@@ -63,6 +63,7 @@ export interface Bank {
   maxLoanLimit: number; // 최대 대출 가능 금액
   creditGrade: number; // 신용 등급 (ex: 1000, 800, 500)
   interestRate: number; // 대출 이자율 (%)
+  repayment: number; // 상환금
   repaymentDue: string; // 상환 기한 (ISO 날짜 문자열)
   createdAt?: string; // 생성일시
   updatedAt?: string; // 수정일시
