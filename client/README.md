@@ -84,6 +84,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 | `src/components/CreditGradeTable.tsx` | 컴포넌트 | 신용 등급 테이블 |
 | `src/components/LoginPage.tsx` | 컴포넌트 | 로그인 UI |
 | `src/components/SignupPage.tsx` | 컴포넌트 | 회원가입 UI |
-| TransactionHistoryPage.tsx | 컴포넌트 | 거래내역 메인 컴포넌트 |
+| `src/components/TransactionHistoryPage.tsx` | 컴포넌트 | 거래내역 메인 컴포넌트 |
 
 ---
