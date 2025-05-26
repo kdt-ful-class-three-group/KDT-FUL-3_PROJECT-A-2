@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { StockModule } from './stocks/stocks.module';
 import { AuthModule } from './auth/auth.module';
 import { BankModule } from './bank/bank.module';
+import { HistoryModule } from './history/history.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { BankModule } from './bank/bank.module';
     StockModule,
     AuthModule,
     BankModule,
+    HistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
