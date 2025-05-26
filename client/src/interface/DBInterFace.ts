@@ -68,3 +68,13 @@ export interface Bank {
   createdAt?: string; // 생성일시
   updatedAt?: string; // 수정일시
 }
+
+// ! input 컴포넌트 매개변수
+export interface inputProps {
+  className?: string;
+  type: string;
+  placeholder?: string;
+  name: string;
+  value: string;
+  onChange: (e: { target: { name: string; value: string } }) => void;
+}
