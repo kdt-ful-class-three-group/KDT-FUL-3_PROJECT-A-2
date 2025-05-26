@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { BankModule } from './bank/bank.module';
 import { HistoryModule } from './history/history.module';
 import { InterestModule } from './interest/interest.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { InterestModule } from './interest/interest.module';
     BankModule,
     HistoryModule,
     InterestModule,
+    OrdersModule
   ],
   controllers: [AppController],
   providers: [AppService],
