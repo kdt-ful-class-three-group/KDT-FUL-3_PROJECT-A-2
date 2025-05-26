@@ -10,6 +10,7 @@ import { HistoryModule } from './history/history.module';
 import { InterestModule } from './interest/interest.module';
 import { OrdersModule } from './orders/orders.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { PortfolioModule } from './portfolio/portfolio.module';
     HistoryModule,
     InterestModule,
     OrdersModule,
-    PortfolioModule
+    PortfolioModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
