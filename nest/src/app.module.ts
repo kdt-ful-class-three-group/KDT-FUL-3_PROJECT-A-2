@@ -3,9 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
-import { StockService } from './stocks/stocks.service';
-import { StockController } from './stocks/stocks.controller';
 import { StockModule } from './stocks/stocks.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -14,8 +13,9 @@ import { StockModule } from './stocks/stocks.module';
     }),
     HttpModule,
     StockModule,
+    AuthModule
   ],
-  controllers: [AppController, StockController],
-  providers: [AppService, StockService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
