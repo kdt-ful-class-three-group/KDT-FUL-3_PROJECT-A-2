@@ -3,9 +3,14 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
-import { StockService } from './stocks/stocks.service';
-import { StockController } from './stocks/stocks.controller';
 import { StockModule } from './stocks/stocks.module';
+import { AuthModule } from './auth/auth.module';
+import { BankModule } from './bank/bank.module';
+import { HistoryModule } from './history/history.module';
+import { InterestModule } from './interest/interest.module';
+import { OrdersModule } from './orders/orders.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -14,8 +19,15 @@ import { StockModule } from './stocks/stocks.module';
     }),
     HttpModule,
     StockModule,
+    AuthModule,
+    BankModule,
+    HistoryModule,
+    InterestModule,
+    OrdersModule,
+    PortfolioModule,
+    UsersModule,
   ],
-  controllers: [AppController, StockController],
-  providers: [AppService, StockService],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
