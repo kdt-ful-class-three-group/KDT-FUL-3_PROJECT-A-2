@@ -9,6 +9,7 @@ import { BankModule } from './bank/bank.module';
 import { HistoryModule } from './history/history.module';
 import { InterestModule } from './interest/interest.module';
 import { OrdersModule } from './orders/orders.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { OrdersModule } from './orders/orders.module';
     BankModule,
     HistoryModule,
     InterestModule,
-    OrdersModule
+    OrdersModule,
+    PortfolioModule
   ],
   controllers: [AppController],
   providers: [AppService],
