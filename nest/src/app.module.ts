@@ -5,6 +5,7 @@ import { HttpModule } from '@nestjs/axios';
 import { ConfigModule } from '@nestjs/config';
 import { StockModule } from './stocks/stocks.module';
 import { AuthModule } from './auth/auth.module';
+import { BankModule } from './bank/bank.module';
 
 @Module({
   imports: [
@@ -13,7 +14,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     HttpModule,
     StockModule,
-    AuthModule
+    AuthModule,
+    BankModule,
   ],
   controllers: [AppController],
   providers: [AppService],
