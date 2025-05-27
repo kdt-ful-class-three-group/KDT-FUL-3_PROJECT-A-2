@@ -48,7 +48,7 @@ export default function ExchangePage() {
 useEffect(() => {
   const fetchSamsung = async () => {
     try {
-      const res = await fetch("http://localhost:8000/stock/price/005930");
+      const res = await fetch(`http://localhost:8000/stock/price/005930`);
       const data = await res.json();
 
       // 실제 응답 구조 확인 필수!
