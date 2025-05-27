@@ -6,7 +6,7 @@ export default function SignupPage() {
       <Title title="회원가입" bookmark={false} dictionary={false} />
       <form
         className="flex flex-col items-center w-full"
-        action="http://localhost:8000/users"
+        action="http://localhost:8000/users/register"
         method="POST"
       >
         <div className="flex flex-col w-full max-w-xs">

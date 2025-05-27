@@ -11,7 +11,7 @@ export class UsersController {
     return this.usersService.getHello();
   }
 
-  @Post()
+  @Post("register")
   register(@Body() body: CreateUserDto, @Res() res): void {
     this.usersService.setUsers(body);
     res.redirect('http://localhost:3000/login');
