@@ -1,74 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-
-
+  <head>
     <head>
-    <meta charset="UTF-8">
-    <title>캔들차트 기본 예제</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta charset="UTF-8" />
+      <title>캔들차트 기본 예제</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <!-- * 연습을 위한 cdn 설정 -->
-    
-    <!-- 
+      <!-- * 연습을 위한 cdn 설정 -->
+
+      <!-- 
       * chart.js : 차트용 라이브러리
       * chartjs-chart-financial : 캔들차트 플러그인
       * chartjs-adapter-date-fns : 날짜 포맷용 어댑터
     
     -->
-    
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+      <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
 
-    <style>
+      <style>
+        /* body 기본값 reset */
+        body {
+          margin: 0;
+          padding: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          background-color: #f0f0f0;
+          box-sizing: border-box;
+        }
 
-/* body 기본값 reset */
-      body {
-        margin:0;
-        padding: 0;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f0f0f0;
-        box-sizing: border-box;
-      }
+        #root {
+          width: 100vw;
+          height: 100vh;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          box-sizing: border-box;
+        }
 
-      #root {
-        width:100vw;
-        height:100vh;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box;
-      }
-
-      #candle-chart {
-        width: 1000px; /* 차트 너비 */
-        height: 400px; /* 차트 높이 */
-        background-color: aquamarine;
-      }
-
-    </style>
-
-
+        #candle-chart {
+          width: 1000px; /* 차트 너비 */
+          height: 400px; /* 차트 높이 */
+          background-color: aquamarine;
+        }
+      </style>
+    </head>
+    <title>Document</title>
   </head>
-  <title>Document</title>
-</head>
-<body>
-  <div id="root">
+  <body>
+    <div id="root">
+      <h1>chart.js 테스트</h1>
+      <canvas id="candle-chart"></canvas>
+    </div>
+    <script>
+      const root = document.getElementById("root");
+      const candleChart = document.getElementById("candle-chart"); // 수정: getContext 호출 전에 캔버스 요소를 가져옵니다.
+      const ctx = candleChart.getContext("2d"); // getContext를 호출할 때 올바른 컨텍스트를 사용합니다.
 
-    <h1>chart.js 테스트</h1>
-    <canvas id="candle-chart"></canvas>
+      // * BigAnt는 임의로 만든 주식 더미데이터 작업
+
+      const BigAnt = {
+        stockData: Array.from({ length: 30 }, (_, i) => {
+          const date = new Date(2025, 4, i + 1); // 2025-05-01 ~ 2025-05-30
+          const open = Math.floor(Math.random() * 1000) + 1000; // 시가
+          const high = open + Math.floor(Math.random() * 50); // 고가
+          const low = open - Math.floor(Math.random() * 50); // 저가
+          const close = Math.floor(Math.random() * (high - low)) + low; // 종가
+          return { x: date, o: open, h: high, l: low, c: close };
+        }),
+      };
+
+      console.log("BigAnt 큰개미 라는 뜻의 더미데이터 :", BigAnt.stockData);
+      console.log(BigAnt.stockData);
 
 
-  </div>
-  <script>
-    const root = document.getElementById('root');
+      function CandleChartExample() {
 
-  </script>
-</body>
+
+      }
+
+    </script>
+  </body>
 </html>
