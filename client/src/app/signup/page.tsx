@@ -77,6 +77,9 @@ export default function SignupPage() {
           <p className="text-[#1E3E62] text-[70%]">사용 가능한 닉네임 입니다.</p>
         </div>
       </div>
+      <div className="w-full max-w-xs mt-5 border-1 text-center bg-[#1E3E62] text-[#FFFFFF] p-2 rounded-lg">
+        <button type="button">가입하기</button>
+      </div>
     </div>
   )
 }
