@@ -1,31 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>캔들차트 예제</title>
+    <title>캔들차트 기본 예제</title>
+    <!-- Chart.js, Financial 차트 플러그인, 날짜 포맷용 어댑터 불러오기 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   </head>
   <body>
-    <h1>Chart.js - 캔들차트 (날짜 보이고 얇은 막대)</h1>
+    <h1>주식형 캔들차트 (날짜, 붙은 막대 포함)</h1>
+    <!-- 차트를 그릴 캔버스 요소 -->
     <canvas id="myChart" width="1000" height="400"></canvas>
 
     <script>
+      // 🟢 1. 캔들차트에 들어갈 더미 데이터 생성
+      // - 날짜(x축)와 시가(o), 고가(h), 저가(l), 종가(c)를 포함
       const candleData = [
-        { x: new Date("2025-05-20"), o: 1000, h: 1020, l: 980, c: 1005 },
-        { x: new Date("2025-05-21"), o: 1010, h: 1030, l: 990, c: 1020 },
-        { x: new Date("2025-05-22"), o: 1020, h: 1040, l: 1000, c: 1010 },
-        { x: new Date("2025-05-23"), o: 1010, h: 1035, l: 995, c: 1000 },
-        { x: new Date("2025-05-24"), o: 1000, h: 1025, l: 980, c: 1010 },
-        { x: new Date("2025-05-25"), o: 1005, h: 1020, l: 990, c: 1008 },
-        { x: new Date("2025-05-26"), o: 1010, h: 1030, l: 1000, c: 1015 },
-        { x: new Date("2025-05-20"), o: 1000, h: 1020, l: 980, c: 1005 },
-        { x: new Date("2025-05-21"), o: 1010, h: 1030, l: 990, c: 1020 },
-        { x: new Date("2025-05-22"), o: 1020, h: 1040, l: 1000, c: 1010 },
-        { x: new Date("2025-05-23"), o: 1010, h: 1035, l: 995, c: 1000 },
-        { x: new Date("2025-05-24"), o: 1000, h: 1025, l: 980, c: 1010 },
-        { x: new Date("2025-05-25"), o: 1005, h: 1020, l: 990, c: 1008 },
-        { x: new Date("2025-05-26"), o: 1010, h: 1030, l: 1000, c: 1015 },
         { x: new Date("2025-05-20"), o: 1000, h: 1020, l: 980, c: 1005 },
         { x: new Date("2025-05-21"), o: 1010, h: 1030, l: 990, c: 1020 },
         { x: new Date("2025-05-22"), o: 1020, h: 1040, l: 1000, c: 1010 },
@@ -35,67 +25,71 @@
         { x: new Date("2025-05-26"), o: 1010, h: 1030, l: 1000, c: 1015 },
       ];
 
+      // 🟢 2. canvas 요소를 가져와서 그리기 위한 컨텍스트(ctx) 준비
       const ctx = document.getElementById("myChart").getContext("2d");
 
+      // 🟢 3. Chart.js 객체 생성 - 캔들차트 타입으로 초기화
       const chart = new Chart(ctx, {
-        type: "candlestick",
+        type: "candlestick", // 차트 종류 설정 (캔들차트로 지정)
         data: {
           datasets: [
             {
-              label: "DUMMY 주식 데이터",
-              data: candleData,
-              barThickness: 20, // 막대 두께를 얇게
+              label: "주식 데이터", // 범례(legend) 이름
+              data: candleData, // 위에서 만든 OHLC 데이터 삽입
+
+              // ✅ 막대 간격 조절 옵션 - 붙어 보이도록
+              barThickness: 15, // 막대의 두께를 직접 지정 (px)
+              categoryPercentage: 1.0, // x축 전체 공간을 100% 차지
+              barPercentage: 1.0, // 한 구간 안에서 막대가 꽉 차게
             },
           ],
         },
         options: {
-          responsive: true,
-          layout: {
-            padding: {
-              left: 10,
-              right: 10,
-              top: 20,
-              bottom: 20,
-            },
-          },
+          responsive: true, // 반응형 설정 (창 크기에 따라 자동 리사이징)
+
+          // 🟢 4. x축, y축 등 스케일 관련 설정
           scales: {
             x: {
-              type: "time",
+              type: "time", // x축을 시간 기반으로 설정
               time: {
-                unit: "day",
-                tooltipFormat: "yyyy-MM-dd",
+                unit: "day", // 하루 단위로 눈금 설정
+                tooltipFormat: "yyyy-MM-dd", // 툴팁에 표시할 날짜 형식
                 displayFormats: {
-                  day: "MM-dd", // x축 포맷
+                  day: "MM-dd", // 눈금 표시 형식: 05-20 이런 식
                 },
               },
               ticks: {
-                autoSkip: false,
-                maxRotation: 0,
+                autoSkip: false, // 눈금 생략하지 않도록 설정
+                maxRotation: 0, // 눈금 텍스트 회전 없음
                 minRotation: 0,
                 font: {
-                  size: 10,
+                  size: 10, // 눈금 텍스트 크기
                 },
-              },
-              callback: function (value, index, ticks) {
-                const date = new Date(value);
-                return `${date.getMonth() + 1}-${date.getDate()}`;
+                // ✅ 눈금 텍스트를 MM-DD 형태로 표시하기 위한 콜백
+                callback: function (value) {
+                  const date = new Date(value);
+                  return `${date.getMonth() + 1}-${date.getDate()}`;
+                },
               },
               title: {
                 display: true,
-                text: "날짜",
+                text: "날짜", // x축 제목
               },
             },
             y: {
-              beginAtZero: false,
+              beginAtZero: false, // 0부터 시작하지 않음 (주식 가격은 대부분 0보다 큼)
               title: {
                 display: true,
-                text: "가격",
+                text: "가격", // y축 제목
               },
             },
           },
+
+          // 🟢 5. 플러그인 옵션 (툴팁, 범례 등)
           plugins: {
             tooltip: {
               callbacks: {
+                // 툴팁에 표시되는 텍스트 직접 정의
                 label: function (context) {
                   const { o, h, l, c } = context.raw;
                   return `O: ${o}, H: ${h}, L: ${l}, C: ${c}`;
@@ -103,7 +97,7 @@
               },
             },
             legend: {
-              display: false,
+              display: false, // 차트 위에 있는 범례 숨기기
             },
           },
         },
