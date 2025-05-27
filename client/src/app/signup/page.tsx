@@ -11,15 +11,15 @@ export default function SignupPage() {
       >
         <div className="flex flex-col w-full max-w-xs">
           <label className="text-[#FC4F00] mb-3">아이디</label>
-          <div className="flex w-full justify-around">
+          <div className="flex justify-between">
             <input
-              className="pl-2 rounded-lg border w-full py-2"
+              className="pl-2 rounded-lg border py-2"
               type="text"
               placeholder="아이디"
               name="userid"
             />
             <button
-              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2"
+              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-4"
               type="button"
             >
               중복확인
@@ -47,9 +47,9 @@ export default function SignupPage() {
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">휴대폰 번호</label>
-          <div className="flex w-full justify-around mb-3">
+          <div className="flex w-full justify-between mb-3">
             <input
-              className="pl-2 rounded-lg border py-2 w-full"
+              className="pl-2 rounded-lg border py-2"
               type="text"
               placeholder="휴대폰 번호"
               name="phone"
