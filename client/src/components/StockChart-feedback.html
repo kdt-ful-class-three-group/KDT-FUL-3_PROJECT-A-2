@@ -15,21 +15,60 @@
       * chartjs-chart-financial : 캔들차트 플러그인
       * chartjs-adapter-date-fns : 날짜 포맷용 어댑터
     
-    
-    
     -->
     
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+
+
+    <style>
+
+/* body 기본값 reset */
+      body {
+        margin:0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        box-sizing: border-box;
+      }
+
+      #root {
+        width:100vw;
+        height:100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+      }
+
+      #candle-chart {
+        width: 1000px; /* 차트 너비 */
+        height: 400px; /* 차트 높이 */
+        background-color: aquamarine;
+      }
+
+    </style>
+
+
   </head>
   <title>Document</title>
 </head>
 <body>
-  <div id="root"></div>
+  <div id="root">
+
+    <h1>chart.js 테스트</h1>
+    <canvas id="candle-chart"></canvas>
+
+
+  </div>
   <script>
     const root = document.getElementById('root');
-    
+
   </script>
 </body>
 </html>
