@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>캔들차트 예제</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+  </head>
+  <body>
+    <h1>Chart.js - 캔들차트 (날짜 보이고 얇은 막대)</h1>
+    <canvas id="myChart" width="1000" height="400"></canvas>
+
+    <script>
+      const candleData = [
+        { x: new Date("2025-05-20"), o: 1000, h: 1020, l: 980, c: 1005 },
+        { x: new Date("2025-05-21"), o: 1010, h: 1030, l: 990, c: 1020 },
+        { x: new Date("2025-05-22"), o: 1020, h: 1040, l: 1000, c: 1010 },
+        { x: new Date("2025-05-23"), o: 1010, h: 1035, l: 995, c: 1000 },
+        { x: new Date("2025-05-24"), o: 1000, h: 1025, l: 980, c: 1010 },
+        { x: new Date("2025-05-25"), o: 1005, h: 1020, l: 990, c: 1008 },
+        { x: new Date("2025-05-26"), o: 1010, h: 1030, l: 1000, c: 1015 },
+        { x: new Date("2025-05-20"), o: 1000, h: 1020, l: 980, c: 1005 },
+        { x: new Date("2025-05-21"), o: 1010, h: 1030, l: 990, c: 1020 },
+        { x: new Date("2025-05-22"), o: 1020, h: 1040, l: 1000, c: 1010 },
+        { x: new Date("2025-05-23"), o: 1010, h: 1035, l: 995, c: 1000 },
+        { x: new Date("2025-05-24"), o: 1000, h: 1025, l: 980, c: 1010 },
+        { x: new Date("2025-05-25"), o: 1005, h: 1020, l: 990, c: 1008 },
+        { x: new Date("2025-05-26"), o: 1010, h: 1030, l: 1000, c: 1015 },
+        { x: new Date("2025-05-20"), o: 1000, h: 1020, l: 980, c: 1005 },
+        { x: new Date("2025-05-21"), o: 1010, h: 1030, l: 990, c: 1020 },
+        { x: new Date("2025-05-22"), o: 1020, h: 1040, l: 1000, c: 1010 },
+        { x: new Date("2025-05-23"), o: 1010, h: 1035, l: 995, c: 1000 },
+        { x: new Date("2025-05-24"), o: 1000, h: 1025, l: 980, c: 1010 },
+        { x: new Date("2025-05-25"), o: 1005, h: 1020, l: 990, c: 1008 },
+        { x: new Date("2025-05-26"), o: 1010, h: 1030, l: 1000, c: 1015 },
+      ];
+
+      const ctx = document.getElementById("myChart").getContext("2d");
+
+      const chart = new Chart(ctx, {
+        type: "candlestick",
+        data: {
+          datasets: [
+            {
+              label: "DUMMY 주식 데이터",
+              data: candleData,
+              barThickness: 20, // 막대 두께를 얇게
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          layout: {
+            padding: {
+              left: 10,
+              right: 10,
+              top: 20,
+              bottom: 20,
+            },
+          },
+          scales: {
+            x: {
+              type: "time",
+              time: {
+                unit: "day",
+                tooltipFormat: "yyyy-MM-dd",
+                displayFormats: {
+                  day: "MM-dd", // x축 포맷
+                },
+              },
+              ticks: {
+                autoSkip: false,
+                maxRotation: 0,
+                minRotation: 0,
+                font: {
+                  size: 10,
+                },
+              },
+              callback: function (value, index, ticks) {
+                const date = new Date(value);
+                return `${date.getMonth() + 1}-${date.getDate()}`;
+              },
+              title: {
+                display: true,
+                text: "날짜",
+              },
+            },
+            y: {
+              beginAtZero: false,
+              title: {
+                display: true,
+                text: "가격",
+              },
+            },
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const { o, h, l, c } = context.raw;
+                  return `O: ${o}, H: ${h}, L: ${l}, C: ${c}`;
+                },
+              },
+            },
+            legend: {
+              display: false,
+            },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
