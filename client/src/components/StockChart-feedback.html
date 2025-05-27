@@ -7,7 +7,18 @@
     <meta charset="UTF-8">
     <title>캔들차트 기본 예제</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Chart.js, Financial 차트 플러그인, 날짜 포맷용 어댑터 불러오기 -->
+
+    <!-- * 연습을 위한 cdn 설정 -->
+    
+    <!-- 
+      * chart.js : 차트용 라이브러리
+      * chartjs-chart-financial : 캔들차트 플러그인
+      * chartjs-adapter-date-fns : 날짜 포맷용 어댑터
+    
+    
+    
+    -->
+    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
@@ -15,6 +26,10 @@
   <title>Document</title>
 </head>
 <body>
-  
+  <div id="root"></div>
+  <script>
+    const root = document.getElementById('root');
+    
+  </script>
 </body>
 </html>
