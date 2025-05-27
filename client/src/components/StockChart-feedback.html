@@ -78,6 +78,16 @@
       function CandleChartExample(stockData) {
         const candleChart = document.getElementById("candle-chart");
         const ctx = candleChart.getContext("2d");
+
+        // ? 프롬프트 질문
+        // chart.js 최초사용법이 뭐야?
+
+        const test = new Chart();
+        console.dir(test);
+        // * 어떤 객체가 생성되는지 확인
+        
+
+
         return stockData;
       }
       CandleChartExample(BigAnt.stockData);
