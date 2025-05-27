@@ -79,13 +79,22 @@
         const candleChart = document.getElementById("candle-chart");
         const ctx = candleChart.getContext("2d");
 
-        // ? 프롬프트 질문
-        // chart.js 최초사용법이 뭐야?
 
-        const test = new Chart(ctx, {});
+        // * 캔들차트 만들때 필요한 메타데이터 객체는 주로 무엇이 필요해?
+
+        const chartConfig = {
+          type: "",
+          data: {},
+          options: {},
+          plugins: {},
+        }
+
+        console.log("chartConfig 초기값 :", chartConfig);
+
+        const test = new Chart(ctx, chartConfig);
         console.dir(test);
-        // * Chart, new Chart에는 타겟 캔버스와, 값을 정의하는 객체가 필요하다는 것을 알게됨
         
+
 
 
 
