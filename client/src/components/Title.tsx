@@ -1,7 +1,9 @@
 type TitleProps = {
   title: string;
+  bookmark: boolean;
+  dictionary: boolean;
 };
-export default function Title({ title }: TitleProps) {
+export default function Title({ title, bookmark, dictionary }: TitleProps) {
   return (
     <div className="w-[95%] flex items-center justify-center relative m-auto p-5">
       <img className="absolute left-0" src="./image/leftArrow.svg" alt="이전버튼" />
