@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { pool } from 'src/DB/DB';
 
 @Injectable()
 export class UsersService {
@@ -7,8 +8,15 @@ export class UsersService {
     return 'Hello from UsersService!';
   }
 
-  setUsers(userData: CreateUserDto): string {
+  setUsers(userData: CreateUserDto): void {
     console.log('회원가입 데이터:', userData);
-    return 'success';
+    const sql = 'INSERT INTO member (user_id, password, phone_number, nickname) VALUES ($1, $2, $3, $4)';
+    pool.query(sql, [userData.userid, userData.password, userData.phone, userData.nickname])
+      .then(() => {
+        console.log('회원가입 성공');
+      })
+      .catch((error) => {
+        console.error('회원가입 에러:', error);
+      });
   }
 }

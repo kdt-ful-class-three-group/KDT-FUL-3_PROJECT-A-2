@@ -13,8 +13,7 @@ export class UsersController {
 
   @Post()
   register(@Body() body: CreateUserDto, @Res() res): void {
-    const result = this.usersService.setUsers(body);
-    console.log(result);
-    // res.redirect('http://localhost:3000/login');
+    this.usersService.setUsers(body);
+    res.redirect('http://localhost:3000/login');
   }
 }
