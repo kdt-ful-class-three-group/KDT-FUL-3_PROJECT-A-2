@@ -82,10 +82,11 @@
         // ? 프롬프트 질문
         // chart.js 최초사용법이 뭐야?
 
-        const test = new Chart();
+        const test = new Chart(ctx, {});
         console.dir(test);
-        // * 어떤 객체가 생성되는지 확인
+        // * Chart, new Chart에는 타겟 캔버스와, 값을 정의하는 객체가 필요하다는 것을 알게됨
         
+
 
 
         return stockData;
