@@ -97,7 +97,6 @@
           options: {
             responsive: true,
             scales: {
-
               // x 축에 무언가 값을 넣어야 하는 것이 핵심으로 보임
               x: {
                 type: "time",
@@ -112,9 +111,25 @@
                   display: true,
                   text: "날짜",
                 },
+
+                // * 파악 결과
+                // * 아래의 작업은 정상적으로 표현되지만,
+                // * chart.js의 비트맵 처리 특성상, 글씨가 겹쳐지거나 좁으면 문제가 생기기 때문에, 겹치거나 가독성이 떨어지는 등의 일련의 차트로서 문제가 있다고 판단하는 경우, 범례를 삭제하기도 하는 것으로 확인됨
+                // * 
+
+
                 ticks: {
-                  source: "data", // 데이터 기반으로 눈금 생성
-                  autoSkip: false, // 눈금 생략하지 않도록 설정
+                  autoSkip: true, // 라벨이 겹치지 않도록 자동으로 건너뛰기 (중요!)
+                  maxTicksLimit: 10, // 표시될 최대 눈금 수 (조절 가능)
+                  maxRotation: 0, // 라벨 회전 없음 (수평 유지)
+                  minRotation: 0,
+                  font: {
+                    size: 10,
+                  },
+                  callback: function (value, index, ticks) {
+                    const date = new Date(value);
+                    return `${date.getMonth() + 1}월 ${date.getDate()}일`;
+                  },
                 },
               },
               y: {
