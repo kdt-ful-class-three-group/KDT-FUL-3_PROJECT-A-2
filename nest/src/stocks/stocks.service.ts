@@ -40,12 +40,13 @@ export class StockService {
     // 주식 시세 조회 API 주소 (모의투자용)
     const url = 'https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-price';
 
+
     // 요청 헤더 설정(토큰과 앱키 포함)
     const headers = {
-      'authorization': `Bearer ${accessToken}`,
-      'appkey': process.env.KIS_APP_KEY,
-      'appsecret': process.env.KIS_APP_SECRET,
-      'tr_id': 'FHKST01010100', // 모의투자용 TR-ID
+      authorization: `Bearer ${accessToken}`,
+      appkey: process.env.KIS_APP_KEY,
+      appsecret: process.env.KIS_APP_SECRET,
+      tr_id: 'FHKST01010100', // 모의투자용 TR-ID
     };
 
     // 요청 파라미터 설정(시장 구분 + 종목코드)
