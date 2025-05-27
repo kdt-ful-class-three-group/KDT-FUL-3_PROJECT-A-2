@@ -117,7 +117,7 @@ useEffect(() => {
 
   return (
     <div className="bg-white text-black min-h-screen p-4 text-xs">
-      <Title title="거래소" />
+      <Title title="거래소" bookmark={false} dictionary={false} />
 
       <div className="max-w-md mx-auto p-4 bg-gray-100 rounded-2xl shadow-lg">
         {/* 종목 검색 */}
