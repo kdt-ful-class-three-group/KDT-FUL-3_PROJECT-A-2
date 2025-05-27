@@ -79,26 +79,67 @@
         const candleChart = document.getElementById("candle-chart");
         const ctx = candleChart.getContext("2d");
 
-
         // * 캔들차트 만들때 필요한 메타데이터 객체는 주로 무엇이 필요해?
 
         const chartConfig = {
-          type: "",
-          data: {},
-          options: {},
-          plugins: {},
-        }
+          type: "candlestick",
+          data: {
+            datasets: [
+              {
+                label: "BigAnt 주식 데이터",
+                data: stockData,
+                barThickness: 15,
+                categoryPercentage: 1.0,
+                barPercentage: 1.0,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                type: "time",
+                time: {
+                  unit: "day",
+                  tooltipFormat: "yyyy-MM-dd",
+                  displayFormats: {
+                    day: "MM-dd",
+                  },
+                },
+                title: {
+                  display: true,
+                  text: "날짜",
+                },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "가격",
+                },
+              },
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    const { o, h, l, c } = context.raw;
+                    return `O: ${o}, H: ${h}, L: ${l}, C: ${c}`;
+                  },
+                },
+              },
+              legend: {
+                display: false,
+              },
+            },
+          },
+        };
 
-        console.log("chartConfig 초기값 :", chartConfig);
+        // console.log("chartConfig 초기값 :", chartConfig);
 
-        const test = new Chart(ctx, chartConfig);
-        console.dir(test);
-        
+        new Chart(ctx, chartConfig);
+        // console.dir(test);
 
-
-
-
-        return stockData;
+        // return stockData;
       }
       CandleChartExample(BigAnt.stockData);
     </script>
