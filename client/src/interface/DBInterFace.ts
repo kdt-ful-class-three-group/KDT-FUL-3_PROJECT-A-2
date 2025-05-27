@@ -70,6 +70,15 @@ export interface Bank {
 }
 
 // ! input 컴포넌트 매개변수
+/**
+ * inputProps는 재사용 input 컴포넌트의 props 타입입니다.
+ * - className: Tailwind 등으로 전달할 커스텀 클래스명(선택)
+ * - type: input의 타입(text, password 등)
+ * - placeholder: placeholder 텍스트(선택)
+ * - name: input의 name 속성(폼 식별용)
+ * - value: input의 값(상태)
+ * - onChange: 값 변경 시 호출되는 콜백 함수 (e.target.name, e.target.value 전달)
+ */
 export interface inputProps {
   className?: string;
   type: string;
