@@ -27,29 +27,54 @@ export default function ExchangePage() {
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
 
+  // 종목 코드와 이름을 매핑
+  const stockNames: { [key: string]: string } = {
+    "005930": "삼성전자",
+    "000660": "SK 하이닉스",
+    "035420": "NAVER(네이버)",
+    "005380": "현대차",
+    "051910": "LG화학",
+    "035720": "카카오",
+    "012330": "삼성생명",
+    "003550": "삼성물산",
+    "006400": "삼성전기",
+    "005490": "POSCO(포스코)",
+  };
+
+  // 여러 종목 코드 배열
+  const stockCodes = Object.keys(stockNames);
+
   useEffect(() => {
-    const fetchSamsung = async () => {
+    const fetchStocks = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/stock/price/005930`);
-        const data = await res.json();
+        // 여러 종목 데이터를 비동기로 받아오기
+        const stockDataPromises = stockCodes.map((code) =>
+          fetch(`http://localhost:8000/stock/price/${code}`).then((res) => res.json())
+        );
 
-        const stockData = data.output || data;
+        // 모든 데이터가 준비될 때까지 기다림
+        const stockDataResponses = await Promise.all(stockDataPromises);
 
-        const stockItem: StockData = {
-          name: "삼성전자",
-          price: Number(stockData.stck_prpr),       // 현재가
-          change: Number(stockData.prdy_ctrt),      // 전일대비 퍼센트 (%)
-          volume: stockData.acml_tr_pbmn,           // 거래대금 (단위: 원)
-        };
+        // 받은 데이터를 처리
+        const stockItems = stockDataResponses.map((data, index) => {
+          const stockData = data.output || data; // 응답 구조에 맞게 처리
 
-        setStocks([stockItem]);
-        setFilteredStocks([stockItem]);
+          return {
+            name: stockNames[stockCodes[index]], // 종목 이름을 매핑
+            price: Number(stockData.stck_prpr), // 현재가
+            change: Number(stockData.prdy_ctrt), // 전일대비 퍼센트 (%)
+            volume: stockData.acml_tr_pbmn, // 거래대금 (단위: 원)
+          };
+        });
+
+        setStocks(stockItems);
+        setFilteredStocks(stockItems);
       } catch (err) {
         console.error("API 데이터 불러오기 실패:", err);
       }
     };
 
-    fetchSamsung();
+    fetchStocks();
   }, []);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
@@ -94,30 +119,29 @@ export default function ExchangePage() {
         </div>
 
         {/* 사용자 요약 정보 */}
-       <div className="bg-gray-200 p-4 rounded mb-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
-       <div className="flex justify-between">
-        <div className="flex items-center">
-          <p className="text-gray-600">총 매수 : </p>
-          <p className="text-black font-bold">{portfolio.totalPurchase}</p>
-        </div>
-        <div className="flex items-center">
-          <p className="text-gray-600">평가손익 :</p>
-          <p className="text-red-600 font-bold">{portfolio.profitLoss.toLocaleString()}</p>
-        </div>
-      </div>
+        <div className="bg-gray-200 p-4 rounded mb-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+          <div className="flex justify-between">
+            <div className="flex items-center">
+              <p className="text-gray-600">총 매수 : </p>
+              <p className="text-black font-bold">{portfolio.totalPurchase}</p>
+            </div>
+            <div className="flex items-center">
+              <p className="text-gray-600">평가손익 :</p>
+              <p className="text-red-600 font-bold">{portfolio.profitLoss.toLocaleString()}</p>
+            </div>
+          </div>
 
-     <div className="flex justify-between">
-       <div className="flex items-center">
-         <p className="text-gray-600">총 평가 :</p>
-         <p className="text-black font-bold">{portfolio.totalEvaluation}</p>
-       </div>
-       <div className="flex items-center">
-         <p className="text-gray-600">수익률 :</p>
-         <p className="text-red-600 font-bold">{portfolio.profitRate}%</p>
-       </div>
-     </div>
-    </div>
-
+          <div className="flex justify-between">
+            <div className="flex items-center">
+              <p className="text-gray-600">총 평가 :</p>
+              <p className="text-black font-bold">{portfolio.totalEvaluation}</p>
+            </div>
+            <div className="flex items-center">
+              <p className="text-gray-600">수익률 :</p>
+              <p className="text-red-600 font-bold">{portfolio.profitRate}%</p>
+            </div>
+          </div>
+        </div>
 
         {/* 종목 테이블 */}
         <div className="overflow-x-auto">
