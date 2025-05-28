@@ -19,4 +19,12 @@ export class UsersService {
         console.error('회원가입 에러:', error);
       });
   }
+
+  checkUserId() {
+    console.log("check User Id");
+  }
+
+  checkUserPw() {
+    console.log("check User Password");
+  }
 }

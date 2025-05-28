@@ -11,6 +11,12 @@ export class UsersController {
     return this.usersService.getHello();
   }
 
+  @Post("signin")
+  Signin() {
+    this.usersService.checkUserId();
+    this.usersService.checkUserPw();
+  }
+
   @Post("register")
   register(@Body() body: CreateUserDto, @Res() res): void {
     this.usersService.setUsers(body);
