@@ -165,7 +165,7 @@ export default function ExchangePage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredStocks.map((stock, i) => (
-                <tr key={i} className="cursor-pointer" onClick={() => router.push("/stock-detail")}>
+                <tr key={i} className="cursor-pointer" onClick={() => router.push("/stock-detail/" + stock.name)}>
                   <td className="p-2">{stock.name}</td>
                   <td className={`p-2 text-right ${getPriceColor(stock)}`}>{stock.price.toLocaleString()}</td>
                   <td className={`p-2 text-right ${getChangeColor(stock.change)}`}>{stock.change}%</td>
