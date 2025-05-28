@@ -10,9 +10,9 @@ export default function Title({ title, bookmark, dictionary }: TitleProps) {
       <h2 className="text-[#FC4F00] text-2xl font-bold">{title}</h2>
       <div className="absolute right-0">
         {/* 북마크 */}
-        <img src="./image/titlebookmark.svg" alt="별" />
+        {bookmark && <img src="./image/titlebookmark.svg" alt="별" />}
         {/* 사전 */}
-        {/* <img src="" alt="" /> */}
+        {dictionary && <img src="" alt="사전" />}
       </div>
     </div>
   );
