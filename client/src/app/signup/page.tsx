@@ -73,12 +73,16 @@ export default function SignupPage() {
   return (
     <div className="m-auto flex flex-col items-center w-full px-5">
       <Title title="회원가입" bookmark={false} dictionary={false} />
-      <form className="flex flex-col items-center w-full" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col items-center w-full"
+        action="http://localhost:8000/users/register"
+        method="POST"
+      >
         <div className="flex flex-col w-full max-w-xs">
           <label className="text-[#FC4F00] mb-3">아이디</label>
-          <div className="flex w-full justify-between">
-            <Input
-              className="pl-2 rounded-lg border w-full py-2"
+          <div className="flex justify-between">
+            <input
+              className="pl-2 rounded-lg border py-2"
               type="text"
               placeholder="아이디"
               name="userid"
@@ -86,7 +90,8 @@ export default function SignupPage() {
               onChange={handleChange}
             />
             <button
-              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
+              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-4"
+
               type="button"
               onClick={checkUserId}
             >
@@ -133,7 +138,7 @@ export default function SignupPage() {
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">휴대폰 번호</label>
           <div className="flex w-full justify-between mb-3">
-            <Input
+            <input
               className="pl-2 rounded-lg border py-2"
               type="text"
               placeholder="휴대폰 번호"

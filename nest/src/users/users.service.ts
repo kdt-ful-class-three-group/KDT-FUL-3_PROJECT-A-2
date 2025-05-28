@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
+import { SigninDto } from './dto/signin.dto';
 import { pool } from 'src/DB/DB';
 
 @Injectable()
@@ -28,5 +29,15 @@ export class UsersService {
       .catch((error) => {
         console.error('회원가입 에러:', error);
       });
+  }
+
+  async checkUser(data: SigninDto) {
+    const sql = 'SELECT * FROM member WHERE user_id = $1 AND password = $2';
+    try {
+      const result = await pool.query(sql, [data.userid, data.password]);
+      return result.rows.length > 0;
+    } catch (error) {
+      throw error;
+    }
   }
 }
