@@ -1,9 +1,5 @@
 "use client";
-import React from "react";
-// import Nav from "@/components/Nav";
-// import Exchange from "@/app/exchange/page";
-
-import { useState } from "react";
+import React, { useState } from "react";
 
 type TradeData = {
   time: string;
@@ -41,8 +37,8 @@ export default function MarketDetailPage() {
         <h1 className="text-orange-500 text-xl font-bold">한화이글스</h1>
         <div className="text-3xl font-bold text-red-500">3,382</div>
         <div className="text-sm text-pink-500">0.56%</div>
-        {/* 컨포넌트롬 만들 탭메뉴 들어갈 자리 */}
-        {/* 탭 */}
+
+        {/* 탭 메뉴 */}
         <div className="mt-4 flex gap-2 items-center">
           <button
             className={`px-4 py-1 rounded ${
@@ -63,60 +59,64 @@ export default function MarketDetailPage() {
         </div>
       </div>
 
-      {/* 데이터 영역 */}
-      {activeTab === "체결" ? (
-        <table className="w-full text-sm">
-          <thead className="border-b">
-            <tr className="text-left">
-              <th className="py-2">체결시간</th>
-              <th>체결가격</th>
-              <th>체결량</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tradeData.map((row, idx) => (
-              <tr key={idx} className="border-b">
-                <td className="py-2">{row.time}</td>
-                <td className="text-red-500">{row.price}</td>
-                <td
-                  className={`${
-                    idx % 2 === 0 ? "text-red-500" : "text-blue-500"
-                  }`}
-                >
-                  {row.volume}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <table className="w-full text-sm">
-          <thead className="border-b">
-            <tr className="text-left">
-              <th className="py-2">일자</th>
-              <th>종가</th>
-              <th>전일대비</th>
-              <th>거래량</th>
-            </tr>
-          </thead>
-          <tbody>
-            {dailyData.map((row, idx) => (
-              <tr key={idx} className="border-b">
-                <td className="py-2">{row.date}</td>
-                <td
-                  className={`${
-                    idx % 2 === 0 ? "text-red-500" : "text-blue-500"
-                  }`}
-                >
-                  {row.close}
-                </td>
-                <td className="text-pink-500">{row.change}</td>
-                <td>{row.volume}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      {/* 데이터 테이블 영역 */}
+      <div className="flex justify-center">
+        <div className="w-1/3">
+          {activeTab === "체결" ? (
+            <table className="w-full text-sm">
+              <thead className="border-b">
+                <tr className="text-left">
+                  <th className="py-2">체결시간</th>
+                  <th>체결가격</th>
+                  <th>체결량</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tradeData.map((row, idx) => (
+                  <tr key={idx} className="border-b">
+                    <td className="py-2">{row.time}</td>
+                    <td className="text-red-500">{row.price}</td>
+                    <td
+                      className={`${
+                        idx % 2 === 0 ? "text-red-500" : "text-blue-500"
+                      }`}
+                    >
+                      {row.volume}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <table className="w-full text-sm">
+              <thead className="border-b">
+                <tr className="text-left">
+                  <th className="py-2">일자</th>
+                  <th>종가</th>
+                  <th>전일대비</th>
+                  <th>거래량</th>
+                </tr>
+              </thead>
+              <tbody>
+                {dailyData.map((row, idx) => (
+                  <tr key={idx} className="border-b">
+                    <td className="py-2">{row.date}</td>
+                    <td
+                      className={`${
+                        idx % 2 === 0 ? "text-red-500" : "text-blue-500"
+                      }`}
+                    >
+                      {row.close}
+                    </td>
+                    <td className="text-pink-500">{row.change}</td>
+                    <td>{row.volume}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
