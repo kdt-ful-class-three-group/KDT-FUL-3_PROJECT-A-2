@@ -38,7 +38,7 @@ export default function LoginPage() {
       <div className="flex justify-between w-full max-w-xs mt-10 mb-10">
         <a href="">아이디 찾기</a>
         <a href="">비밀번호 찾기</a>
-        <a href="">회원가입</a>
+        <a href="/signup">회원가입</a>
       </div>
     </div>
   )
