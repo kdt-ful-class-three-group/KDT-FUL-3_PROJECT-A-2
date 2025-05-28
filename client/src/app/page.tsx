@@ -14,17 +14,17 @@ type DailyData = {
   volume: string;
 };
 
-const tradeData: TradeData[] = new Array(10).fill(null).map(() => ({
+const tradeData: TradeData[] = new Array(25).fill(null).map(() => ({
   time: "16:37:13",
   price: "149,099,000",
-  volume: Math.random() > 0.5 ? "0.0033514" : "0.0033514",
+  volume: "0.0033514",
 }));
 
-const dailyData: DailyData[] = new Array(10).fill(null).map(() => ({
+const dailyData: DailyData[] = new Array(25).fill(null).map(() => ({
   date: "5.16",
   close: "3,382",
   change: "0.56%/19",
-  volume: "41,309,700.03965287",
+  volume: "41,309,700.039",
 }));
 
 export default function MarketDetailPage() {
@@ -33,13 +33,17 @@ export default function MarketDetailPage() {
   return (
     <div className="p-4">
       {/* Header */}
-      <div className="flex flex-col items-center border-b pb-4 mb-4">
-        <h1 className="text-orange-500 text-xl font-bold">한화이글스</h1>
-        <div className="text-3xl font-bold text-red-500">3,382</div>
-        <div className="text-sm text-pink-500">0.56%</div>
+      <div className="border-b pb-4 mb-4">
+        <div className="flex justify-center mb-2">
+          <h1 className="text-orange-500 text-xl font-bold">한화이글스</h1>
+        </div>
+        <div className="text-left">
+          <div className="text-3xl font-bold text-red-500">3,382</div>
+          <div className="text-sm text-pink-500">0.56%</div>
+        </div>
 
         {/* 탭 메뉴 */}
-        <div className="mt-4 flex gap-2 items-center">
+        <div className="mt-4 flex gap-2 items-center justify-center">
           <button
             className={`px-4 py-1 rounded ${
               activeTab === "체결" ? "bg-blue-900 text-white" : "border"
@@ -59,16 +63,16 @@ export default function MarketDetailPage() {
         </div>
       </div>
 
-      {/* 데이터 테이블 영역 */}
+      {/* 테이블 영역 */}
       <div className="flex justify-center">
-        <div className="w-1/3">
+        <div className="w-full max-w-md">
           {activeTab === "체결" ? (
-            <table className="w-full text-sm">
+            <table className="w-full text-sm table-fixed">
               <thead className="border-b">
                 <tr className="text-left">
-                  <th className="py-2">체결시간</th>
-                  <th>체결가격</th>
-                  <th>체결량</th>
+                  <th className="py-2 w-1/3">체결시간</th>
+                  <th className="w-1/3">체결가격</th>
+                  <th className="w-1/3">체결량</th>
                 </tr>
               </thead>
               <tbody>
@@ -88,13 +92,13 @@ export default function MarketDetailPage() {
               </tbody>
             </table>
           ) : (
-            <table className="w-full text-sm">
+            <table className="w-full text-sm table-fixed">
               <thead className="border-b">
                 <tr className="text-left">
-                  <th className="py-2">일자</th>
-                  <th>종가</th>
-                  <th>전일대비</th>
-                  <th>거래량</th>
+                  <th className="py-2 w-1/4">일자</th>
+                  <th className="w-1/4">종가</th>
+                  <th className="w-1/4">전일대비</th>
+                  <th className="w-1/4">거래량</th>
                 </tr>
               </thead>
               <tbody>
