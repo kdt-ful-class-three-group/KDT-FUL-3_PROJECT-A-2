@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function Nav() {
   return (
     <div className="absolute bottom-0 p-5 flex bg-[#1E3E62] w-full justify-between items-center">
-      <Link href="/exchange" className="cursor-pointer flex flex-col items-center">
+      <Link href="/" className="cursor-pointer flex flex-col items-center">
         <img src="./image/home.svg" alt="" />
         <p className="mt-2 text-white">거래소</p>
       </Link>

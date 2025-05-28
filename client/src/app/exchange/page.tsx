@@ -1,4 +1,3 @@
-// client/src/app/exchange/page.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -27,74 +26,60 @@ export default function ExchangePage() {
   const [filteredStocks, setFilteredStocks] = useState<StockData[]>([]);
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortAsc, setSortAsc] = useState(true);
-  const [favorites] = useState<Set<string>>(new Set());
 
-
-//   useEffect(() => {
-//   const fetchStocks = async () => {
-//     try {
-//       const res = await fetch("http://localhost:3000/api/stocks"); 
-//       const data = await res.json();
-//       setStocks(data);
-//       setFilteredStocks(data);
-//     } catch (error) {
-//       console.error("주식 데이터 불러오기 실패", error);
-//     }
-//   };
-
-//   fetchStocks();
-// }, []);
-
-useEffect(() => {
-  const fetchSamsung = async () => {
-    try {
-      const res = await fetch("http://localhost:8000/stock/price/005930");
-      const data = await res.json();
-
-      // 실제 응답 구조 확인 필수!
-      const stockData = data.output || data; // 예: { output: { stck_prpr, ... } } or { stck_prpr, ... }
-
-      const stockItem: StockData = {
-        name: "삼성전자",
-        price: Number(stockData.stck_prpr),       // 현재가
-        change: Number(stockData.prdy_ctrt),      // 전일대비 퍼센트 (%)
-        volume: stockData.acml_tr_pbmn,           // 거래대금 (단위: 원)
-      };
-
-      setStocks([stockItem]);
-      setFilteredStocks([stockItem]);
-    } catch (err) {
-      console.error("API 데이터 불러오기 실패:", err);
-    }
+  // 종목 코드와 이름을 매핑
+  const stockNames: { [key: string]: string } = {
+    "005930": "삼성전자",
+    "000660": "SK 하이닉스",
+    "035420": "NAVER(네이버)",
+    "005380": "현대차",
+    "051910": "LG화학",
+    "035720": "카카오",
+    "012330": "삼성생명",
+    "003550": "삼성물산",
+    "006400": "삼성전기",
+    "005490": "POSCO(포스코)",
   };
 
-  fetchSamsung();
-}, []);
+  // 여러 종목 코드 배열
+  const stockCodes = Object.keys(stockNames);
 
+  useEffect(() => {
+    const fetchStocks = async () => {
+      try {
+        // 여러 종목 데이터를 비동기로 받아오기
+        const stockDataPromises = stockCodes.map((code) =>
+          fetch(`http://localhost:8000/stock/price/${code}`).then((res) => res.json())
+        );
 
+        // 모든 데이터가 준비될 때까지 기다림
+        const stockDataResponses = await Promise.all(stockDataPromises);
 
+        // 받은 데이터를 처리
+        const stockItems = stockDataResponses.map((data, index) => {
+          const stockData = data.output || data; // 응답 구조에 맞게 처리
 
-  // useEffect(() => {
-  //   const initialStocks = [
-  //     { name: "한화에어로스", price: 50000, change: 0.31, volume: "741123" },
-  //     { name: "삼성전자", price: 60000, change: -0.41, volume: "812455" },
-  //     { name: "LG화학", price: 45000, change: 1.12, volume: "512320" },
-  //   ];
-  //   setStocks(initialStocks);
-  //   setFilteredStocks(initialStocks);
-  // }, []);
+          return {
+            name: stockNames[stockCodes[index]], // 종목 이름을 매핑
+            price: Number(stockData.stck_prpr), // 현재가
+            change: Number(stockData.prdy_ctrt), // 전일대비 퍼센트 (%)
+            volume: stockData.acml_tr_pbmn, // 거래대금 (단위: 원)
+          };
+        });
+
+        setStocks(stockItems);
+        setFilteredStocks(stockItems);
+      } catch (err) {
+        console.error("API 데이터 불러오기 실패:", err);
+      }
+    };
+
+    fetchStocks();
+  }, []);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setSearch(e.target.value);
   };
-
-  // const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-  //   if (e.key === "Enter") {
-  //     const keyword = search.trim();
-  //     const result = stocks.filter(stock => stock.name.includes(keyword));
-  //     setFilteredStocks(result);
-  //   }
-  // };
 
   const sortBy = (field: keyof StockData) => {
     const sorted = [...filteredStocks].sort((a, b) => {
@@ -119,7 +104,7 @@ useEffect(() => {
     <div className="bg-white text-black min-h-screen p-4 text-xs">
       <Title title="거래소" bookmark={false} dictionary={false} />
 
-      <div className="max-w-md mx-auto p-4 bg-gray-100 rounded-2xl shadow-lg">
+      <div className="max-w-full mx-auto p-4 bg-gray-100 rounded-2xl shadow-lg">
         {/* 종목 검색 */}
         <div className="mb-4">
           <label className="block text-xs font-bold mb-1 text-orange-600">종목 검색</label>
@@ -134,22 +119,27 @@ useEffect(() => {
         </div>
 
         {/* 사용자 요약 정보 */}
-        <div className="bg-gray-200 p-4 rounded mb-4 grid grid-cols-2 gap-4 text-center">
-          <div>
-            <p className="text-gray-600">총 매수</p>
-            <p className="text-black font-bold">{portfolio.totalPurchase}</p>
+        <div className="bg-gray-200 p-4 rounded mb-4 grid sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+          <div className="flex justify-between">
+            <div className="flex items-center">
+              <p className="text-gray-600">총 매수 : </p>
+              <p className="text-black font-bold">{portfolio.totalPurchase}</p>
+            </div>
+            <div className="flex items-center">
+              <p className="text-gray-600">평가손익 :</p>
+              <p className="text-red-600 font-bold">{portfolio.profitLoss.toLocaleString()}</p>
+            </div>
           </div>
-          <div>
-            <p className="text-gray-600">평가손익</p>
-            <p className="text-red-600 font-bold">{portfolio.profitLoss.toLocaleString()}</p>
-          </div>
-          <div>
-            <p className="text-gray-600">총 평가</p>
-            <p className="text-black font-bold">{portfolio.totalEvaluation}</p>
-          </div>
-          <div>
-            <p className="text-gray-600">수익률</p>
-            <p className="text-red-600 font-bold">{portfolio.profitRate}%</p>
+
+          <div className="flex justify-between">
+            <div className="flex items-center">
+              <p className="text-gray-600">총 평가 :</p>
+              <p className="text-black font-bold">{portfolio.totalEvaluation}</p>
+            </div>
+            <div className="flex items-center">
+              <p className="text-gray-600">수익률 :</p>
+              <p className="text-red-600 font-bold">{portfolio.profitRate}%</p>
+            </div>
           </div>
         </div>
 
@@ -175,7 +165,7 @@ useEffect(() => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredStocks.map((stock, i) => (
-                <tr key={i} className="cursor-pointer" onClick={() => router.push("/stock-detail")}>  
+                <tr key={i} className="cursor-pointer" onClick={() => router.push("/stock-detail/" + stock.name)}>
                   <td className="p-2">{stock.name}</td>
                   <td className={`p-2 text-right ${getPriceColor(stock)}`}>{stock.price.toLocaleString()}</td>
                   <td className={`p-2 text-right ${getChangeColor(stock.change)}`}>{stock.change}%</td>
