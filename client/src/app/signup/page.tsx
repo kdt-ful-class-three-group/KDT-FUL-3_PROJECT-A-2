@@ -16,14 +16,35 @@ export default function SignupPage() {
   });
 
   const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
+  const [userIdAvailable, setUserIdAvailable] = useState<null | boolean>(null);
+
+  const checkUserId = async () => {
+    if (!form.userid) {
+      setUserIdAvailable(null);
+      return;
+    }
+    try {
+      const res = await fetch(`http://localhost:8000/users/${form.userid}`);
+      const data = await res.json();
+      if (data.exists) {
+        setUserIdAvailable(false);
+      } else {
+        setUserIdAvailable(true);
+      }
+    } catch (err) {
+      setUserIdAvailable(null);
+      console.log("아이디 중복 확인 에러:", err);
+    }
+  };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
-    const { name, value } = e.target;
-    const nextForm = { ...form, [name]: value };
-    setForm(nextForm);
-    if (name === "password" || name === "passwordCheck") {
-      if (nextForm.password && nextForm.passwordCheck) {
-        setPasswordMatch(nextForm.password === nextForm.passwordCheck);
+    setForm({ ...form, [e.target.name]: e.target.value });
+    if (e.target.name === "userid") {
+      setUserIdAvailable(null);
+    }
+    if (e.target.name === "password" || e.target.name === "passwordCheck") {
+      if (form.password && form.passwordCheck) {
+        setPasswordMatch(form.password === form.passwordCheck);
       } else {
         setPasswordMatch(null);
       }
@@ -65,12 +86,19 @@ export default function SignupPage() {
               onChange={handleChange}
             />
             <button
-              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2"
+              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
               type="button"
+              onClick={checkUserId}
             >
               중복확인
             </button>
           </div>
+          {userIdAvailable === true && (
+            <p className="text-green-600 text-xs mt-1">사용 가능한 아이디입니다.</p>
+          )}
+          {userIdAvailable === false && (
+            <p className="text-red-500 text-xs mt-1">사용할 수 없는 아이디입니다.</p>
+          )}
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">비밀번호</label>

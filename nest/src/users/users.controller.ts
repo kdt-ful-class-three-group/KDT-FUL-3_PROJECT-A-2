@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -9,6 +9,12 @@ export class UsersController {
   @Get()
   getHello(): string {
     return this.usersService.getHello();
+  }
+
+  @Get(":id")
+  async checkId(@Param('id') id: string, @Res() res) {
+    const isExists = await this.usersService.checkId(id);
+    return res.json(isExists)
   }
 
   @Post("register")
