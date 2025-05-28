@@ -41,21 +41,9 @@ export default function MarketDetailPage() {
         <h1 className="text-orange-500 text-xl font-bold">한화이글스</h1>
         <div className="text-3xl font-bold text-red-500">3,382</div>
         <div className="text-sm text-pink-500">0.56%</div>
-        {/* Nav */}
-        <div className="flex space-x-4 mt-4 text-gray-600 text-sm">
-          <span>주문</span>
-          <span>호가</span>
-          <span>차트</span>
-          <span className="text-black font-bold border-b-2 border-black">
-            시세
-          </span>
-          <span>정보</span>
-        </div>
+        {/* 컨포넌트롬 만들 탭메뉴 들어갈 자리 */}
         {/* 탭 */}
         <div className="mt-4 flex gap-2 items-center">
-          <span className="w-6 h-6 flex items-center justify-center border rounded-full text-sm">
-            1
-          </span>
           <button
             className={`px-4 py-1 rounded ${
               activeTab === "체결" ? "bg-blue-900 text-white" : "border"
