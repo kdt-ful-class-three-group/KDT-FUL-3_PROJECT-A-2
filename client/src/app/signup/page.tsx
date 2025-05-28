@@ -14,9 +14,19 @@ export default function SignupPage() {
     code: "",
     nickname: "",
   });
+  const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    const nextForm = { ...form, [name]: value };
+    setForm(nextForm);
+    if (name === "password" || name === "passwordCheck") {
+      if (nextForm.password && nextForm.passwordCheck) {
+        setPasswordMatch(nextForm.password === nextForm.passwordCheck);
+      } else {
+        setPasswordMatch(null);
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,6 +93,12 @@ export default function SignupPage() {
             <p className="text-[#1E3E62] text-[60%]">
               6~20자/영문 대문자, 소문자, 숫자, 특수문자 중 2가지 이상 조합
             </p>
+            {passwordMatch === false && (
+              <p className="text-red-500 text-xs mt-1">비밀번호가 일치하지 않습니다.</p>
+            )}
+            {passwordMatch === true && (
+              <p className="text-green-600 text-xs mt-1">비밀번호가 일치합니다.</p>
+            )}
           </div>
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
