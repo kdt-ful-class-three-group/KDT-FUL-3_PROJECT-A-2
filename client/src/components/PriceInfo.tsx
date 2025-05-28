@@ -35,11 +35,7 @@ export default function MarketDetailPage() {
     <div className="p-4">
       {/* Header */}
       <div className="border-b pb-4 mb-4">
-        <Title title="시세" bookmark={false} dictionary={false} />
-        <div className="text-left">
-          <div className="text-3xl font-bold text-red-500">3,382</div>
-          <div className="text-sm text-pink-500">0.56%</div>
-        </div>
+        <div className="text-left"></div>
 
         {/* 탭 메뉴 */}
         <div className="mt-4 flex gap-2 items-center justify-center">
