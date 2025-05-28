@@ -14,6 +14,7 @@ export default function SignupPage() {
     code: "",
     nickname: "",
   });
+
   const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
@@ -32,7 +33,7 @@ export default function SignupPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:8000/users", {
+      const res = await fetch("http://localhost:8000/users/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
