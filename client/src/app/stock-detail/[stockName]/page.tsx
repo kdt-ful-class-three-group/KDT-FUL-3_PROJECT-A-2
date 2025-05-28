@@ -37,7 +37,7 @@ export default function StockDetailPage() {
       />
 
       <div className="p-4">
-        {tab === "companyInfo" && <CompanyInfo />}
+        {tab === "companyInfo" && <CompanyInfo stockName={stockName}/>}
         {tab === "orderForm" && <OrderForm />}
         {tab === "orderBook" && <OrderBook />}
         {tab === "stockChart" && <StockChart />}
