@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 
@@ -11,9 +11,19 @@ export class UsersController {
     return this.usersService.getHello();
   }
 
-  @Post()
-  register(@Body() body: CreateUserDto, @Res() res): void {
-    this.usersService.setUsers(body);
-    res.redirect('http://localhost:3000/login');
+  @Get(":id")
+  async checkId(@Param('id') id: string, @Res() res) {
+    const isExists = await this.usersService.checkId(id);
+    return res.json(isExists)
+  }
+
+  @Post("register")
+  register(@Body() body: CreateUserDto, @Res() res) {
+    try {
+      this.usersService.setUsers(body);
+      res.status(200).json({ ok: true });
+    } catch (e) {
+      res.status(400).json({ ok: false, message: '회원가입 실패' });
+    }
   }
 }
