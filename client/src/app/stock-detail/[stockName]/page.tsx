@@ -2,7 +2,7 @@
 "use client";
 
 import React, {  useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation"; // ⭐ URL 파라미터 꺼낼 때 사용
+import { useParams, useRouter } from "next/navigation"; 
 
 import Title from "@/components/Title";
 import StockHeader from "@/components/StockHeader";
