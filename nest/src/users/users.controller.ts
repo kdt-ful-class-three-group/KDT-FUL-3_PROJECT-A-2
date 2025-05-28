@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Res } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SigninDto } from './dto/signin.dto';
@@ -11,7 +11,6 @@ export class UsersController {
   getHello(): string {
     return this.usersService.getHello();
   }
-
   @Post("signin")
   async Signin(@Body() data: SigninDto, @Res() res) {
     const isExist = await this.usersService.checkUser(data);
