@@ -12,7 +12,7 @@ export class UsersController {
     return this.usersService.getHello();
   }
 
-  @Get(":id")
+  @Get("check-id/:id")
   async checkId(@Param('id') id: string, @Res() res) {
     const isExists = await this.usersService.checkId(id);
     return res.json(isExists)

@@ -23,7 +23,7 @@ export default function SignupPage() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:8000/users/${form.userid}`);
+      const res = await fetch(`http://localhost:8000/users/check-id/${form.userid}`);
       const data = await res.json();
       if (data.exists) {
         setUserIdAvailable(false);
@@ -168,19 +168,26 @@ export default function SignupPage() {
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">닉네임</label>
-          <div className="w-full justify-around">
+          <div className="flex justify-between">
             <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
+              className="pl-2 rounded-lg border py-2"
               type="text"
               placeholder="닉네임"
               name="nickname"
               value={form.nickname}
               onChange={handleChange}
             />
-            <p className="text-[#1E3E62] text-[70%]">
-              사용 가능한 닉네임 입니다.
-            </p>
+            <button
+              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
+              type="button"
+              onClick={checkUserId}
+            >
+              중복확인
+            </button>
           </div>
+          <p className="text-[#1E3E62] text-[70%]">
+            사용 가능한 닉네임 입니다.
+          </p>
         </div>
         <button
           type="submit"
