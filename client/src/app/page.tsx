@@ -2,7 +2,7 @@
 import React from "react";
 
 export default function StockBookUI() {
-  const hogaData = Array(6).fill({
+  const hogaData = Array(20).fill({
     price: "3,382",
     percent: "0.80%",
     quantity: "48,441,604",
@@ -72,12 +72,16 @@ export default function StockBookUI() {
               <strong>당일저가:</strong> 4,984 (-1.55%)
             </div>
           </div> */}
-          <div className="flex-1 bg-white p-3 text-sm leading-6">
-            {infoList.map((item, index) => (
-              <div className="flex justify-between" key={index}>
-                <strong>{item.label}:</strong> {item.value}
-              </div>
-            ))}
+
+          <div className="flex-1 bg-white p-3 text-sm leading-tight h-48 flex items-end">
+            <div className="w-full">
+              {infoList.map((item, index) => (
+                <div className="flex justify-between mb-1" key={index}>
+                  <strong>{item.label}:</strong>
+                  <span>{item.value}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -121,6 +125,8 @@ export default function StockBookUI() {
           </div>
         </div>
       </div>
+      {/*  */}
+      <div className="fixed bottom-0 left-0 w-full bg-white p-4 shadow-md"></div>
     </div>
   );
 }
