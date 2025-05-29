@@ -2,7 +2,7 @@
 import Input from "@/components/Input";
 import Title from "@/components/Title";
 import { SignupForm } from "@/interface/SignupForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SignupPage() {
   const [form, setForm] = useState<SignupForm>({
@@ -56,17 +56,18 @@ export default function SignupPage() {
     }
   };
 
+  useEffect(() => {
+    if (form.password && form.passwordCheck) {
+      setPasswordMatch(form.password === form.passwordCheck);
+    } else {
+      setPasswordMatch(null);
+    }
+  }, [form.password, form.passwordCheck]);
+
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (e.target.name === "userid") {
       setUserIdAvailable(null);
-    }
-    if (e.target.name === "password" || e.target.name === "passwordCheck") {
-      if (form.password && form.passwordCheck) {
-        setPasswordMatch(form.password === form.passwordCheck);
-      } else {
-        setPasswordMatch(null);
-      }
     }
   };
 
