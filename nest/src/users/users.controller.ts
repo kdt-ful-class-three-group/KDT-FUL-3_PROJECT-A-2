@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Res, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SigninDto } from './dto/signin.dto';
+import * as bcrypt from "bcryptjs";
 
 @Controller('users')
 export class UsersController {
@@ -31,8 +32,12 @@ export class UsersController {
   }
 
   @Post("register")
-  register(@Body() body: CreateUserDto, @Res() res) {
+  async register(@Body() body: CreateUserDto, @Res() res) {
+
+    const hash = await bcrypt.genSalt(10);
+    body.password = await bcrypt.hash(body.password, hash);
     try {
+
       this.usersService.setUsers(body);
       res.status(200).json({ ok: true });
     } catch (e) {

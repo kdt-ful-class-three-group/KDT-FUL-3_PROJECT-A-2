@@ -19,7 +19,7 @@ export class UsersService {
     }
   }
 
-  
+
   async checkNick(nickname: string): Promise<{ exists: boolean }> {
     const sql = "SELECT * FROM member WHERE nickname = $1";
     try {
