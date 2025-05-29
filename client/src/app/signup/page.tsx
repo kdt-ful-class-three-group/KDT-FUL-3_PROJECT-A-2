@@ -1,11 +1,10 @@
-"use client"
-import Input from "@/components/input";
-import Title from "@/components/Title"
+"use client";
+import Input from "@/components/Input";
+import Title from "@/components/Title";
 import { SignupForm } from "@/interface/SignupForm";
 import { useState } from "react";
 
 export default function SignupPage() {
-
   const [form, setForm] = useState<SignupForm>({
     userid: "",
     password: "",
@@ -91,7 +90,6 @@ export default function SignupPage() {
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-4"
-
               type="button"
               onClick={checkUserId}
             >
@@ -99,10 +97,14 @@ export default function SignupPage() {
             </button>
           </div>
           {userIdAvailable === true && (
-            <p className="text-green-600 text-xs mt-1">사용 가능한 아이디입니다.</p>
+            <p className="text-green-600 text-xs mt-1">
+              사용 가능한 아이디입니다.
+            </p>
           )}
           {userIdAvailable === false && (
-            <p className="text-red-500 text-xs mt-1">사용할 수 없는 아이디입니다.</p>
+            <p className="text-red-500 text-xs mt-1">
+              사용할 수 없는 아이디입니다.
+            </p>
           )}
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
@@ -128,10 +130,14 @@ export default function SignupPage() {
               6~20자/영문 대문자, 소문자, 숫자, 특수문자 중 2가지 이상 조합
             </p>
             {passwordMatch === false && (
-              <p className="text-red-500 text-xs mt-1">비밀번호가 일치하지 않습니다.</p>
+              <p className="text-red-500 text-xs mt-1">
+                비밀번호가 일치하지 않습니다.
+              </p>
             )}
             {passwordMatch === true && (
-              <p className="text-green-600 text-xs mt-1">비밀번호가 일치합니다.</p>
+              <p className="text-green-600 text-xs mt-1">
+                비밀번호가 일치합니다.
+              </p>
             )}
           </div>
         </div>
@@ -175,7 +181,9 @@ export default function SignupPage() {
               value={form.nickname}
               onChange={handleChange}
             />
-            <p className="text-[#1E3E62] text-[70%]">사용 가능한 닉네임 입니다.</p>
+            <p className="text-[#1E3E62] text-[70%]">
+              사용 가능한 닉네임 입니다.
+            </p>
           </div>
         </div>
         <button
@@ -186,5 +194,5 @@ export default function SignupPage() {
         </button>
       </form>
     </div>
-  )
+  );
 }

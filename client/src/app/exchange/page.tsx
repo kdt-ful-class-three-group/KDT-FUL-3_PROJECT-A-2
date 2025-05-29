@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Nav from "@/components/Nav";
 import Title from "@/components/Title";
-import Input from "@/components/input";
+import Input from "@/components/Input";
 import { useRouter } from "next/navigation";
 
 interface StockData {
@@ -49,7 +49,9 @@ export default function ExchangePage() {
       try {
         // 여러 종목 데이터를 비동기로 받아오기
         const stockDataPromises = stockCodes.map((code) =>
-          fetch(`http://localhost:8000/stock/price/${code}`).then((res) => res.json())
+          fetch(`http://localhost:8000/stock/price/${code}`).then((res) =>
+            res.json()
+          )
         );
 
         // 모든 데이터가 준비될 때까지 기다림
@@ -83,9 +85,15 @@ export default function ExchangePage() {
 
   const sortBy = (field: keyof StockData) => {
     const sorted = [...filteredStocks].sort((a, b) => {
-      const aVal = field === "volume" ? parseInt(a[field].replace(/[^0-9]/g, "")) : a[field];
-      const bVal = field === "volume" ? parseInt(b[field].replace(/[^0-9]/g, "")) : b[field];
-      return sortAsc ? (aVal > bVal ? 1 : -1) : (aVal < bVal ? 1 : -1);
+      const aVal =
+        field === "volume"
+          ? parseInt(a[field].replace(/[^0-9]/g, ""))
+          : a[field];
+      const bVal =
+        field === "volume"
+          ? parseInt(b[field].replace(/[^0-9]/g, ""))
+          : b[field];
+      return sortAsc ? (aVal > bVal ? 1 : -1) : aVal < bVal ? 1 : -1;
     });
     setFilteredStocks(sorted);
     setSortField(field);
@@ -107,7 +115,9 @@ export default function ExchangePage() {
       <div className="max-w-full mx-auto p-4 bg-gray-100 rounded-2xl shadow-lg">
         {/* 종목 검색 */}
         <div className="mb-4">
-          <label className="block text-xs font-bold mb-1 text-orange-600">종목 검색</label>
+          <label className="block text-xs font-bold mb-1 text-orange-600">
+            종목 검색
+          </label>
           <Input
             type="text"
             name="search"
@@ -127,14 +137,18 @@ export default function ExchangePage() {
             </div>
             <div className="flex items-center">
               <p className="text-gray-600">평가손익 :</p>
-              <p className="text-red-600 font-bold">{portfolio.profitLoss.toLocaleString()}</p>
+              <p className="text-red-600 font-bold">
+                {portfolio.profitLoss.toLocaleString()}
+              </p>
             </div>
           </div>
 
           <div className="flex justify-between">
             <div className="flex items-center">
               <p className="text-gray-600">총 평가 :</p>
-              <p className="text-black font-bold">{portfolio.totalEvaluation}</p>
+              <p className="text-black font-bold">
+                {portfolio.totalEvaluation}
+              </p>
             </div>
             <div className="flex items-center">
               <p className="text-gray-600">수익률 :</p>
@@ -151,25 +165,52 @@ export default function ExchangePage() {
                 <th className="p-2">종목</th>
                 <th className="p-2 text-right">
                   현재가
-                  <button onClick={() => sortBy("price")} className="ml-3 text-xs">▲▼</button>
+                  <button
+                    onClick={() => sortBy("price")}
+                    className="ml-3 text-xs"
+                  >
+                    ▲▼
+                  </button>
                 </th>
                 <th className="p-2 text-right">
                   전일대비
-                  <button onClick={() => sortBy("change")} className="ml-1 text-xs">▲▼</button>
+                  <button
+                    onClick={() => sortBy("change")}
+                    className="ml-1 text-xs"
+                  >
+                    ▲▼
+                  </button>
                 </th>
                 <th className="p-2 text-right">
                   거래대금
-                  <button onClick={() => sortBy("volume")} className="ml-1 text-xs">▲▼</button>
+                  <button
+                    onClick={() => sortBy("volume")}
+                    className="ml-1 text-xs"
+                  >
+                    ▲▼
+                  </button>
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredStocks.map((stock, i) => (
-                <tr key={i} className="cursor-pointer" onClick={() => router.push("/stock-detail/" + stock.name)}>
+                <tr
+                  key={i}
+                  className="cursor-pointer"
+                  onClick={() => router.push("/stock-detail/" + stock.name)}
+                >
                   <td className="p-2">{stock.name}</td>
-                  <td className={`p-2 text-right ${getPriceColor(stock)}`}>{stock.price.toLocaleString()}</td>
-                  <td className={`p-2 text-right ${getChangeColor(stock.change)}`}>{stock.change}%</td>
-                  <td className="p-2 text-right text-blue-600">{Number(stock.volume).toLocaleString()}백만</td>
+                  <td className={`p-2 text-right ${getPriceColor(stock)}`}>
+                    {stock.price.toLocaleString()}
+                  </td>
+                  <td
+                    className={`p-2 text-right ${getChangeColor(stock.change)}`}
+                  >
+                    {stock.change}%
+                  </td>
+                  <td className="p-2 text-right text-blue-600">
+                    {Number(stock.volume).toLocaleString()}백만
+                  </td>
                 </tr>
               ))}
             </tbody>
