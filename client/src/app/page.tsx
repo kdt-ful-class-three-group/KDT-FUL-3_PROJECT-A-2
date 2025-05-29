@@ -19,8 +19,8 @@ export default function StockBookUI() {
       <div className="overflow-hidden rounded-md shadow-md border border-gray-200">
         {/* 🔵 상단: 파란 호가 + 거래 정보 */}
         <div className="flex">
-          {/* 파란 호가 박스 */}
-          <div className="flex-1 bg-[#e3f2ff] p-2 flex flex-col gap-2">
+          {/* 파란 호가 박스 (역순 표시됨) */}
+          <div className="flex-1 bg-[#e3f2ff] p-2 flex flex-col-reverse gap-2">
             {hogaData.map((_, i) => (
               <div key={i} className="flex items-center gap-2">
                 <span className="text-red-500 font-bold w-[55px]">3,382</span>
