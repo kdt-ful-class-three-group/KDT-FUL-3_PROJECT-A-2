@@ -1,6 +1,7 @@
+"use client";
 import React from "react";
 
-const StockBookUI = () => {
+export default function StockBookUI() {
   const hogaData = Array(6).fill({
     price: "3,382",
     percent: "0.80%",
@@ -10,36 +11,29 @@ const StockBookUI = () => {
   const trades = Array(8).fill({ price: "328,000", qty: 2 });
   const buyCount = 6;
   const sellCount = 2;
-  const vp = ((buyCount / sellCount) * 100).toFixed(0); // 체결강도 계산
+  const vp = ((buyCount / sellCount) * 100).toFixed(0);
 
   return (
-    <div style={styles.container}>
-      {/* 상단 제목
-      <div style={styles.header}>
-        <div style={styles.company}>한화이글스</div>
-        <div style={styles.priceBox}>
-          <span style={styles.price}>3,382</span>
-          <span style={styles.percent}>0.56%</span>
-        </div>
-      </div> */}
-
+    <div className="font-sans text-[#222] max-w-[720px] mx-auto p-4 bg-[#f2f2f2] rounded-lg shadow-md">
       {/* 호가 + 정보 */}
-      <div style={styles.orderSection}>
+      <div className="flex gap-4 items-start">
         {/* 파란 호가 */}
-        <div style={styles.hogaBlockLeft}>
+        <div className="flex-1 bg-[#e3f2ff] p-2 flex flex-col gap-2 rounded-md">
           {hogaData.map((_, i) => (
-            <div key={i} style={styles.blueRow}>
-              <span style={styles.hogaPriceRed}>3,382</span>
-              <div style={styles.hogaBarBoxBlue}>
-                <div style={styles.hogaBarBlue}></div>
-                <span style={styles.hogaQty}>48,441,604</span>
+            <div key={i} className="flex items-center gap-2">
+              <span className="text-red-500 font-bold w-[55px]">3,382</span>
+              <div className="relative bg-[#cce0f7] flex-1 h-5 rounded-md">
+                <div className="absolute left-0 top-0 bottom-0 w-[60%] bg-[#005baf] rounded-l-md" />
+                <span className="absolute right-1 top-[2px] text-white text-[11px] font-bold">
+                  48,441,604
+                </span>
               </div>
             </div>
           ))}
         </div>
 
         {/* 오른쪽 거래 정보 */}
-        <div style={styles.marketInfoBox}>
+        <div className="flex-1 bg-white p-3 text-sm leading-6 rounded-md shadow-sm">
           <div>
             <strong>거래량:</strong> 223,215,046 XRP
           </div>
@@ -64,200 +58,49 @@ const StockBookUI = () => {
         </div>
       </div>
 
-      {/* 하단 체결강도 & 체결내역 */}
-      <div style={styles.tradeBox}>
-        {/* 왼쪽 체결강도 + 체결가/체결량 */}
-        <div style={styles.tradeLeft}>
-          <div style={styles.vpTitle}>
-            체결강도 <span style={styles.tradeVP}>{vp}%</span>
+      {/* 하단 체결강도 & 매도 박스 (위치 바뀜) */}
+      <div className="flex bg-white rounded-md mt-4 p-3 gap-4">
+        {/* 1️⃣ 빨간 매도 체결 박스 왼쪽 */}
+        <div className="flex-[1.5] flex flex-col gap-1">
+          {trades.map((_, i) => (
+            <div
+              key={i}
+              className="flex justify-between items-center bg-red-100 text-sm p-2 rounded"
+            >
+              <span className="text-red-500 font-bold">3,382</span>
+              <span className="text-gray-500 text-xs">0.80%</span>
+              <span className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                48,441,604
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* 2️⃣ 중앙 - 등락률만 표시 */}
+        <div className="flex-1 flex flex-col gap-1 text-xs justify-start">
+          {trades.map((_, i) => (
+            <div key={i} className="flex justify-end text-gray-500">
+              0.80%
+            </div>
+          ))}
+        </div>
+
+        {/* 3️⃣ 체결강도 + 체결가/체결량 오른쪽 */}
+        <div className="flex-[0.8] text-xs pl-2">
+          <div className="mb-2 font-semibold text-sm">
+            체결강도 <span className="text-blue-600 font-bold ml-1">{vp}%</span>
           </div>
           {trades.map((t, i) => (
-            <div key={i} style={styles.tradeRow}>
+            <div
+              key={i}
+              className="flex justify-between bg-gray-50 px-2 py-1 rounded-sm mb-[2px]"
+            >
               <span>{t.price}</span>
               <span>{t.qty}</span>
-            </div>
-          ))}
-        </div>
-
-        {/* 가운데 현재가/등락률 */}
-        <div style={styles.tradeCenter}>
-          {trades.map((_, i) => (
-            <div key={i} style={styles.centerRow}>
-              {/* <span>3,382</span> */}
-              <span style={styles.percentGray}>0.80%</span>
-            </div>
-          ))}
-        </div>
-
-        {/* 오른쪽 매도 체결 박스 */}
-        <div style={styles.tradeRight}>
-          {trades.map((_, i) => (
-            <div key={i} style={styles.sellBox}>
-              <span style={styles.hogaPriceRed}>3,382</span>
-              <span style={styles.percentGray}>0.80%</span>
-              <span style={styles.hogaQtyBox}>48,441,604</span>
             </div>
           ))}
         </div>
       </div>
     </div>
   );
-};
-
-export default StockBookUI;
-
-const styles: { [key: string]: React.CSSProperties } = {
-  container: {
-    fontFamily: "Arial, sans-serif",
-    padding: "16px",
-    backgroundColor: "#f2f2f2",
-    color: "#222",
-    maxWidth: "720px",
-    margin: "auto",
-    borderRadius: "8px",
-    boxShadow: "0 0 8px rgba(0, 0, 0, 0.05)",
-  },
-  header: {
-    textAlign: "center",
-    marginBottom: "16px",
-  },
-  company: {
-    fontSize: "20px",
-    color: "#ff6600",
-    fontWeight: "bold",
-  },
-  priceBox: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "8px",
-    fontSize: "20px",
-    color: "#d03b3b",
-  },
-  price: { fontWeight: "bold", fontSize: "28px" },
-  percent: { fontSize: "16px" },
-
-  orderSection: {
-    display: "flex",
-    gap: "16px",
-    alignItems: "flex-start",
-  },
-  hogaBlockLeft: {
-    flex: 1,
-    backgroundColor: "#e3f2ff",
-    padding: "8px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "8px",
-    borderRadius: "6px",
-  },
-  blueRow: {
-    display: "flex",
-    alignItems: "center",
-    gap: "6px",
-  },
-  hogaPriceRed: {
-    color: "#d03b3b",
-    fontWeight: "bold",
-    width: "55px",
-  },
-  hogaBarBoxBlue: {
-    backgroundColor: "#cce0f7",
-    flex: 1,
-    height: "18px",
-    borderRadius: "4px",
-    position: "relative",
-  },
-  hogaBarBlue: {
-    width: "60%",
-    height: "100%",
-    backgroundColor: "#005baf",
-    borderRadius: "4px 0 0 4px",
-  },
-  hogaQty: {
-    fontSize: "11px",
-    color: "#fff",
-    position: "absolute",
-    right: "6px",
-    top: "2px",
-    fontWeight: "bold",
-  },
-  marketInfoBox: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-    padding: "12px",
-    fontSize: "13px",
-    lineHeight: "1.6",
-    borderRadius: "6px",
-    boxShadow: "0 0 4px rgba(0, 0, 0, 0.1)",
-  },
-
-  // 하단 체결 내역
-  tradeBox: {
-    display: "flex",
-    marginTop: "16px",
-    backgroundColor: "#fff",
-    padding: "10px",
-    borderRadius: "6px",
-  },
-  tradeLeft: {
-    flex: 0.8,
-    fontSize: "12px",
-    paddingRight: "6px",
-  },
-  vpTitle: {
-    fontWeight: "bold",
-    marginBottom: "6px",
-    fontSize: "13px",
-  },
-  tradeRow: {
-    display: "flex",
-    justifyContent: "space-between",
-    margin: "2px 0",
-    padding: "2px 4px",
-    backgroundColor: "#f9f9f9",
-    borderRadius: "4px",
-  },
-  tradeCenter: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    gap: "4px",
-    fontSize: "13px",
-  },
-  centerRow: {
-    display: "flex",
-    justifyContent: "space-between",
-  },
-  percentGray: {
-    color: "#888",
-    fontSize: "12px",
-  },
-  tradeRight: {
-    flex: 1.5,
-    display: "flex",
-    flexDirection: "column",
-    gap: "4px",
-  },
-  sellBox: {
-    backgroundColor: "#ffe5e5",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: "4px 6px",
-    borderRadius: "4px",
-    fontSize: "13px",
-  },
-  hogaQtyBox: {
-    backgroundColor: "#ff3c3c",
-    padding: "2px 6px",
-    color: "#fff",
-    borderRadius: "4px",
-    fontSize: "12px",
-    fontWeight: "bold",
-  },
-  tradeVP: {
-    fontWeight: "bold",
-    color: "#3366ff",
-    marginLeft: "4px",
-  },
-};
+}
