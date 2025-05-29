@@ -31,8 +31,12 @@ export class UsersController {
   }
 
   @Post("register")
-  register(@Body() body: CreateUserDto, @Res() res): void {
-    this.usersService.setUsers(body);
-    res.redirect('http://localhost:3000/login');
+  register(@Body() body: CreateUserDto, @Res() res) {
+    try {
+      this.usersService.setUsers(body);
+      res.status(200).json({ ok: true });
+    } catch (e) {
+      res.status(400).json({ ok: false, message: '회원가입 실패' });
+    }
   }
 }
