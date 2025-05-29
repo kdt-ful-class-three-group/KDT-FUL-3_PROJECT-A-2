@@ -19,6 +19,17 @@ export class UsersService {
     }
   }
 
+  
+  async checkNick(nickname: string): Promise<{ exists: boolean }> {
+    const sql = "SELECT * FROM member WHERE nickname = $1";
+    try {
+      const result = await pool.query(sql, [nickname]);
+      return { exists: result.rows.length > 0 };
+    } catch (error) {
+      throw error;
+    }
+  }
+
   setUsers(userData: CreateUserDto): void {
     console.log('회원가입 데이터:', userData);
     const sql = 'INSERT INTO member (user_id, password, phone_number, nickname) VALUES ($1, $2, $3, $4)';
