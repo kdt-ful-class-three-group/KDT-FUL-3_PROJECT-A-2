@@ -5,23 +5,16 @@ import { SigninDto } from './dto/signin.dto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Get()
   getHello(): string {
     return this.usersService.getHello();
   }
-
-  @Get(":id")
-  async checkId(@Param('id') id: string, @Res() res) {
-    const isExists = await this.usersService.checkId(id);
-    return res.json(isExists)
-  }
-
   @Post("signin")
   async Signin(@Body() data: SigninDto, @Res() res) {
     const isExist = await this.usersService.checkUser(data);
-    res.json({ ok: isExist });
+    res.json({ok : isExist});
   }
 
   @Post("register")
