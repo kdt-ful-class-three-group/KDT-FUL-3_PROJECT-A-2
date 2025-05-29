@@ -1,6 +1,6 @@
 
 "use client"
-import Input from "@/components/input";
+import Input from "@/components/Input";
 import Title from "@/components/Title";
 import { LoginForm } from "@/interface/LoginForm";
 import { useState } from "react";
