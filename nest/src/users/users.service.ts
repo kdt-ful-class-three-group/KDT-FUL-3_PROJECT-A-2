@@ -33,6 +33,9 @@ export class UsersService {
 
   async setUsers(userData: CreateUserDto): Promise<boolean> {
     const sql = 'INSERT INTO member (user_id, password, phone_number, nickname) VALUES ($1, $2, $3, $4)';
+    const hash = await bcrypt.genSalt(10);
+    userData.password = await bcrypt.hash(userData.password, hash);
+
     try {
       await pool.query(sql, [userData.userid, userData.password, userData.phone, userData.nickname]);
       return true;
@@ -43,14 +46,13 @@ export class UsersService {
   }
 
   async checkUser(data: SigninDto): Promise<boolean> {
-    // 1. user_id로 회원정보 조회
     const sql = "SELECT * FROM member WHERE user_id = $1";
     const result = await pool.query(sql, [data.userid]);
-    if (result.rows.length === 0) return false; // 아이디 없음
 
+    if (result.rows.length === 0) return false;
     const user = result.rows[0];
-    // 2. bcrypt로 비밀번호 비교
     const isMatch = await bcrypt.compare(data.password, user.password);
+
     return isMatch;
   }
 }
