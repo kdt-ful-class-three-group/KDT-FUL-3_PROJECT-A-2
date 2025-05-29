@@ -18,6 +18,12 @@ export class UsersController {
     return res.json(isExists)
   }
 
+  @Get("check-nick/:nick")
+  async checkNick(@Param('nick') nickname: string, @Res() res) {
+    const isExists = await this.usersService.checkNick(nickname);
+    return res.json(isExists)
+  }
+
   @Post("signin")
   async Signin(@Body() data: SigninDto, @Res() res) {
     const isExist = await this.usersService.checkUser(data);

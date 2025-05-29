@@ -16,6 +16,7 @@ export default function SignupPage() {
 
   const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
   const [userIdAvailable, setUserIdAvailable] = useState<null | boolean>(null);
+  const [userNickAvailable, setUserNickAvailable] = useState<null | boolean>(null);
 
   const checkUserId = async () => {
     if (!form.userid) {
@@ -32,6 +33,25 @@ export default function SignupPage() {
       }
     } catch (err) {
       setUserIdAvailable(null);
+      console.log("아이디 중복 확인 에러:", err);
+    }
+  };
+
+  const checkNick = async () => {
+    if (!form.nickname) {
+      setUserNickAvailable(null);
+      return;
+    }
+    try {
+      const res = await fetch(`http://localhost:8000/users/check-id/${form.nickname}`);
+      const data = await res.json();
+      if (data.exists) {
+        setUserNickAvailable(false);
+      } else {
+        setUserNickAvailable(true);
+      }
+    } catch (err) {
+      setUserNickAvailable(null);
       console.log("아이디 중복 확인 에러:", err);
     }
   };
@@ -180,14 +200,21 @@ export default function SignupPage() {
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
               type="button"
-              onClick={checkUserId}
+              onClick={checkNick}
             >
               중복확인
             </button>
           </div>
-          <p className="text-[#1E3E62] text-[70%]">
-            사용 가능한 닉네임 입니다.
-          </p>
+          {userNickAvailable === false && (
+            <p className="text-red-500 text-xs mt-1">
+              사용 할 수 없는 닉네임 입니다.
+            </p>
+          )}
+          {userNickAvailable === true && (
+            <p className="text-green-600 text-xs mt-1">
+              사용 핤 수 있는 닉네임 입니다.
+            </p>
+          )}
         </div>
         <button
           type="submit"
