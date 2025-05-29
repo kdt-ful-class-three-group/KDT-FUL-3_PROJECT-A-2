@@ -5,8 +5,7 @@ export default function Home() {
   return (
     <div className="m-auto">
       {/* body 컬러 변경해야함 */}
-      <Title title="한화이글스" />
-
+      ㅋ
       <Nav />
     </div>
   );
