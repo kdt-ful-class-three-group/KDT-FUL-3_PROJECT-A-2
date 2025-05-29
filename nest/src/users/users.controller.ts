@@ -33,14 +33,13 @@ export class UsersController {
 
   @Post("register")
   async register(@Body() body: CreateUserDto, @Res() res) {
-
     const hash = await bcrypt.genSalt(10);
     body.password = await bcrypt.hash(body.password, hash);
-    try {
 
-      this.usersService.setUsers(body);
+    const result = await this.usersService.setUsers(body);
+    if (result) {
       res.status(200).json({ ok: true });
-    } catch (e) {
+    } else {
       res.status(400).json({ ok: false, message: '회원가입 실패' });
     }
   }

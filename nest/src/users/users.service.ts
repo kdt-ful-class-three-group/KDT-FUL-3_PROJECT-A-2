@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SigninDto } from './dto/signin.dto';
 import { pool } from 'src/DB/DB';
+import * as bcrypt from "bcryptjs";
 
 @Injectable()
 export class UsersService {
@@ -30,25 +31,26 @@ export class UsersService {
     }
   }
 
-  setUsers(userData: CreateUserDto): void {
-    console.log('회원가입 데이터:', userData);
+  async setUsers(userData: CreateUserDto): Promise<boolean> {
     const sql = 'INSERT INTO member (user_id, password, phone_number, nickname) VALUES ($1, $2, $3, $4)';
-    pool.query(sql, [userData.userid, userData.password, userData.phone, userData.nickname])
-      .then(() => {
-        console.log('회원가입 성공');
-      })
-      .catch((error) => {
-        console.error('회원가입 에러:', error);
-      });
+    try {
+      await pool.query(sql, [userData.userid, userData.password, userData.phone, userData.nickname]);
+      return true;
+    } catch (error) {
+      console.error('회원가입 에러:', error);
+      return false;
+    }
   }
 
-  async checkUser(data: SigninDto) {
-    const sql = 'SELECT * FROM member WHERE user_id = $1 AND password = $2';
-    try {
-      const result = await pool.query(sql, [data.userid, data.password]);
-      return result.rows.length > 0;
-    } catch (error) {
-      throw error;
-    }
+  async checkUser(data: SigninDto): Promise<boolean> {
+    // 1. user_id로 회원정보 조회
+    const sql = "SELECT * FROM member WHERE user_id = $1";
+    const result = await pool.query(sql, [data.userid]);
+    if (result.rows.length === 0) return false; // 아이디 없음
+
+    const user = result.rows[0];
+    // 2. bcrypt로 비밀번호 비교
+    const isMatch = await bcrypt.compare(data.password, user.password);
+    return isMatch;
   }
 }
