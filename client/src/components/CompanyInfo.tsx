@@ -1,8 +1,10 @@
 // src/components/CompanyInfo.tsx
+// next.js 13 이상에서 클라이언트 컴포넌트로 선언
 "use client";
 
 import React, { useEffect, useState } from "react";
 
+// 재무정보 타입
 interface Financial {
   revenue: string;
   operatingProfit: string;
@@ -13,6 +15,7 @@ interface Financial {
   low52w: string;
 }
 
+// 회사 기본정보 타입 정의
 interface CompanyInfoType {
   code?: string;
   listingDate?: string;
@@ -23,6 +26,7 @@ interface CompanyInfoType {
   financial?: Financial;
 }
 
+// 뉴스 아이템 타입 정리
 interface NewsItem {
   title: string;
   link: string;
@@ -34,38 +38,43 @@ interface CompanyInfoProps {
 }
 
 export default function CompanyInfo({ stockName }: CompanyInfoProps) {
+  // 회사 정보 상태
   const [info, setInfo] = useState<CompanyInfoType | null>(null);
   const [loadingInfo, setLoadingInfo] = useState<boolean>(true);
 
+  // 뉴스 목록 상태
   const [newsList, setNewsList] = useState<NewsItem[]>([]);
   const [loadingNews, setLoadingNews] = useState<boolean>(true);
 
-  // 값이 없으면 '-' 반환
+  // 값이 없으면 '-' 반환하기
   const get = (val?: string) => (val && val !== "" ? val : "-");
 
-  // 1) 회사 기본 정보 로드
+  // 회사 기본 정보 fetch 로드
   useEffect(() => {
     setLoadingInfo(true);
-    fetch(/api/company/${stockName})
+    fetch(`/api/company/${stockName}`)
       .then((res) => res.json())
       .then((data: CompanyInfoType) => setInfo(data))
       .catch(() => setInfo({}))
       .finally(() => setLoadingInfo(false));
   }, [stockName]);
 
-  // 2) 뉴스 로드
+  // 뉴스 목록 fetch 로드
   useEffect(() => {
     setLoadingNews(true);
-    fetch(/api/news/${stockName})
+   fetch(`http://localhost:8000/news/${encodeURIComponent(stockName)}`)
+      // 응답을 JSON으로 파싱
       .then((res) => res.json())
-      .then((json) => {
-        console.log("🔍 newsList:", json.items); // 개발자 도구 콘솔에도 찍히도록
-        setNewsList(json.items || []);
-      })
+      // .then((items: any[]) => setNewsList(items))
+      // .then((res) => res.json() as Promise<NewsItem[]>)
+      // 파싱된 뉴스 배열을 상태로 설정하고 화면에 표시될 데이터 저장
+      .then((items) => setNewsList(items))
+      // 에러 발생 시 빈 배열로 설정하고 뉴스 없음 표시
       .catch(() => setNewsList([]))
       .finally(() => setLoadingNews(false));
   }, [stockName]);
 
+// 로딩 중 표시
   if (loadingInfo) return <div>정보 로딩 중…</div>;
 
   return (
@@ -143,7 +152,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
             <dt>52주 최고/최저가</dt>
             <dd className="font-medium">
               {info?.financial
-                ? ${get(info.financial.high52w)} / ${get(info.financial.low52w)}
+                ? `${get(info.financial.high52w)} / ${get(info.financial.low52w)}`
                 : "-"}
             </dd>
           </div>
@@ -174,13 +183,6 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
             ))}
           </ul>
         )}
-        {/* ————————————————————————————— */}
-        {/* 🔧 임시: raw JSON 확인용 */}
-        {/* {!loadingNews && (
-          <pre className="mt-4 p-2 bg-gray-100 text-xs overflow-auto">
-            {JSON.stringify(newsList, null, 2)}
-          </pre>
-        )} */}
       </section>
 
     </div>
