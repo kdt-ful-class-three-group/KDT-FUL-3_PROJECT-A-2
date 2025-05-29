@@ -1,9 +1,10 @@
 "use client";
-
+import { useStockApi } from "@/hooks/useStockApi";
 import React from "react";
 import {
   Chart as ChartJS,
   LineElement,
+  BarElement,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -12,11 +13,13 @@ import {
   Legend,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
-import { Line } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 ChartJS.register(
   LineElement,
+  BarElement,
   CategoryScale,
+
   LinearScale,
   PointElement,
   TimeScale,
@@ -24,19 +27,25 @@ ChartJS.register(
   Legend
 );
 
-type Props = {
-  data: { date: string; price: number }[];
-};
+// type Props = {
+//   data: { date: string; price: number }[];
+// };
 
-export default function Chart({ data }: Props) {
+export default function Chart() {
+  const { stocks } = useStockApi();
+  console.log(stocks);
+  const validStocks = stocks.filter(
+    (item) => typeof item.price === "number" && !isNaN(item.price)
+  );
+
   const chartData = {
-    labels: data.map((item) => item.date),
+    labels: validStocks.map((item) => item.name),
     datasets: [
       {
         label: "주가",
-        data: data.map((item) => item.price),
+        data: validStocks.map((item) => item.price),
         borderColor: "red",
-        backgroundColor: "#F1F1F1",
+        backgroundColor: "red",
         tension: 0.3,
         fill: true,
       },
@@ -44,37 +53,23 @@ export default function Chart({ data }: Props) {
   };
 
   const options = {
-    type: "bar",
     responsive: true,
-    // scales: {
-    //   x: {
-    //     type: "time" as const,
-    //     time: {
-    //       unit: "day",
-    //       tooltipFormat: "yyyy-MM-dd",
-    //     },
-    //     title: {
-    //       display: true,
-    //       text: "날짜",
-    //     },
-    //   },
-    //   y: {
-    //     title: {
-    //       display: true,
-    //       text: "가격 (₩)",
-    //     },
-    //   },
-    // },
-    plugins: {
-      legend: {
-        position: "top",
+    scales: {
+      x: {
+        type: "category" as const, // "time" → "category"
+        title: {
+          display: true,
+          text: "종목명",
+        },
       },
-      title: {
-        display: true,
-        text: "Chart.js Floating Bar Chart",
+      y: {
+        title: {
+          display: true,
+          text: "가격 (₩)",
+        },
       },
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return <Bar data={chartData} options={options} />;
 }
