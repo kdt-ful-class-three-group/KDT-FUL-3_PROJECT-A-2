@@ -46,7 +46,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
   // 1) 회사 기본 정보 로드
   useEffect(() => {
     setLoadingInfo(true);
-    fetch(`/api/company/${stockName}`)
+    fetch(/api/company/${stockName})
       .then((res) => res.json())
       .then((data: CompanyInfoType) => setInfo(data))
       .catch(() => setInfo({}))
@@ -56,9 +56,12 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
   // 2) 뉴스 로드
   useEffect(() => {
     setLoadingNews(true);
-    fetch(`/api/news/${stockName}`)
+    fetch(/api/news/${stockName})
       .then((res) => res.json())
-      .then((json) => setNewsList(json.items || []))
+      .then((json) => {
+        console.log("🔍 newsList:", json.items); // 개발자 도구 콘솔에도 찍히도록
+        setNewsList(json.items || []);
+      })
       .catch(() => setNewsList([]))
       .finally(() => setLoadingNews(false));
   }, [stockName]);
@@ -140,7 +143,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
             <dt>52주 최고/최저가</dt>
             <dd className="font-medium">
               {info?.financial
-                ? `${get(info.financial.high52w)} / ${get(info.financial.low52w)}`
+                ? ${get(info.financial.high52w)} / ${get(info.financial.low52w)}
                 : "-"}
             </dd>
           </div>
@@ -150,7 +153,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
       {/* 4. 뉴스 */}
       <section>
         <h4 className="text-lg font-semibold mb-3">뉴스</h4>
-        {loadingNews ? (
+         {loadingNews ? (
           <div>뉴스 로딩 중…</div>
         ) : newsList.length === 0 ? (
           <div className="text-gray-500">뉴스가 없습니다.</div>
@@ -171,7 +174,15 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
             ))}
           </ul>
         )}
+        {/* ————————————————————————————— */}
+        {/* 🔧 임시: raw JSON 확인용 */}
+        {/* {!loadingNews && (
+          <pre className="mt-4 p-2 bg-gray-100 text-xs overflow-auto">
+            {JSON.stringify(newsList, null, 2)}
+          </pre>
+        )} */}
       </section>
+
     </div>
   );
 }
