@@ -23,36 +23,47 @@ interface CompanyInfoType {
   financial?: Financial;
 }
 
+interface NewsItem {
+  title: string;
+  link: string;
+  pubDate: string;
+}
+
 interface CompanyInfoProps {
   stockName: string;
 }
 
 export default function CompanyInfo({ stockName }: CompanyInfoProps) {
   const [info, setInfo] = useState<CompanyInfoType | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loadingInfo, setLoadingInfo] = useState<boolean>(true);
 
+  const [newsList, setNewsList] = useState<NewsItem[]>([]);
+  const [loadingNews, setLoadingNews] = useState<boolean>(true);
+
+  // 값이 없으면 '-' 반환
+  const get = (val?: string) => (val && val !== "" ? val : "-");
+
+  // 1) 회사 기본 정보 로드
   useEffect(() => {
-    async function loadInfo() {
-      setLoading(true);
-      try {
-        // TODO: 실제 API 경로로 교체
-        const res = await fetch(`/api/company/${stockName}`);
-        if (!res.ok) throw new Error("네트워크 오류");
-        const data: CompanyInfoType = await res.json();
-        setInfo(data);
-      } catch (err) {
-        console.error(err);
-        setInfo({}); // 최소한 빈 객체라도 세팅
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadInfo();
+    setLoadingInfo(true);
+    fetch(`/api/company/${stockName}`)
+      .then((res) => res.json())
+      .then((data: CompanyInfoType) => setInfo(data))
+      .catch(() => setInfo({}))
+      .finally(() => setLoadingInfo(false));
   }, [stockName]);
 
-  if (loading) return <div>로딩 중…</div>;
+  // 2) 뉴스 로드
+  useEffect(() => {
+    setLoadingNews(true);
+    fetch(`/api/news/${stockName}`)
+      .then((res) => res.json())
+      .then((json) => setNewsList(json.items || []))
+      .catch(() => setNewsList([]))
+      .finally(() => setLoadingNews(false));
+  }, [stockName]);
 
-  const get = (val?: string) => (val && val !== "" ? val : "-");
+  if (loadingInfo) return <div>정보 로딩 중…</div>;
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-sm space-y-6">
@@ -85,18 +96,18 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
         <div className="col-span-2">
           <dt className="font-medium">홈페이지</dt>
           <dd>
-            {info?.website
-              ? (
-                <a
-                  href={info.website}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  {info.website}
-                </a>
-              )
-              : "-"}
+            {info?.website ? (
+              <a
+                href={info.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline"
+              >
+                {info.website}
+              </a>
+            ) : (
+              "-"
+            )}
           </dd>
         </div>
       </dl>
@@ -136,12 +147,30 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
         </dl>
       </section>
 
-      {/* 4. 뉴스 영역 (스켈레톤) */}
+      {/* 4. 뉴스 */}
       <section>
         <h4 className="text-lg font-semibold mb-3">뉴스</h4>
-        <div className="h-32 border border-dashed border-gray-300 rounded flex items-center justify-center text-gray-400">
-          뉴스 로딩 스켈레톤
-        </div>
+        {loadingNews ? (
+          <div>뉴스 로딩 중…</div>
+        ) : newsList.length === 0 ? (
+          <div className="text-gray-500">뉴스가 없습니다.</div>
+        ) : (
+          <ul className="space-y-2">
+            {newsList.map((n, i) => (
+              <li key={i} className="text-sm">
+                <a
+                  href={n.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline text-blue-600"
+                >
+                  {n.title.replace(/<[^>]+>/g, "")}
+                </a>
+                <p className="text-xs text-gray-500">{n.pubDate}</p>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
     </div>
   );
