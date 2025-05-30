@@ -1,5 +1,7 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
   imports: [
@@ -18,5 +20,7 @@ import { Module } from '@nestjs/common';
       },
     }),
   ],
+  controllers: [AuthController],
+  providers: [AuthService],
 })
-export class AuthModule {}
+export class AuthModule { }
