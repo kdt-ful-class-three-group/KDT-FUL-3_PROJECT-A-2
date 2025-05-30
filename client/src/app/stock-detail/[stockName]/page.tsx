@@ -17,7 +17,7 @@ export default function StockDetailPage() {
   const { stocks } = useStockApi();
   const [tab, setTab] = useState("orderBook");
   const params = useParams();
-  const srtnCd = params?.stockName as string; // 여기 수정!
+  const srtnCd = params?.stockName as string;
   const stockNumFind = stocks.find((s) => s.srtnCd === srtnCd);
 
   if (!stockNumFind) {
@@ -27,7 +27,7 @@ export default function StockDetailPage() {
   return (
     <div>
       <Title title={stockNumFind.itmsNm} bookmark={false} dictionary={false} />
-      <StockHeader onSelectTab={setTab} />
+      <StockHeader onSelectTab={setTab} stockValue={stockNumFind} />
       <div className="p-4">
         {tab === "companyInfo" && <CompanyInfo />}
         {tab === "orderForm" && <OrderForm />}
