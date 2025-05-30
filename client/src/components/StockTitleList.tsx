@@ -13,6 +13,7 @@ function formatFloat(value: string) {
   if (value.startsWith("-.")) return "-0" + value.slice(1);
   return value;
 }
+
 function StockTitleList({
   sortedStocks,
   sortField,
