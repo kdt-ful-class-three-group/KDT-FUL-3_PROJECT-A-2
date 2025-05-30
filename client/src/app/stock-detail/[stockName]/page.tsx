@@ -15,7 +15,7 @@ import PriceInfo from "@/components/PriceInfo";
 export default function StockDetailPage() {
   const router = useRouter();
   const params = useParams(); // URL 파라미터 가져오기
-  const stockName = decodeURIComponent(params.stockName as string); // "삼성전자" 등 한글 대응
+  const stockName = decodeURIComponent(params.stockName as string); 
   
   const [tab, setTab] = useState("orderBook");
 
