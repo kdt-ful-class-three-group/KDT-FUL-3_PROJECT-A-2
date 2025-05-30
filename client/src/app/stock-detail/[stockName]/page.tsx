@@ -15,8 +15,8 @@ import { useStockApi } from "@/hooks/useStockApi"; // API 훅
 import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
 
 export default function StockDetailPage() {
-  const { stocks, isLoading } = useStockApi();
-  const [tab, setTab] = useState("orderBook");
+  const { stocks, isLoading } = useStockApi()
+  const [tab, setTab] = useState("orderPage"); // 초기 탭은 주문 페이지로 설정
   const params = useParams();
   const srtnCd = params?.stockName as string;
   const stockNumFind = stocks.find((s) => s.srtnCd === srtnCd);
@@ -31,7 +31,7 @@ export default function StockDetailPage() {
       <StockHeader onSelectTab={setTab} stockValue={stockNumFind} />
       <div className="p-4">
         {tab === "companyInfo" && <CompanyInfo />}
-        {tab === "orderForm" && <OrderPage />}
+        {tab === "orderPage" && <OrderPage />}
         {tab === "orderBook" && <OrderBook />}
         {tab === "stockChart" && <StockChart />}
         {tab === "priceInfo" && <PriceInfo />}
