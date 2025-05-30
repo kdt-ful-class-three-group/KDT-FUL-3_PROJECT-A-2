@@ -57,6 +57,25 @@ export default function SignupPage() {
     }
   };
 
+  const handleEmailCode = () => {
+    fetch("http://localhost:8000/auth/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: form.email }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          console.log(data.message);
+        } else {
+          console.log("이메일 인증 요청에 실패했습니다.");
+        }
+      })
+      .catch((err) => {
+        console.error("이메일 인증 요청 오류.", err);
+      });
+  }
+
   useEffect(() => {
     if (form.password && form.passwordCheck) {
       setPasswordMatch(form.password === form.passwordCheck);
@@ -169,13 +188,14 @@ export default function SignupPage() {
               className="pl-2 rounded-lg border py-2"
               type="text"
               placeholder="example@exmaple.com"
-              name="phone"
-              value={form.phone}
+              name="email"
+              value={form.email}
               onChange={handleChange}
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg"
               type="button"
+              onClick={handleEmailCode}
             >
               인증번호 받기
             </button>
