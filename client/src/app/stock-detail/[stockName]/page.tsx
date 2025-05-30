@@ -31,7 +31,7 @@ export default function StockDetailPage() {
       <StockHeader onSelectTab={setTab} stockValue={stockNumFind} />
       <div className="p-4">
         {tab === "companyInfo" && <CompanyInfo />}
-        {tab === "orderPage" && <OrderPage />}
+        {tab === "orderPage" && <OrderPage stockCode={srtnCd} />}
         {tab === "orderBook" && <OrderBook />}
         {tab === "stockChart" && <StockChart />}
         {tab === "priceInfo" && <PriceInfo />}
