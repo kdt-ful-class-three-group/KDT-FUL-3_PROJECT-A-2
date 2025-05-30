@@ -43,7 +43,7 @@ export default function SignupPage() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:8000/users/check-id/${form.nickname}`);
+      const res = await fetch(`http://localhost:8000/users/check-nick/${form.nickname}`);
       const data = await res.json();
       if (data.exists) {
         setUserNickAvailable(false);
