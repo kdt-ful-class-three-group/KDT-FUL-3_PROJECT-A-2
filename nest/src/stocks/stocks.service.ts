@@ -38,8 +38,8 @@ export class StockService {
   // 주식 시세 조회 함수
   async getStockPrice(accessToken: string, code: string) {
     // 주식 시세 조회 API 주소 (모의투자용)
-    const url = 'https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-price';
-
+    const url =
+      'https://openapivts.koreainvestment.com:29443/uapi/domestic-stock/v1/quotations/inquire-price';
 
     // 요청 헤더 설정(토큰과 앱키 포함)
     const headers = {
