@@ -7,7 +7,7 @@ interface Props {
 
 export default function StockHeader({ onSelectTab, stockValue }: Props) {
   const tabs = [
-    { name: "주문", key: "orderForm" },
+    { name: "주문", key: "orderPage" },
     { name: "호가", key: "orderBook" },
     { name: "차트", key: "stockChart" },
     { name: "시세", key: "priceInfo" },
