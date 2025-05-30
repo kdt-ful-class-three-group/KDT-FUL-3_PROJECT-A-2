@@ -1,4 +1,5 @@
 import { useRouter } from "next/navigation";
+import { StockData } from "@/hooks/useStockApi"; // API 훅
 type Props = {
   sortedStocks: StockData[];
   sortField: "mkp" | "fltRt" | "trPrc" | null;
@@ -12,6 +13,7 @@ function formatFloat(value: string) {
   if (value.startsWith("-.")) return "-0" + value.slice(1);
   return value;
 }
+
 function StockTitleList({
   sortedStocks,
   sortField,
