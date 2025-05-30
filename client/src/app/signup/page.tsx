@@ -9,7 +9,7 @@ export default function SignupPage() {
     userid: "",
     password: "",
     passwordCheck: "",
-    phone: "",
+    email: "",
     code: "",
     nickname: "",
   });
@@ -17,6 +17,7 @@ export default function SignupPage() {
   const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
   const [userIdAvailable, setUserIdAvailable] = useState<null | boolean>(null);
   const [userNickAvailable, setUserNickAvailable] = useState<null | boolean>(null);
+  const [emailCode, setEmailCode] = useState<null | boolean>(null);
 
   const checkUserId = async () => {
     if (!form.userid) {
@@ -68,6 +69,9 @@ export default function SignupPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (e.target.name === "userid") {
       setUserIdAvailable(null);
+    }
+    if (e.target.name === "code") {
+      console.log("테스트");
     }
   };
 
@@ -159,12 +163,12 @@ export default function SignupPage() {
           </div>
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
-          <label className="text-[#FC4F00] mb-3">휴대폰 번호</label>
+          <label className="text-[#FC4F00] mb-3">이메일</label>
           <div className="flex w-full justify-between mb-3">
             <Input
               className="pl-2 rounded-lg border py-2"
               type="text"
-              placeholder="휴대폰 번호"
+              placeholder="example@exmaple.com"
               name="phone"
               value={form.phone}
               onChange={handleChange}
@@ -186,6 +190,16 @@ export default function SignupPage() {
               onChange={handleChange}
             />
           </div>
+          {userNickAvailable === false && (
+            <p className="text-red-500 text-xs">
+              인증번호가 일치하지 않습니다.
+            </p>
+          )}
+          {userNickAvailable === true && (
+            <p className="text-green-600 text-xs">
+              인증번호가 일치 합니다.
+            </p>
+          )}
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">닉네임</label>
