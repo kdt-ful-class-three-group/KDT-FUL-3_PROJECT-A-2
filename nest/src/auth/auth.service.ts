@@ -1,6 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { randomInt } from 'crypto'; // 랜덤 문자열 생성
+import { Request } from 'express';
+
+// 세션에 code 속성을 추가
+declare module 'express-session' {
+  interface SessionData {
+    code?: string;
+  }
+}
 
 @Injectable()
 export class AuthService {
@@ -12,8 +20,10 @@ export class AuthService {
     },
   });
 
-  async sendVerificationEmail(email: string) {
+  async sendVerificationEmail(email: string, @Req() req: Request) {
     const code = randomInt(100000, 999999).toString();
+
+    req.session.code = code;
 
     await this.transporter.sendMail({
       to: email,
