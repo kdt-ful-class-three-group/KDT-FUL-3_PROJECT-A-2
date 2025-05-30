@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import Title from "@/components/Title";
 import StockHeader from "@/components/StockHeader"; // 차트 내용 컴포넌트
 import CompanyInfo from "@/components/CompanyInfo"; // 정보 탭 컴포넌트
-import OrderForm from "@/components/OrderForm"; // 주문 탭 컴포넌트
+import OrderForm from "@/components/OrderPage"; // 주문 탭 컴포넌트
 import OrderBook from "@/components/OrderBook"; // 호가 탭 컴포넌트
 import StockChart from "@/components/StockChart"; // 차트 탭 컴포넌트
 import PriceInfo from "@/components/PriceInfo"; // 가격 정보 탭 컴포넌트

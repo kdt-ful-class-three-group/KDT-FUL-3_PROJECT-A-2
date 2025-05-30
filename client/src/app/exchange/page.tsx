@@ -103,7 +103,7 @@ export default function ExchangePage() {
             <div
               key={id}
               className="flex px-2 border-[#D9D9D9] py-5 border-b"
-              onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
+              onClick={() => router.push("/stock-detail/" + stock.itmsNm)}
             >
               <div className="flex justify-center w-full">
                 <p className="text-[#313131]">{stock.itmsNm}</p>

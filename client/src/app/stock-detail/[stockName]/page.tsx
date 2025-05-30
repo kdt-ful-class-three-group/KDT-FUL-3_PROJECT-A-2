@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import Title from "@/components/Title";
 import StockHeader from "@/components/StockHeader";
 import CompanyInfo from "@/components/CompanyInfo";
-import OrderForm from "@/components/OrderForm";
+import OrderForm from "@/components/OrderPage";
 import OrderBook from "@/components/OrderBook";
 import StockChart from "@/components/StockChart";
 import PriceInfo from "@/components/PriceInfo";
