@@ -5,7 +5,7 @@ import Nav from "@/components/Nav";
 import Title from "@/components/Title";
 import Input from "@/components/Input";
 import { useRouter } from "next/navigation";
-import { useStockApi } from "@/hooks/useStockApi"; // API 훅
+import { useStockApi, StockData } from "@/hooks/useStockApi"; // API 훅
 
 // 소수점 앞에 0이 없으면 0을 붙여주는 함수
 function formatFloat(value: string) {
@@ -20,6 +20,21 @@ export default function ExchangePage() {
   const [search, setSearch] = useState("");
   const { stocks } = useStockApi();
   console.log(stocks);
+  const [sortField, setSortField] = useState<"mkp" | "fltRt" | "trPrc" | null>(
+    null
+  );
+  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
+  // const [fltRtSortOrder, setFltRtSortOrder] = useState<"desc" | "asc" | null>(
+  //   null
+  // );
+  const [sortedStocks, setSortedStocks] = useState<StockData[]>([]);
+  useEffect(() => {
+    if (!sortField) {
+      setSortedStocks(stocks);
+      return;
+    }
+  }, [stocks]);
+
   const [portfolio] = useState({
     totalPurchase: 12,
     totalEvaluation: 12,
@@ -27,7 +42,23 @@ export default function ExchangePage() {
     profitRate: 10,
   });
 
-  useEffect(() => {}, []);
+  const handleSort = (field: "mkp" | "fltRt" | "trPrc") => {
+    let nextOrder: "desc" | "asc" = sortOrder;
+    if (sortField === field) {
+      nextOrder = sortOrder === "desc" ? "asc" : "desc";
+    } else {
+      nextOrder = "desc";
+    }
+    setSortField(field);
+    setSortOrder(nextOrder);
+
+    const sorted = [...sortedStocks].sort((a, b) => {
+      const upNum = parseFloat(a[field]);
+      const downNum = parseFloat(b[field]);
+      return nextOrder === "desc" ? downNum - upNum : upNum - downNum;
+    });
+    setSortedStocks(sorted);
+  };
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setSearch(e.target.value);
@@ -86,20 +117,57 @@ export default function ExchangePage() {
             <div className="flex justify-center  w-full ">
               <p className="text-[#313131]">종목</p>
             </div>
-            <div className="flex justify-center w-full">
+            <div
+              className="flex justify-center w-full"
+              onClick={() => handleSort("mkp")}
+            >
               <p className="text-[#313131] mr-1">현재가</p>
-              <img src="./image/btarrow.svg" alt="" />
+
+              <img
+                src={
+                  sortField === "mkp"
+                    ? sortOrder === "desc"
+                      ? "./image/arrow_up.svg"
+                      : "./image/arrow_down.svg"
+                    : "./image/tbArrow.svg"
+                }
+                alt="정렬"
+              />
             </div>
-            <div className="flex justify-center w-full">
+            <div
+              className="flex justify-center w-full"
+              onClick={() => handleSort("fltRt")}
+            >
               <p className="text-[#313131] mr-1">전일대비</p>
-              <img src="./image/btarrow.svg" alt="" />
+              <img
+                src={
+                  sortField === "fltRt"
+                    ? sortOrder === "desc"
+                      ? "./image/arrow_up.svg"
+                      : "./image/arrow_down.svg"
+                    : "./image/tbArrow.svg"
+                }
+                alt="정렬"
+              />
             </div>
-            <div className="flex justify-center w-full w-full">
+            <div
+              className="flex justify-center w-full"
+              onClick={() => handleSort("trPrc")}
+            >
               <p className="text-[#313131] mr-1">거래대금</p>
-              <img src="./image/btarrow.svg" alt="" />
+              <img
+                src={
+                  sortField === "trPrc"
+                    ? sortOrder === "desc"
+                      ? "./image/arrow_up.svg"
+                      : "./image/arrow_down.svg"
+                    : "./image/tbArrow.svg"
+                }
+                alt="정렬"
+              />
             </div>
           </div>
-          {stocks.map((stock, id) => (
+          {sortedStocks.map((stock, id) => (
             <div
               key={id}
               className="flex px-2 border-[#D9D9D9] py-5 border-b"
@@ -109,7 +177,15 @@ export default function ExchangePage() {
                 <p className="text-[#313131]">{stock.itmsNm}</p>
               </div>
               <div className="flex justify-center w-full">
-                <p className="text-[#313131]">{stock.mkp.toLocaleString()}</p>
+                <p
+                  className={
+                    stock.fltRt.startsWith("-")
+                      ? "text-blue-500"
+                      : "text-red-500"
+                  }
+                >
+                  {stock.mkp.toLocaleString()}
+                </p>
               </div>
               <div className="flex justify-center w-full">
                 <p
@@ -123,7 +199,13 @@ export default function ExchangePage() {
                 </p>
               </div>
               <div className="flex justify-center w-full">
-                <p className="text-[#313131]">
+                <p
+                  className={
+                    stock.fltRt.startsWith("-")
+                      ? "text-blue-500"
+                      : "text-red-500"
+                  }
+                >
                   {stock.trPrc.toLocaleString()}백만
                 </p>
               </div>
