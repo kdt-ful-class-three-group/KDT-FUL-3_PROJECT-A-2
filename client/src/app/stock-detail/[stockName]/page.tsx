@@ -4,6 +4,7 @@
 import React, { useState } from "react";
 import { useParams } from "next/navigation"; // URL 파라미터 가져오기
 import Title from "@/components/Title";
+
 import StockHeader from "@/components/StockHeader"; // 차트 내용 컴포넌트
 import CompanyInfo from "@/components/CompanyInfo"; // 정보 탭 컴포넌트
 import OrderForm from "@/components/OrderForm"; // 주문 탭 컴포넌트

@@ -171,7 +171,7 @@ export default function ExchangePage() {
             <div
               key={id}
               className="flex px-2 border-[#D9D9D9] py-5 border-b"
-              onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
+              onClick={() => router.push("/stock-detail/" + stock.itmsNm)}
             >
               <div className="flex justify-center w-full">
                 <p className="text-[#313131]">{stock.itmsNm}</p>
@@ -211,20 +211,6 @@ export default function ExchangePage() {
               </div>
             </div>
           ))}
-          {/* <div className="flex px-2 border-[#D9D9D9] py-5 border-b">
-            <div className="flex justify-center w-full">
-              <p className="text-[#313131]">삼성전자</p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p className="text-[#313131]">50,000</p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p className="text-[#313131]">0.31%</p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p className="text-[#313131]">741,123백만</p>
-            </div>
-          </div> */}
         </div>
       </div>
 
