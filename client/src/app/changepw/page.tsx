@@ -5,6 +5,16 @@ import { useState } from "react";
 
 export default function ChangePw() {
   const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
+  const [password, setPassword] = useState<string>("");
+  const [passwordCheck, setPasswordCheck] = useState<string>("");
+
+  const handlePassword = (e: { target: { value: string } }) => {
+    setPassword(e.target.value);
+  }
+
+  const handlePasswordCheck = (e: { target: { value: string } }) => {
+    setPasswordCheck(e.target.value);
+  }
 
   const handleSubmit = () => {
     console.log("클릭");
@@ -24,16 +34,16 @@ export default function ChangePw() {
                 type="password"
                 placeholder="비밀번호"
                 name="password"
-                value={""}
-                onChange={(e) => { e.target.value }}
+                value={password}
+                onChange={handlePassword}
               />
               <Input
                 className="pl-2 rounded-lg border py-2 w-full mb-3"
                 type="password"
                 placeholder="비밀번호 확인"
                 name="passwordCheck"
-                value={""}
-                onChange={(e) => { e.target.value }}
+                value={passwordCheck}
+                onChange={handlePasswordCheck}
               />
               <p className="text-[#1E3E62] text-[60%]">
                 6~20자/영문 대문자, 소문자, 숫자, 특수문자 중 2가지 이상 조합
