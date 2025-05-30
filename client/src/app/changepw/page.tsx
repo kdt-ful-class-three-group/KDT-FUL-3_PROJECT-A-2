@@ -1,7 +1,7 @@
 "use client"
 import Input from "@/components/Input";
 import Title from "@/components/Title";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function ChangePw() {
   const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
@@ -16,8 +16,13 @@ export default function ChangePw() {
     setPasswordCheck(e.target.value);
   }
 
-  const handleSubmit = () => {
-    console.log("클릭");
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === passwordCheck) {
+      setPasswordMatch(true);
+    } else {
+      setPasswordMatch(false);
+    }
   }
 
 
