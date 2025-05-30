@@ -25,7 +25,10 @@ const serviceKey =
 const url = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${serviceKey}&beginBasDt=20250101&endBasDt=20250429&numOfRows=10&pageNo=3&resultType=json`;
 
 export function useStockApi() {
+  //! 주식 데이터 상태
   const [stocks, setStocks] = useState<StockData[]>([]);
+  //! 주식 데이터 가져올 때 로딩 상태
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     const StocksApi = async () => {
       try {
@@ -34,11 +37,13 @@ export function useStockApi() {
         setStocks(stocksItems);
       } catch (err) {
         console.error("API 데이터 불러오기 실패:", err);
+      } finally {
+        setIsLoading(false); // ★ 반드시 필요!
       }
     };
 
     StocksApi();
   }, []);
 
-  return { stocks };
+  return { stocks, isLoading };
 }

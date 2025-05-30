@@ -1,26 +1,22 @@
 // components/OrderSummary.tsx
-'use client';
+"use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 export interface OrderSummaryProps {
   stockCode: string;
-  side: 'buy' | 'sell';
+  side: "buy" | "sell";
 }
 
-export default function OrderSummary({
-  stockCode,
-  side,
-}: OrderSummaryProps) {
-  const isBuy = side === 'buy';
+export default function OrderSummary({ stockCode, side }: OrderSummaryProps) {
+  const isBuy = side === "buy";
 
   // 주문 타입: 지정가(limit) / 시장가(market)
-  const [orderType, setOrderType] =
-    useState<'limit' | 'market'>('limit');
+  const [orderType, setOrderType] = useState<"limit" | "market">("limit");
   // 2) 공통 state
   const [availableQty, setAvailableQty] = useState<number>(0);
   const [currentPrice, setCurrentPrice] = useState<number>(0);
-  const [quantity, setQuantity] = useState<number | ''>('');
+  const [quantity, setQuantity] = useState<number | "">("");
   const [percentage, setPercentage] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
 
@@ -33,7 +29,9 @@ export default function OrderSummary({
         setAvailableQty(data.availableQty);
         setCurrentPrice(data.currentPrice);
       })
-      .catch(console.error);
+      .catch((error) => {
+        console.log(error);
+      });
   }, [stockCode]);
 
   // 수량·퍼센트·orderType·currentPrice 변경 시 총액 계산
@@ -44,11 +42,9 @@ export default function OrderSummary({
     }
     let unitPrice = currentPrice;
 
-    if (orderType === 'limit') {
+    if (orderType === "limit") {
       // 매수는 가산, 매도는 차감
-      const factor = isBuy
-        ? 1 + percentage / 100
-        : 1 - percentage / 100;
+      const factor = isBuy ? 1 + percentage / 100 : 1 - percentage / 100;
       unitPrice = Math.floor(currentPrice * factor);
     }
 
@@ -57,14 +53,14 @@ export default function OrderSummary({
 
   // 초기화
   const handleReset = () => {
-    setQuantity('');
+    setQuantity("");
     setPercentage(0);
   };
 
   // 주문 요청
   const handleOrder = async () => {
     if (!quantity) {
-      alert('수량을 입력해주세요');
+      alert("수량을 입력해주세요");
       return;
     }
     const payload: any = {
@@ -72,25 +68,22 @@ export default function OrderSummary({
       side,
       quantity: Number(quantity),
     };
-    if (orderType === 'limit') {
+    if (orderType === "limit") {
       payload.limitPrice = Math.floor(
-        currentPrice *
-          (isBuy
-            ? 1 + percentage / 100
-            : 1 - percentage / 100)
+        currentPrice * (isBuy ? 1 + percentage / 100 : 1 - percentage / 100)
       );
     }
-    const res = await fetch('/api/order', {
-      method: 'POST',
+    const res = await fetch("/api/order", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
     });
     if (!res.ok) {
-      alert(`${isBuy ? '매수' : '매도'} 실패`);
+      alert(`${isBuy ? "매수" : "매도"} 실패`);
     } else {
-      alert(`${isBuy ? '매수' : '매도'} 완료`);
+      alert(`${isBuy ? "매수" : "매도"} 완료`);
       handleReset();
     }
   };
@@ -102,17 +95,17 @@ export default function OrderSummary({
         <label>
           <input
             type="radio"
-            checked={orderType === 'limit'}
-            onChange={() => setOrderType('limit')}
-          />{' '}
+            checked={orderType === "limit"}
+            onChange={() => setOrderType("limit")}
+          />{" "}
           지정가
         </label>
         <label>
           <input
             type="radio"
-            checked={orderType === 'market'}
-            onChange={() => setOrderType('market')}
-          />{' '}
+            checked={orderType === "market"}
+            onChange={() => setOrderType("market")}
+          />{" "}
           시장가
         </label>
       </div>
@@ -128,18 +121,14 @@ export default function OrderSummary({
       </div>
 
       {/* 지정가 폼 */}
-      {orderType === 'limit' && (
+      {orderType === "limit" && (
         <>
           <div className="bg-white rounded px-3 py-2 flex items-center">
             <input
               type="number"
               value={quantity}
               onChange={(e) =>
-                setQuantity(
-                  e.target.value === ''
-                    ? ''
-                    : Number(e.target.value)
-                )
+                setQuantity(e.target.value === "" ? "" : Number(e.target.value))
               }
               placeholder="수량"
               className="flex-1 bg-transparent focus:outline-none"
@@ -149,18 +138,14 @@ export default function OrderSummary({
           <div className="bg-white rounded px-3 py-2 flex items-center">
             <select
               value={percentage}
-              onChange={(e) =>
-                setPercentage(Number(e.target.value))
-              }
+              onChange={(e) => setPercentage(Number(e.target.value))}
               className="flex-1 bg-transparent focus:outline-none"
             >
-              {Array.from({ length: 41 }, (_, i) => 100 - i * 5).map(
-                (v) => (
-                  <option key={v} value={v}>
-                    {v >= 0 ? `+${v}%` : `${v}%`}
-                  </option>
-                )
-              )}
+              {Array.from({ length: 41 }, (_, i) => 100 - i * 5).map((v) => (
+                <option key={v} value={v}>
+                  {v >= 0 ? `+${v}%` : `${v}%`}
+                </option>
+              ))}
             </select>
             <span className="ml-2"></span>
           </div>
@@ -168,17 +153,13 @@ export default function OrderSummary({
       )}
 
       {/* 시장가 폼 */}
-      {orderType === 'market' && (
+      {orderType === "market" && (
         <div className="bg-white rounded px-3 py-2 flex items-center">
           <input
             type="number"
             value={quantity}
             onChange={(e) =>
-              setQuantity(
-                e.target.value === ''
-                  ? ''
-                  : Number(e.target.value)
-              )
+              setQuantity(e.target.value === "" ? "" : Number(e.target.value))
             }
             placeholder="수량"
             className="flex-1 bg-transparent focus:outline-none"
@@ -215,10 +196,10 @@ export default function OrderSummary({
           onClick={handleOrder}
           disabled={!quantity}
           className={`flex-1 rounded py-2 text-white disabled:opacity-50 ${
-            isBuy ? 'bg-red-500' : 'bg-blue-600'
+            isBuy ? "bg-red-500" : "bg-blue-600"
           }`}
         >
-          {isBuy ? '매수' : '매도'}
+          {isBuy ? "매수" : "매도"}
         </button>
       </div>
     </div>
