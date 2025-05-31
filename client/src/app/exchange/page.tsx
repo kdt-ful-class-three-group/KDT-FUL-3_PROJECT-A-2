@@ -7,29 +7,33 @@ import Input from "@/components/Input";
 import StockTitleList from "@/components/StockTitleList";
 import StockPortfolio from "@/components/StockPortfolio";
 import { useStockApi, StockData } from "@/hooks/useStockApi";
+// import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
 
 export default function ExchangePage() {
   const [search, setSearch] = useState("");
-  const { stocks } = useStockApi();
+  const { allStocks } = useStockApi();
   const [sortField, setSortField] = useState<"mkp" | "fltRt" | "trPrc" | null>(
     null
   );
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
   const [sortedStocks, setSortedStocks] = useState<StockData[]>([]);
-
+  // const mockData = useMockStockSimulator(stocks);
   // 정렬 기준/방향/원본 데이터가 바뀔 때마다 정렬
+  console.log(allStocks);
   useEffect(() => {
     if (!sortField) {
-      setSortedStocks(stocks);
+      setSortedStocks(allStocks);
       return;
     }
-    const sorted = [...stocks].sort((a, b) => {
-      const aNum = parseFloat(a[sortField]);
-      const bNum = parseFloat(b[sortField]);
-      return sortOrder === "desc" ? bNum - aNum : aNum - bNum;
+    const sorted = [...allStocks].sort((a, b) => {
+      const stocksUp = parseFloat(a[sortField]);
+      const stocksDown = parseFloat(b[sortField]);
+      return sortOrder === "desc"
+        ? stocksDown - stocksUp
+        : stocksUp - stocksDown;
     });
     setSortedStocks(sorted);
-  }, [stocks, sortField, sortOrder]);
+  }, [allStocks, sortField, sortOrder]);
 
   const handleSort = (field: "mkp" | "fltRt" | "trPrc") => {
     let nextOrder: "desc" | "asc" = sortOrder;
@@ -71,8 +75,10 @@ export default function ExchangePage() {
             sortField={sortField}
             sortOrder={sortOrder}
             handleSort={handleSort}
+            stocks={allStocks}
           />
         </div>
+        {/* <SimulatedStockTest /> */}
       </div>
       <Nav />
     </div>

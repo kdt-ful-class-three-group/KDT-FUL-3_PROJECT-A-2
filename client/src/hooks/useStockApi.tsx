@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import axios, { AxiosResponse } from "axios";
 
 export interface StockData {
@@ -22,28 +22,46 @@ const serviceKey =
   "%2F%2FyNWMYBpj%2BUWMNJOecVH1q6KYhP2UrjZA8nDYMreg0vjscQMgKCI8uqHwT9CLP1g5C5xVnHzwK7I9%2BxwO%2FqAA%3D%3D";
 
 // 실제 메서드명(getStockPriceInfo)으로 수정
-const url = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${serviceKey}&beginBasDt=20250101&endBasDt=20250429&numOfRows=10&pageNo=3&resultType=json`;
-
+const prevUrl = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${serviceKey}&endBasDt=20250314&numOfRows=100&pageNo=1&resultType=json`;
+// 실제 메서드명(getStockPriceInfo)으로 수정
+const nextUrl = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${serviceKey}&endBasDt=20250315&numOfRows=100&pageNo=1&resultType=json`;
 export function useStockApi() {
   //! 주식 데이터 상태
-  const [stocks, setStocks] = useState<StockData[]>([]);
+  const [prevStocks, setPrevStocks] = useState<StockData[]>([]);
+  const [nextStocks, setNextStocks] = useState<StockData[]>([]);
   //! 주식 데이터 가져올 때 로딩 상태
   const [isLoading, setIsLoading] = useState(true);
+  console.log("전날 데이터 호출 완료", prevStocks);
+  console.log("다음날 데이터 호출 완료", nextStocks);
   useEffect(() => {
-    const StocksApi = async () => {
+    const prevStocksApi = async () => {
       try {
-        const stocksResponse: AxiosResponse = await axios.get(url);
-        const stocksItems = stocksResponse.data.response.body.items.item;
-        setStocks(stocksItems);
+        const prevStocksResponse: AxiosResponse = await axios.get(prevUrl);
+        const prevStocksItems =
+          prevStocksResponse.data.response.body.items.item;
+        setPrevStocks(prevStocksItems);
       } catch (err) {
         console.error("API 데이터 불러오기 실패:", err);
-      } finally {
-        setIsLoading(false); // ★ 반드시 필요!
       }
     };
-
-    StocksApi();
+    const nextStocksApi = async () => {
+      try {
+        const nextStocksResponse: AxiosResponse = await axios.get(nextUrl);
+        const nextStocksItems =
+          nextStocksResponse.data.response.body.items.item;
+        setNextStocks(nextStocksItems);
+      } catch (err) {
+        console.error("API 데이터 불러오기 실패:", err);
+      }
+    };
+    Promise.all([prevStocksApi(), nextStocksApi()]).finally(() => {
+      setIsLoading(false);
+    });
   }, []);
-
-  return { stocks, isLoading };
+  const allStocks = useMemo(
+    () => [...(prevStocks || []), ...(nextStocks || [])],
+    [prevStocks, nextStocks]
+  );
+  console.log("2일 맵핑", allStocks);
+  return { allStocks, isLoading };
 }
