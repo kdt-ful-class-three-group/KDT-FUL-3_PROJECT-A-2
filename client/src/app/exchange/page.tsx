@@ -6,12 +6,11 @@ import Title from "@/components/Title";
 import Input from "@/components/Input";
 import StockTitleList from "@/components/StockTitleList";
 import StockPortfolio from "@/components/StockPortfolio";
-import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
 import { useStockApi, StockData } from "@/hooks/useStockApi";
 
 export default function ExchangePage() {
   const [search, setSearch] = useState("");
-  const { stocks, isLoading } = useStockApi();
+  const { stocks } = useStockApi();
   const [sortField, setSortField] = useState<"mkp" | "fltRt" | "trPrc" | null>(
     null
   );
@@ -24,7 +23,6 @@ export default function ExchangePage() {
       setSortedStocks(stocks);
       return;
     }
-
     const sorted = [...stocks].sort((a, b) => {
       const aNum = parseFloat(a[sortField]);
       const bNum = parseFloat(b[sortField]);
@@ -32,9 +30,6 @@ export default function ExchangePage() {
     });
     setSortedStocks(sorted);
   }, [stocks, sortField, sortOrder]);
-  if (isLoading) {
-    return <Spinner />;
-  }
 
   const handleSort = (field: "mkp" | "fltRt" | "trPrc") => {
     let nextOrder: "desc" | "asc" = sortOrder;
