@@ -1,10 +1,21 @@
 import { useRouter } from "next/navigation";
 import { StockData } from "@/hooks/useStockApi"; // API 훅
+import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
+
+// type MockData = {
+//   date: string;
+//   hipr: number;
+//   lopr: number;
+//   clpr: number;
+// } | null;
+
 type Props = {
   sortedStocks: StockData[];
   sortField: "mkp" | "fltRt" | "trPrc" | null;
   sortOrder: "desc" | "asc";
   handleSort: (field: "mkp" | "fltRt" | "trPrc") => void;
+  stocks: StockData[]; // API 훅에서 가져온 종목 데이터
+  // mockData: MockData;
 };
 // 소수점 앞에 0이 없으면 0을 붙여주는 함수
 function formatFloat(value: string) {
@@ -19,8 +30,12 @@ function StockTitleList({
   sortField,
   sortOrder,
   handleSort,
-}: Props) {
+  stocks,
+}: // mockData,
+Props) {
   const router = useRouter();
+
+  const simulatedMap = useMockStockSimulator(stocks);
   return (
     <div>
       <div className="flex justify-between px-2 mb-6">
@@ -77,44 +92,72 @@ function StockTitleList({
           />
         </div>
       </div>
-      {sortedStocks.map((stock, id) => (
-        <div
-          key={id}
-          className="flex px-2 border-[#D9D9D9] py-5 border-b"
-          onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
-        >
-          <div className="flex justify-center w-full">
-            <p className="text-[#313131]">{stock.itmsNm}</p>
+      {sortedStocks.map((stock, id) => {
+        const simulated = simulatedMap[stock.srtnCd];
+        console.log(stock.srtnCd, simulated);
+        return (
+          <div
+            key={id}
+            className="flex px-2 border-[#D9D9D9] py-5 border-b"
+            onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
+          >
+            <div className="flex justify-center w-full">
+              <p className="text-[#313131]">{stock.itmsNm}</p>
+            </div>
+            <div className="flex justify-center w-full">
+              <p
+                className={
+                  simulated
+                    ? simulated.changeRate < 0
+                      ? "text-blue-500"
+                      : "text-red-500"
+                    : stock.fltRt.startsWith("-")
+                    ? "text-blue-500"
+                    : "text-red-500"
+                }
+              >
+                {simulated
+                  ? simulated.currentPrice.toLocaleString()
+                  : stock.mkp.toLocaleString()}
+              </p>
+            </div>
+            <div className="flex justify-center w-full">
+              <p
+                className={
+                  simulated
+                    ? simulated.changeRate < 0
+                      ? "text-blue-500"
+                      : "text-red-500"
+                    : stock.fltRt.startsWith("-")
+                    ? "text-blue-500"
+                    : "text-red-500"
+                }
+              >
+                {simulated
+                  ? simulated.changeRate + "%"
+                  : formatFloat(stock.fltRt) + "%"}
+              </p>
+            </div>
+            <div className="flex justify-center w-full">
+              <p
+                className={
+                  simulated
+                    ? simulated.changeRate < 0
+                      ? "text-blue-500"
+                      : "text-red-500"
+                    : stock.fltRt.startsWith("-")
+                    ? "text-blue-500"
+                    : "text-red-500"
+                }
+              >
+                {simulated
+                  ? simulated.tradeAmount.toLocaleString() + "백만"
+                  : stock.trPrc.toLocaleString() + "백만"}
+              </p>
+            </div>
           </div>
-          <div className="flex justify-center w-full">
-            <p
-              className={
-                stock.fltRt.startsWith("-") ? "text-blue-500" : "text-red-500"
-              }
-            >
-              {stock.mkp.toLocaleString()}
-            </p>
-          </div>
-          <div className="flex justify-center w-full">
-            <p
-              className={
-                stock.fltRt.startsWith("-") ? "text-blue-500" : "text-red-500"
-              }
-            >
-              {formatFloat(stock.fltRt)}%
-            </p>
-          </div>
-          <div className="flex justify-center w-full">
-            <p
-              className={
-                stock.fltRt.startsWith("-") ? "text-blue-500" : "text-red-500"
-              }
-            >
-              {stock.trPrc.toLocaleString()}백만
-            </p>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
