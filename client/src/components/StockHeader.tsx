@@ -1,15 +1,13 @@
+import { StockData } from "@/hooks/useStockApi";
+
 interface Props {
   onSelectTab: (tab: string) => void;
-  name: string;
-  price: number;
-  percent: number;
+  stockValue: StockData & { simulatedColor?: string };
 }
 
-export default function StockHeader({ onSelectTab, name, price, percent }: Props) {
-  const isUp = percent >= 0;
-
+export default function StockHeader({ onSelectTab, stockValue }: Props) {
   const tabs = [
-    { name: "주문", key: "orderForm" },
+    { name: "주문", key: "orderPage" },
     { name: "호가", key: "orderBook" },
     { name: "차트", key: "stockChart" },
     { name: "시세", key: "priceInfo" },
@@ -18,15 +16,23 @@ export default function StockHeader({ onSelectTab, name, price, percent }: Props
 
   return (
     <div className="bg-white p-4 shadow">
-      <div className="text-xl font-bold  text-black mb-2">{name}</div>
+      <div className="text-xl font-bold  text-black mb-2">
+        {stockValue.itmsNm}
+      </div>
       <div className=" mb-3">
         <span className="text-2 font-bold text-red-500 mr-2">
-          <span className="text-2xl font-bold text-red-500 mr-2">
-            {price ? price.toLocaleString() + "원" : "-"}
+          <span
+            className="text-2xl font-bold mr-2"
+            style={{ color: stockValue.simulatedColor }}
+          >
+            {stockValue.fltRt}%
           </span>
         </span>
-        <span className={`text-sm ${isUp ? "text-red-500" : "text-blue-500"}`}>
-          {isUp ? "▲" : "▼"} {Math.abs(percent).toFixed(2)}%
+        <span
+          className={`text-sm  "text-red-500"`}
+          style={{ color: stockValue.simulatedColor }}
+        >
+          {stockValue.mkp}
         </span>
       </div>
 

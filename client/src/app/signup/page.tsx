@@ -1,22 +1,27 @@
-"use client"
-import Input from "@/components/input";
-import Title from "@/components/Title"
+"use client";
+import Input from "@/components/Input";
+import SignupEmailInput from "@/components/SignupEmailInput";
+import SignupPasswordInput from "@/components/SignupPasswordInput";
+import Title from "@/components/Title";
+import { useEmailVerification } from "@/hooks/useEmailVerification";
+import { usePasswordMatch } from "@/hooks/usePasswordMatch";
 import { SignupForm } from "@/interface/SignupForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function SignupPage() {
-
   const [form, setForm] = useState<SignupForm>({
     userid: "",
     password: "",
     passwordCheck: "",
-    phone: "",
+    email: "",
     code: "",
     nickname: "",
   });
 
-  const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
   const [userIdAvailable, setUserIdAvailable] = useState<null | boolean>(null);
+  const [userNickAvailable, setUserNickAvailable] = useState<null | boolean>(null);
+  const { passwordMatch } = usePasswordMatch(form.password, form.passwordCheck);
+  const { handleEmail, isEmailCodeMatch } = useEmailVerification(form.email, form.code);
 
   const checkUserId = async () => {
     if (!form.userid) {
@@ -24,7 +29,7 @@ export default function SignupPage() {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:8000/users/${form.userid}`);
+      const res = await fetch(`http://localhost:8000/users/check-id/${form.userid}`);
       const data = await res.json();
       if (data.exists) {
         setUserIdAvailable(false);
@@ -37,17 +42,29 @@ export default function SignupPage() {
     }
   };
 
+  const checkNick = async () => {
+    if (!form.nickname) {
+      setUserNickAvailable(null);
+      return;
+    }
+    try {
+      const res = await fetch(`http://localhost:8000/users/check-nick/${form.nickname}`);
+      const data = await res.json();
+      if (data.exists) {
+        setUserNickAvailable(false);
+      } else {
+        setUserNickAvailable(true);
+      }
+    } catch (err) {
+      setUserNickAvailable(null);
+      console.log("아이디 중복 확인 에러:", err);
+    }
+  };
+
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (e.target.name === "userid") {
       setUserIdAvailable(null);
-    }
-    if (e.target.name === "password" || e.target.name === "passwordCheck") {
-      if (form.password && form.passwordCheck) {
-        setPasswordMatch(form.password === form.passwordCheck);
-      } else {
-        setPasswordMatch(null);
-      }
     }
   };
 
@@ -76,9 +93,9 @@ export default function SignupPage() {
       <form className="flex flex-col items-center w-full" onSubmit={handleSubmit}>
         <div className="flex flex-col w-full max-w-xs">
           <label className="text-[#FC4F00] mb-3">아이디</label>
-          <div className="flex w-full justify-between">
+          <div className="flex justify-between">
             <Input
-              className="pl-2 rounded-lg border w-full py-2"
+              className="pl-2 rounded-lg border py-2"
               type="text"
               placeholder="아이디"
               name="userid"
@@ -94,84 +111,58 @@ export default function SignupPage() {
             </button>
           </div>
           {userIdAvailable === true && (
-            <p className="text-green-600 text-xs mt-1">사용 가능한 아이디입니다.</p>
+            <p className="text-green-600 text-xs mt-1">
+              사용 가능한 아이디입니다.
+            </p>
           )}
           {userIdAvailable === false && (
-            <p className="text-red-500 text-xs mt-1">사용할 수 없는 아이디입니다.</p>
+            <p className="text-red-500 text-xs mt-1">
+              사용할 수 없는 아이디입니다.
+            </p>
           )}
         </div>
-        <div className="flex flex-col w-full max-w-xs mt-5">
-          <label className="text-[#FC4F00] mb-3">비밀번호</label>
-          <div>
-            <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
-              type="password"
-              placeholder="비밀번호"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-            />
-            <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
-              type="password"
-              placeholder="비밀번호 확인"
-              name="passwordCheck"
-              value={form.passwordCheck}
-              onChange={handleChange}
-            />
-            <p className="text-[#1E3E62] text-[60%]">
-              6~20자/영문 대문자, 소문자, 숫자, 특수문자 중 2가지 이상 조합
-            </p>
-            {passwordMatch === false && (
-              <p className="text-red-500 text-xs mt-1">비밀번호가 일치하지 않습니다.</p>
-            )}
-            {passwordMatch === true && (
-              <p className="text-green-600 text-xs mt-1">비밀번호가 일치합니다.</p>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col w-full max-w-xs mt-5">
-          <label className="text-[#FC4F00] mb-3">휴대폰 번호</label>
-          <div className="flex w-full justify-between mb-3">
-            <Input
-              className="pl-2 rounded-lg border py-2"
-              type="text"
-              placeholder="휴대폰 번호"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
-            />
-            <button
-              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg"
-              type="button"
-            >
-              인증번호 받기
-            </button>
-          </div>
-          <div>
-            <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
-              type="text"
-              placeholder="인증번호 입력"
-              name="code"
-              value={form.code}
-              onChange={handleChange}
-            />
-          </div>
-        </div>
+        <SignupPasswordInput
+          password={form.password}
+          passwordCheck={form.passwordCheck}
+          onChange={handleChange}
+          passwordMatch={passwordMatch}
+        />
+        <SignupEmailInput
+          email={form.email}
+          code={form.code}
+          onChange={handleChange}
+          onRequestCode={handleEmail}
+          isEmailCodeMatch={isEmailCodeMatch}
+        />
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">닉네임</label>
-          <div className="w-full justify-around">
+          <div className="flex justify-between">
             <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
+              className="pl-2 rounded-lg border py-2"
               type="text"
               placeholder="닉네임"
               name="nickname"
               value={form.nickname}
               onChange={handleChange}
             />
-            <p className="text-[#1E3E62] text-[70%]">사용 가능한 닉네임 입니다.</p>
+            <button
+              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
+              type="button"
+              onClick={checkNick}
+            >
+              중복확인
+            </button>
           </div>
+          {userNickAvailable === false && (
+            <p className="text-red-500 text-xs mt-1">
+              사용 할 수 없는 닉네임 입니다.
+            </p>
+          )}
+          {userNickAvailable === true && (
+            <p className="text-green-600 text-xs mt-1">
+              사용 핤 수 있는 닉네임 입니다.
+            </p>
+          )}
         </div>
         <button
           type="submit"
@@ -181,5 +172,5 @@ export default function SignupPage() {
         </button>
       </form>
     </div>
-  )
+  );
 }

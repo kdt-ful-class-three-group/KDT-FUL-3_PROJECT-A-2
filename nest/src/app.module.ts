@@ -11,6 +11,7 @@ import { InterestModule } from './interest/interest.module';
 import { OrdersModule } from './orders/orders.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { UsersModule } from './users/users.module';
+import { NewsModule } from './news/news.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UsersModule } from './users/users.module';
     OrdersModule,
     PortfolioModule,
     UsersModule,
+    NewsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
