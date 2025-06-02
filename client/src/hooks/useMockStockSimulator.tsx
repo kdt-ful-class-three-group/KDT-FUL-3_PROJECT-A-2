@@ -25,7 +25,9 @@ export function useMockStockSimulator(
   const timersRef = useRef<Record<string, NodeJS.Timeout>>({});
 
   useEffect(() => {
-    if (!prevStocks.length || !nextStocks.length) return;
+    if (!Array.isArray(prevStocks) || !Array.isArray(nextStocks)) return;
+    if (prevStocks.length === 0 || nextStocks.length === 0) return;
+
 
     // 기존 타이머 모두 정리
     Object.values(timersRef.current).forEach(clearTimeout);
