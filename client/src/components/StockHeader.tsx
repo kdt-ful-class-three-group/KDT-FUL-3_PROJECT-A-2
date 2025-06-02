@@ -2,7 +2,7 @@ import { StockData } from "@/hooks/useStockApi";
 
 interface Props {
   onSelectTab: (tab: string) => void;
-  stockValue: StockData;
+  stockValue: StockData & { simulatedColor?: string };
 }
 
 export default function StockHeader({ onSelectTab, stockValue }: Props) {
@@ -21,11 +21,19 @@ export default function StockHeader({ onSelectTab, stockValue }: Props) {
       </div>
       <div className=" mb-3">
         <span className="text-2 font-bold text-red-500 mr-2">
-          <span className="text-2xl font-bold text-red-500 mr-2">
-            {stockValue.fltRt}
+          <span
+            className="text-2xl font-bold mr-2"
+            style={{ color: stockValue.simulatedColor }}
+          >
+            {stockValue.fltRt}%
           </span>
         </span>
-        <span className={`text-sm  "text-red-500"`}>{stockValue.mkp}</span>
+        <span
+          className={`text-sm  "text-red-500"`}
+          style={{ color: stockValue.simulatedColor }}
+        >
+          {stockValue.mkp}
+        </span>
       </div>
 
       <div className="flex justify-around border-t pt-1 text-sm text-gray-600">

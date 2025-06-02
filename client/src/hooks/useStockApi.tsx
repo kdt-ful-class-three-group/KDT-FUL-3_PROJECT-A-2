@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo, use } from "react";
 import axios, { AxiosResponse } from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 export interface StockData {
   basDt: string; // 기준일자 (YYYYMMDD)
@@ -22,28 +23,35 @@ const serviceKey =
   "%2F%2FyNWMYBpj%2BUWMNJOecVH1q6KYhP2UrjZA8nDYMreg0vjscQMgKCI8uqHwT9CLP1g5C5xVnHzwK7I9%2BxwO%2FqAA%3D%3D";
 
 // 실제 메서드명(getStockPriceInfo)으로 수정
-const url = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${serviceKey}&beginBasDt=20250101&endBasDt=20250429&numOfRows=10&pageNo=3&resultType=json`;
-
+const prevUrl = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${serviceKey}&endBasDt=20250314&numOfRows=10&pageNo=1&resultType=json`;
+// 실제 메서드명(getStockPriceInfo)으로 수정
+const nextUrl = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${serviceKey}&endBasDt=20250315&numOfRows=10&pageNo=1&resultType=json`;
+async function fetchStocks(url: string): Promise<StockData[]> {
+  const resStocks = await axios.get(url);
+  return resStocks.data.response.body.items.item || ["데이터 없음"];
+}
 export function useStockApi() {
-  //! 주식 데이터 상태
-  const [stocks, setStocks] = useState<StockData[]>([]);
   //! 주식 데이터 가져올 때 로딩 상태
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    const StocksApi = async () => {
-      try {
-        const stocksResponse: AxiosResponse = await axios.get(url);
-        const stocksItems = stocksResponse.data.response.body.items.item;
-        setStocks(stocksItems);
-      } catch (err) {
-        console.error("API 데이터 불러오기 실패:", err);
-      } finally {
-        setIsLoading(false); // ★ 반드시 필요!
-      }
-    };
+  // const [isLoading, setIsLoading] = useState(true);
+  const { data: prevStocks = [], isLoading: isLoadingPrev } = useQuery({
+    queryKey: ["stocks", "prev", prevUrl],
+    queryFn: () => fetchStocks(prevUrl),
+    staleTime: 1000 * 60 * 60, // 1시간
+  });
+  const { data: nextStocks = [], isLoading: isLoadingNext } = useQuery({
+    queryKey: ["stocks", "next", nextUrl],
+    queryFn: () => fetchStocks(nextUrl),
+    staleTime: 1000 * 60 * 60, // 1시간
+  });
 
-    StocksApi();
-  }, []);
-
-  return { stocks, isLoading };
+  const allStocks = useMemo(
+    () => [...prevStocks, ...nextStocks],
+    [prevStocks, nextStocks]
+  );
+  return {
+    allStocks,
+    prevStocks,
+    nextStocks,
+    isLoading: isLoadingPrev || isLoadingNext,
+  };
 }

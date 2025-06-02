@@ -22,19 +22,25 @@ export default function Nav() {
   return (
     <div className="absolute bottom-0 p-5 flex bg-[#1E3E62] w-full justify-between items-center">
       <Link href="/" className="cursor-pointer flex flex-col items-center">
-        <img src="./image/home.svg" alt="" />
+        <img src="/image/home.svg" alt="" />
         <p className="mt-2 text-white">거래소</p>
       </Link>
-      <Link href="/watch-list" className="cursor-pointer flex flex-col items-center">
-        <img src="./image/bookmark.svg" alt="" />
+      <Link
+        href="/watch-list"
+        className="cursor-pointer flex flex-col items-center"
+      >
+        <img src="/image/bookmark.svg" alt="" />
         <p className="mt-2 text-white">관심</p>
       </Link>
-      <Link href="/investment" className="cursor-pointer flex flex-col items-center">
-        <img src="./image/investment.svg" alt="" />
+      <Link
+        href="/transaction-history"
+        className="cursor-pointer flex flex-col items-center"
+      >
+        <img src="/image/investment.svg" alt="" />
         <p className="mt-2 text-white">투자내역</p>
       </Link>
       <Link href="bank" className="cursor-pointer flex flex-col items-center">
-        <img src="./image/bank.svg" alt="" />
+        <img src="/image/bank.svg" alt="" />
         <p className="mt-2 text-white">은행</p>
       </Link>
       {isExistsToken ? (
