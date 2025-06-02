@@ -3,28 +3,28 @@
 import { useRouter } from "next/navigation";
 import { StockData } from "@/hooks/useStockApi"; // API 훅
 
+import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
 
 type Props = {
   sortedStocks: StockData[];
   sortField: "mkp" | "fltRt" | "trPrc" | null;
   sortOrder: "desc" | "asc";
   handleSort: (field: "mkp" | "fltRt" | "trPrc") => void;
+  prevStocks: StockData[];
+  nextStocks: StockData[];
 };
-// 소수점 앞에 0이 없으면 0을 붙여주는 함수
-function formatFloat(value: string) {
-  if (!value) return "0";
-  if (value.startsWith(".")) return "0" + value;
-  if (value.startsWith("-.")) return "-0" + value.slice(1);
-  return value;
-}
-
 function StockTitleList({
   sortedStocks,
   sortField,
   sortOrder,
   handleSort,
-}: Props) {
+  prevStocks, // ✅ 추가
+  nextStocks,
+}: // mockData,
+Props) {
   const router = useRouter();
+  const simulatedStocks = useMockStockSimulator(prevStocks, nextStocks);
+
   return (
     <div>
       <div className="flex justify-between px-2 mb-6">
@@ -41,9 +41,9 @@ function StockTitleList({
             src={
               sortField === "mkp"
                 ? sortOrder === "desc"
-                  ? "./image/arrow_up.svg"
-                  : "./image/arrow_down.svg"
-                : "./image/tbArrow.svg"
+                  ? "/image/arrow_up.svg"
+                  : "/image/arrow_down.svg"
+                : "/image/tbArrow.svg"
             }
             alt="정렬"
           />
@@ -57,9 +57,9 @@ function StockTitleList({
             src={
               sortField === "fltRt"
                 ? sortOrder === "desc"
-                  ? "./image/arrow_up.svg"
-                  : "./image/arrow_down.svg"
-                : "./image/tbArrow.svg"
+                  ? "/image/arrow_up.svg"
+                  : "/image/arrow_down.svg"
+                : "/image/tbArrow.svg"
             }
             alt="정렬"
           />
@@ -73,52 +73,44 @@ function StockTitleList({
             src={
               sortField === "trPrc"
                 ? sortOrder === "desc"
-                  ? "./image/arrow_up.svg"
-                  : "./image/arrow_down.svg"
-                : "./image/tbArrow.svg"
+                  ? "/image/arrow_up.svg"
+                  : "/image/arrow_down.svg"
+                : "/image/tbArrow.svg"
             }
             alt="정렬"
           />
         </div>
       </div>
-      {sortedStocks.map((stock, id) => (
-        <div
-          key={id}
-          className="flex px-2 border-[#D9D9D9] py-5 border-b"
-          onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
-        >
-          <div className="flex justify-center w-full">
-            <p className="text-[#313131]">{stock.itmsNm}</p>
+      {simulatedStocks.map((stock, id) => {
+        // const simulated = simulatedMap[stock.srtnCd];
+        // console.log(stock.srtnCd, simulated);
+        return (
+          <div
+            key={id}
+            className="flex px-2 border-[#D9D9D9] py-5 border-b"
+            onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
+          >
+            <div className="flex justify-center w-full">
+              <p className="text-[#313131]">{stock.itmsNm}</p>
+            </div>
+            <div className="flex justify-center w-full">
+              <p style={{ color: stock.simulatedColor }}>
+                {stock.simulatedPrice.toLocaleString()}
+              </p>
+            </div>
+            <div className="flex justify-center w-full">
+              <p style={{ color: stock.simulatedColor }}>
+                {stock.simulatedChangeRate}%
+              </p>
+            </div>
+            <div className="flex justify-center w-full">
+              <p style={{ color: stock.simulatedColor }}>
+                {stock.simulatedTradeAmount.toLocaleString()}백만
+              </p>
+            </div>
           </div>
-          <div className="flex justify-center w-full">
-            <p
-              className={
-                stock.fltRt.startsWith("-") ? "text-blue-500" : "text-red-500"
-              }
-            >
-              {stock.mkp.toLocaleString()}
-            </p>
-          </div>
-          <div className="flex justify-center w-full">
-            <p
-              className={
-                stock.fltRt.startsWith("-") ? "text-blue-500" : "text-red-500"
-              }
-            >
-              {formatFloat(stock.fltRt)}%
-            </p>
-          </div>
-          <div className="flex justify-center w-full">
-            <p
-              className={
-                stock.fltRt.startsWith("-") ? "text-blue-500" : "text-red-500"
-              }
-            >
-              {stock.trPrc.toLocaleString()}백만
-            </p>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 }

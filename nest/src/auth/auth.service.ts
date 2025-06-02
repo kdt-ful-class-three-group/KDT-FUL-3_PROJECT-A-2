@@ -2,6 +2,8 @@ import { Injectable, Req } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
 import { randomInt } from 'crypto'; // 랜덤 문자열 생성
 import { Request } from 'express';
+import { SigninDto } from 'src/users/dto/signin.dto';
+import { JwtService } from '@nestjs/jwt';
 
 // 세션에 code 속성을 추가
 declare module 'express-session' {
@@ -12,6 +14,7 @@ declare module 'express-session' {
 
 @Injectable()
 export class AuthService {
+  constructor(private readonly jwtService: JwtService) {}
   private transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -43,5 +46,10 @@ export class AuthService {
     } else {
       return { ok: false, message: "인증번호가 일치하지 않습니다." };
     }
+  }
+  
+  provideJWT(user: SigninDto) {
+    const payload = {userid: user.userid}
+    return {access_token: this.jwtService.sign(payload)}
   }
 }
