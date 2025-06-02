@@ -147,7 +147,7 @@ function InfoItem({
       <span className={`${highlight ? "text-blue-800 font-semibold" : ""}`}>
         {label}
       </span>
-      <span className="font-bold text-black">₩ {value.toLocaleString()}</span>
+      <span className="text-gray-800">₩ {value.toLocaleString()}</span>
     </div>
   );
 }
