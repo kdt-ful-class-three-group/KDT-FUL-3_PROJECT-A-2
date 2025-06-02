@@ -7,20 +7,58 @@ export default function BankPage() {
   const [loanAmount, setLoanAmount] = useState("");
 
   const currentAssets: number = 34000000; //현재자산
-  const totalLoan: number = 10000000; //총대출금액
-  const loanAvailable: number = 40000000; //대출가능한돈
-  const currentDebt: number = 5000000; //내빛
+  const [totalLoan, setTotalLoan] = useState(0); //총대출금액
+  const [loanAvailable, setLoanAvailable] = useState(50000000); //대출가능한돈
+  const currentDebt = totalLoan; // 내빛은 총대출금액과 같게 했음
   const remainingDays: number = 120; //남은 날짜
   const maxLimit: number = 5000000; //최대한도
   const creditGrade: string = "1"; //등급
   const interestRate: number = 5.0; // 현재이자
 
   const handleLoan = () => {
-    alert(`${loanAmount} 대출 신청`);
+    const loan = Number(loanAmount.replace(/,/g, ""));
+
+    if (isNaN(loan) || loan <= 0) {
+      alert("올바른 금액을 입력해주세요.");
+      return;
+    }
+
+    if (loan > loanAvailable) {
+      alert(`최대 대출 가능 금액은 ${loanAvailable.toLocaleString()}원입니다.`);
+      return;
+    }
+
+    const newTotalLoan = totalLoan + loan;
+    const newLoanAvailable = loanAvailable - loan;
+    setTotalLoan(newTotalLoan);
+    setLoanAvailable(newLoanAvailable);
+    alert(
+      `${loan.toLocaleString()}원 대출 신청 완료\n총 대출금액: ${newTotalLoan.toLocaleString()}원\n남은 대출 가능 금액: ${newLoanAvailable.toLocaleString()}원`
+    );
   };
 
   const handleRepay = () => {
-    alert("상환 요청");
+    const loan = Number(loanAmount.replace(/,/g, ""));
+
+    if (isNaN(loan) || loan <= 0) {
+      alert("올바른 금액을 입력해주세요.");
+      return;
+    }
+
+    if (loan > totalLoan) {
+      alert(
+        `현재 총 대출금액 ₩${totalLoan.toLocaleString()}을 초과하여 상환할 수 없습니다.`
+      );
+      return;
+    }
+
+    const newTotalLoan = totalLoan - loan;
+    const newLoanAvailable = loanAvailable + loan;
+    setTotalLoan(newTotalLoan);
+    setLoanAvailable(newLoanAvailable);
+    alert(
+      `${loan.toLocaleString()}원 상환 완료\n총 대출금액: ${newTotalLoan.toLocaleString()}원\n남은 대출 가능 금액: ${newLoanAvailable.toLocaleString()}원`
+    );
   };
 
   return (
@@ -37,9 +75,13 @@ export default function BankPage() {
         </div>
         <div className="flex justify-between border-b border-[#D9D9D9] py-2"></div>
         <input
-          type="number"
-          value={loanAmount}
-          onChange={(e) => setLoanAmount(e.target.value)}
+          type="text"
+          value={loanAmount.replace(/[^0-9,]/g, "")}
+          onChange={(e) => {
+            const raw = e.target.value.replace(/,/g, "");
+            const formatted = Number(raw).toLocaleString();
+            setLoanAmount(formatted);
+          }}
           className="w-full p-3 border rounded-md mb-3 text-sm"
           placeholder="대출 할 금액을 입력하세요."
         />
