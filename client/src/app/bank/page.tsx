@@ -11,7 +11,7 @@ export default function BankPage() {
   const currentDebt = totalLoan; // 내빛은 총대출금액과 같게 했음
   const remainingDays: number = 120; //남은 날짜
   const maxLimit: number = 50000000; //최대한도
-  const [creditGrade, setCreditGrade] = useState("6"); //등급
+  const [creditGrade, setCreditGrade] = useState("5"); //등급
 
   // 등급 → 이자율 계산 함수
   const getInterestRateByGrade = (grade: string): number => {
