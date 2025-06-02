@@ -1,3 +1,5 @@
+// components/StockPortfolio.tsx
+"use client";
 import React, { useState } from "react";
 
 function StockPortfolio() {
