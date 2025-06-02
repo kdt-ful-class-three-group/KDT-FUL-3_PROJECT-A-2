@@ -1,5 +1,9 @@
+// components/StockTitleList.tsx
+"use client";
 import { useRouter } from "next/navigation";
 import { StockData } from "@/hooks/useStockApi"; // API 훅
+
+
 type Props = {
   sortedStocks: StockData[];
   sortField: "mkp" | "fltRt" | "trPrc" | null;
