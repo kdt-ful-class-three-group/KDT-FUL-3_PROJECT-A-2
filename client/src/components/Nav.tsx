@@ -33,7 +33,7 @@ export default function Nav() {
         <p className="mt-2 text-white">관심</p>
       </Link>
       <Link
-        href="/transaction-history"
+        href="/investment"
         className="cursor-pointer flex flex-col items-center"
       >
         <img src="/image/investment.svg" alt="" />

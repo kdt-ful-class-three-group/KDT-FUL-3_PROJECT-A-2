@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import Nav from "@/components/Nav";
 import Title from "@/components/Title";
-import WatchListPage from "@/components/WatchListPage";
+// import WatchListPage from "@/components/WatchListPage";
 import StockPortfolio from "@/components/StockPortfolio";
 import StockTitleList from "@/components/StockTitleList";
 import { StockData } from "@/hooks/useStockApi";
@@ -25,7 +25,7 @@ export default function Page() {
       <StockTitleList sortedStocks={sortedStocks} />
 
       {/* 관심종목 리스트 컴포넌트 */}
-      <WatchListPage />
+      {/* <WatchListPage /> */}
 
       {/* 네비게이션 */}
       <Nav />
