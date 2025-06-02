@@ -3,6 +3,7 @@ import Input from "@/components/Input";
 import SignupEmailInput from "@/components/SignupEmailInput";
 import SignupPasswordInput from "@/components/SignupPasswordInput";
 import Title from "@/components/Title";
+import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { usePasswordMatch } from "@/hooks/usePasswordMatch";
 import { SignupForm } from "@/interface/SignupForm";
 import { useEffect, useState } from "react";
@@ -19,8 +20,8 @@ export default function SignupPage() {
 
   const [userIdAvailable, setUserIdAvailable] = useState<null | boolean>(null);
   const [userNickAvailable, setUserNickAvailable] = useState<null | boolean>(null);
-  const [isEmailCodeMatch, setIsEmailCodeMatch] = useState<null | boolean>(null);
   const { passwordMatch } = usePasswordMatch(form.password, form.passwordCheck);
+  const { handleEmail, isEmailCodeMatch } = useEmailVerification(form.email, form.code);
 
   const checkUserId = async () => {
     if (!form.userid) {
@@ -60,58 +61,10 @@ export default function SignupPage() {
     }
   };
 
-  const handleEmail = () => {
-    fetch("http://localhost:8000/auth/email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: 'include',
-      body: JSON.stringify({ email: form.email }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          console.log(data.message);
-        } else {
-          console.log("이메일 인증 요청에 실패했습니다.");
-        }
-      })
-      .catch((err) => {
-        console.error("이메일 인증 요청 오류.", err);
-      });
-  }
-
-  const handleEmailCode = useEffect(() => {
-    if (form.code === "") {
-      return
-    }
-    fetch("http://localhost:8000/auth/verify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: 'include',
-      body: JSON.stringify({ code: form.code }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          console.log(data.message);
-          setIsEmailCodeMatch(data.ok);
-        } else {
-          console.log(data.message);
-          setIsEmailCodeMatch(data.ok)
-        }
-      })
-      .catch((err) => {
-        console.error("이메일 인증 요청 오류.", err);
-      });
-  }, [form.code])
-
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (e.target.name === "userid") {
       setUserIdAvailable(null);
-    }
-    if (e.target.name === "code") {
-      handleEmailCode
     }
   };
 
