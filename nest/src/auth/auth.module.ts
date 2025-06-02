@@ -2,6 +2,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -19,8 +21,15 @@ import { AuthService } from './auth.service';
         from: '"Your Project" <yourproject.auth@gmail.com>',
       },
     }),
+
+    PassportModule,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET || 'superSecretKey', // 비밀키 (환경변수 추천!)
+      signOptions: { expiresIn: '1h' }, // 토큰 만료시간
+    }),
   ],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService]
 })
 export class AuthModule { }

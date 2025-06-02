@@ -25,6 +25,7 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (data.ok) {
+        sessionStorage.setItem("token", data.token.access_token);
         window.location.href = "/";
       } else {
         console.log(data.message || "로그인 실패");
