@@ -12,23 +12,35 @@ import OrderBook from "@/components/OrderBook"; // 호가 탭 컴포넌트
 import StockChart from "@/components/StockChart"; // 차트 탭 컴포넌트
 import PriceInfo from "@/components/PriceInfo"; // 가격 정보 탭 컴포넌트
 import { useStockApi } from "@/hooks/useStockApi"; // API 훅
+import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
 import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
 
 export default function StockDetailPage() {
-  const { stocks, isLoading } = useStockApi();
-  const [tab, setTab] = useState("orderPage"); // 초기 탭은 주문 페이지로 설정
+  const { prevStocks, nextStocks, isLoading } = useStockApi();
+  const [tab, setTab] = useState("orderPage");
   const params = useParams();
   const srtnCd = params?.stockName as string;
-  const stockNumFind = stocks.find((s) => s.srtnCd === srtnCd);
 
-  if (isLoading) {
+  // 배열로 반환된 시뮬레이션 데이터에서 해당 종목 찾기
+  const simulatedList = useMockStockSimulator(prevStocks, nextStocks);
+  const simulated = simulatedList.find((s) => s.srtnCd === srtnCd);
+
+  if (isLoading || !simulated) {
     return <Spinner />;
   }
 
   return (
     <div>
-      <Title title={stockNumFind.itmsNm} bookmark={false} dictionary={false} />
-      <StockHeader onSelectTab={setTab} stockValue={stockNumFind} />
+      <Title title={simulated.itmsNm} bookmark={false} dictionary={false} />
+      <StockHeader
+        onSelectTab={setTab}
+        stockValue={{
+          ...simulated,
+          fltRt: simulated.simulatedChangeRate.toString(),
+          mkp: simulated.simulatedPrice.toString(),
+          simulatedColor: simulated.simulatedColor, // 추가!
+        }}
+      />
       <div className="p-4">
         {tab === "companyInfo" && <CompanyInfo />}
         {tab === "orderPage" && <OrderPage stockCode={srtnCd} />}

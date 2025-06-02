@@ -1,92 +1,138 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { StockData } from "./useStockApi";
 
-interface SimulatedStock {
-  date: string;
-  currentPrice: number;
-  changeRate: number;
-  tradeAmount: number;
+export interface SimulatedStock extends StockData {
+  simulatedPrice: number;
+  simulatedChangeRate: number;
+  simulatedTradeAmount: number;
+  simulatedColor: string;
 }
 
-type SimulatedMap = Record<string, SimulatedStock | null>;
+const STORAGE_KEY = "simulatedStockMap";
 
-export function useMockStockSimulator(stocks: StockData[]) {
-  const [simulatedMap, setSimulatedMap] = useState<SimulatedMap>({});
-  const [dayIndexMap, setDayIndexMap] = useState<Record<string, number>>({});
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+export function useMockStockSimulator(
+  prevStocks: StockData[],
+  nextStocks: StockData[]
+): SimulatedStock[] {
+  const [simulatedList, setSimulatedList] = useState<SimulatedStock[]>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    }
+    return [];
+  });
+  const prevSimMapRef = useRef<Record<string, number>>({});
+  const timersRef = useRef<Record<string, NodeJS.Timeout>>({});
 
   useEffect(() => {
-    if (!stocks || stocks.length < 2) return;
+    if (!prevStocks.length || !nextStocks.length) return;
 
-    // 종목코드별로 과거 데이터 분리
-    const grouped: Record<string, StockData[]> = {};
-    stocks.forEach((stock) => {
-      if (!grouped[stock.srtnCd]) grouped[stock.srtnCd] = [];
-      grouped[stock.srtnCd].push(stock);
-    });
+    // 기존 타이머 모두 정리
+    Object.values(timersRef.current).forEach(clearTimeout);
+    timersRef.current = {};
 
-    // dayIndexMap 초기화
-    const newDayIndexMap: Record<string, number> = {};
-    Object.keys(grouped).forEach((srtnCd) => {
-      newDayIndexMap[srtnCd] = dayIndexMap[srtnCd] ?? 1;
-    });
+    const prevMap = new Map<string, StockData>();
+    prevStocks.forEach((stock) => prevMap.set(stock.srtnCd, stock));
 
-    function simulateAll() {
-      const newSimulatedMap: SimulatedMap = {};
-      Object.entries(grouped).forEach(([srtnCd, arr]) => {
-        const dayIndex = newDayIndexMap[srtnCd];
-        const today = arr[dayIndex - 1];
-        const prev = arr[dayIndex];
-        if (!today || !prev) return;
+    // 종목별로 랜덤 주기로 갱신
+    nextStocks.forEach((stock) => {
+      const updateSim = () => {
+        const prev = prevMap.get(stock.srtnCd);
+        if (!prev) return;
 
-        const todayHigh = Number(today.hipr);
-        const todayLow = Number(today.lopr);
-        const prevHigh = Number(prev.hipr);
-        const prevLow = Number(prev.lopr);
+        function getTickSize(price: number): number {
+          if (price < 1000) return 1; // 1,000원 미만
+          if (price < 5000) return 5; // 1,000원 이상 ~ 4,990원
+          if (price < 10000) return 10; // 5,000원 이상 ~ 9,990원
+          if (price < 50000) return 50; // 10,000원 이상 ~ 49,950원
+          if (price < 100000) return 100; // 50,000원 이상 ~ 99,950원
+          if (price < 500000) return 500; // 100,000원 이상 ~ 499,000원
+          return 1000; // 500,000원 이상
+        }
 
-        const minPrice = Math.min(todayLow, prevLow);
-        const maxPrice = Math.max(todayHigh, prevHigh);
+        const prevClose = Number(prev.clpr);
+        const lastSim = prevSimMapRef.current[stock.srtnCd];
+        const basePrice = lastSim ?? prevClose;
 
-        const currentPrice = Number(
-          (Math.random() * (maxPrice - minPrice) + minPrice).toFixed(2)
+        const tick = getTickSize(basePrice);
+        const direction = Math.random() < 0.5 ? -1 : 1;
+        let simulatedPrice =
+          tick < 1
+            ? Number((basePrice + direction * tick).toFixed(2)) // 소수점 2자리
+            : Number((basePrice + direction * tick).toFixed(0)); // 정수
+
+        const minPrice = Number((prevClose * 0.85).toFixed(2)); // -15%
+        const maxPrice = Number((prevClose * 1.3).toFixed(2)); // +30%
+        if (simulatedPrice < minPrice) simulatedPrice = minPrice;
+        if (simulatedPrice > maxPrice) simulatedPrice = maxPrice;
+        const simulatedChangeRate = prevClose
+          ? Number(
+              (((simulatedPrice - prevClose) / prevClose) * 100).toFixed(2)
+            )
+          : 0;
+
+        const simulatedTradeAmount = Math.floor(
+          Number(stock.trPrc) * (0.9 + Math.random() * 0.2)
         );
 
-        const todayClose = Number(today.clpr);
-        const prevClose = Number(prev.clpr);
-        const changeRate =
-          prevClose !== 0
-            ? Number((((todayClose - prevClose) / prevClose) * 100).toFixed(2))
-            : 0;
+        // const simulatedColor = simulatedChangeRate < 0 ? "blue" : "red";
+        const simulatedColor = simulatedChangeRate < 0 ? "#1A68CC" : "#E23C4F";
 
-        newSimulatedMap[srtnCd] = {
-          date: today.basDt,
-          currentPrice,
-          changeRate,
-          tradeAmount: Number(today.trPrc),
-        };
-      });
-      setSimulatedMap(newSimulatedMap);
-    }
+        prevSimMapRef.current[stock.srtnCd] = simulatedPrice;
 
-    simulateAll();
+        setSimulatedList((prevList) => {
+          // 기존 시뮬레이션 값을 Map으로 변환
+          const prevMap = new Map(prevList.map((s) => [s.srtnCd, s]));
+          // 새 값으로 갱신
+          prevMap.set(stock.srtnCd, {
+            ...stock,
+            simulatedPrice,
+            simulatedChangeRate,
+            simulatedTradeAmount,
+            simulatedColor,
+          });
+          // 항상 nextStocks 순서대로 반환
+          return nextStocks
+            .map((s) => prevMap.get(s.srtnCd))
+            .filter(Boolean) as SimulatedStock[];
+        });
 
-    timerRef.current = setTimeout(() => {
-      // 각 종목별 dayIndex 증가
-      const updatedDayIndexMap: Record<string, number> = { ...newDayIndexMap };
-      Object.entries(grouped).forEach(([srtnCd, arr]) => {
-        if (updatedDayIndexMap[srtnCd] < arr.length - 1) {
-          updatedDayIndexMap[srtnCd] += 1;
-        } else {
-          updatedDayIndexMap[srtnCd] = 1;
+        // localStorage 저장
+        if (typeof window !== "undefined") {
+          const updatedList = simulatedList.filter(
+            (s) => s.srtnCd !== stock.srtnCd
+          );
+          localStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify([
+              ...updatedList,
+              {
+                ...stock,
+                simulatedPrice,
+                simulatedChangeRate,
+                simulatedTradeAmount,
+                simulatedColor,
+              },
+            ])
+          );
         }
-      });
-      setDayIndexMap(updatedDayIndexMap);
-    }, 1000 + Math.random() * 1000);
 
+        // 다음 갱신 예약 (0.5~2초 랜덤)
+        const nextDelay = 500 + Math.random() * 1500;
+        timersRef.current[stock.srtnCd] = setTimeout(updateSim, nextDelay);
+      };
+
+      // 최초 실행
+      updateSim();
+    });
+
+    // 언마운트 시 타이머 정리
     return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
+      Object.values(timersRef.current).forEach(clearTimeout);
+      timersRef.current = {};
     };
-  }, [stocks, dayIndexMap]);
+    // eslint-disable-next-line
+  }, [prevStocks, nextStocks]);
 
-  return simulatedMap;
+  return simulatedList;
 }

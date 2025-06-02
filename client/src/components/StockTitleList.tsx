@@ -1,41 +1,30 @@
+// components/StockTitleList.tsx
+"use client";
 import { useRouter } from "next/navigation";
 import { StockData } from "@/hooks/useStockApi"; // API 훅
-import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
 
-// type MockData = {
-//   date: string;
-//   hipr: number;
-//   lopr: number;
-//   clpr: number;
-// } | null;
+import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
 
 type Props = {
   sortedStocks: StockData[];
   sortField: "mkp" | "fltRt" | "trPrc" | null;
   sortOrder: "desc" | "asc";
   handleSort: (field: "mkp" | "fltRt" | "trPrc") => void;
-  stocks: StockData[]; // API 훅에서 가져온 종목 데이터
-  // mockData: MockData;
+  prevStocks: StockData[];
+  nextStocks: StockData[];
 };
-// 소수점 앞에 0이 없으면 0을 붙여주는 함수
-function formatFloat(value: string) {
-  if (!value) return "0";
-  if (value.startsWith(".")) return "0" + value;
-  if (value.startsWith("-.")) return "-0" + value.slice(1);
-  return value;
-}
-
 function StockTitleList({
   sortedStocks,
   sortField,
   sortOrder,
   handleSort,
-  stocks,
+  prevStocks, // ✅ 추가
+  nextStocks,
 }: // mockData,
 Props) {
   const router = useRouter();
+  const simulatedStocks = useMockStockSimulator(prevStocks, nextStocks);
 
-  const simulatedMap = useMockStockSimulator(stocks);
   return (
     <div>
       <div className="flex justify-between px-2 mb-6">
@@ -52,9 +41,9 @@ Props) {
             src={
               sortField === "mkp"
                 ? sortOrder === "desc"
-                  ? "./image/arrow_up.svg"
-                  : "./image/arrow_down.svg"
-                : "./image/tbArrow.svg"
+                  ? "/image/arrow_up.svg"
+                  : "/image/arrow_down.svg"
+                : "/image/tbArrow.svg"
             }
             alt="정렬"
           />
@@ -68,9 +57,9 @@ Props) {
             src={
               sortField === "fltRt"
                 ? sortOrder === "desc"
-                  ? "./image/arrow_up.svg"
-                  : "./image/arrow_down.svg"
-                : "./image/tbArrow.svg"
+                  ? "/image/arrow_up.svg"
+                  : "/image/arrow_down.svg"
+                : "/image/tbArrow.svg"
             }
             alt="정렬"
           />
@@ -84,17 +73,17 @@ Props) {
             src={
               sortField === "trPrc"
                 ? sortOrder === "desc"
-                  ? "./image/arrow_up.svg"
-                  : "./image/arrow_down.svg"
-                : "./image/tbArrow.svg"
+                  ? "/image/arrow_up.svg"
+                  : "/image/arrow_down.svg"
+                : "/image/tbArrow.svg"
             }
             alt="정렬"
           />
         </div>
       </div>
-      {sortedStocks.map((stock, id) => {
-        const simulated = simulatedMap[stock.srtnCd];
-        console.log(stock.srtnCd, simulated);
+      {simulatedStocks.map((stock, id) => {
+        // const simulated = simulatedMap[stock.srtnCd];
+        // console.log(stock.srtnCd, simulated);
         return (
           <div
             key={id}
@@ -105,54 +94,18 @@ Props) {
               <p className="text-[#313131]">{stock.itmsNm}</p>
             </div>
             <div className="flex justify-center w-full">
-              <p
-                className={
-                  simulated
-                    ? simulated.changeRate < 0
-                      ? "text-blue-500"
-                      : "text-red-500"
-                    : stock.fltRt.startsWith("-")
-                    ? "text-blue-500"
-                    : "text-red-500"
-                }
-              >
-                {simulated
-                  ? simulated.currentPrice.toLocaleString()
-                  : stock.mkp.toLocaleString()}
+              <p style={{ color: stock.simulatedColor }}>
+                {stock.simulatedPrice.toLocaleString()}
               </p>
             </div>
             <div className="flex justify-center w-full">
-              <p
-                className={
-                  simulated
-                    ? simulated.changeRate < 0
-                      ? "text-blue-500"
-                      : "text-red-500"
-                    : stock.fltRt.startsWith("-")
-                    ? "text-blue-500"
-                    : "text-red-500"
-                }
-              >
-                {simulated
-                  ? simulated.changeRate + "%"
-                  : formatFloat(stock.fltRt) + "%"}
+              <p style={{ color: stock.simulatedColor }}>
+                {stock.simulatedChangeRate}%
               </p>
             </div>
             <div className="flex justify-center w-full">
-              <p
-                className={
-                  simulated
-                    ? simulated.changeRate < 0
-                      ? "text-blue-500"
-                      : "text-red-500"
-                    : stock.fltRt.startsWith("-")
-                    ? "text-blue-500"
-                    : "text-red-500"
-                }
-              >
-                {simulated
-                  ? simulated.tradeAmount.toLocaleString() + "백만"
-                  : stock.trPrc.toLocaleString() + "백만"}
+              <p style={{ color: stock.simulatedColor }}>
+                {stock.simulatedTradeAmount.toLocaleString()}백만
               </p>
             </div>
           </div>
