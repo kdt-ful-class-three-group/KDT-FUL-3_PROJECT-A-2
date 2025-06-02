@@ -1,6 +1,10 @@
 "use client";
 import Input from "@/components/Input";
+import SignupEmailInput from "@/components/SignupEmailInput";
+import SignupPasswordInput from "@/components/SignupPasswordInput";
 import Title from "@/components/Title";
+import { useEmailVerification } from "@/hooks/useEmailVerification";
+import { usePasswordMatch } from "@/hooks/usePasswordMatch";
 import { SignupForm } from "@/interface/SignupForm";
 import { useEffect, useState } from "react";
 
@@ -14,10 +18,10 @@ export default function SignupPage() {
     nickname: "",
   });
 
-  const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
   const [userIdAvailable, setUserIdAvailable] = useState<null | boolean>(null);
   const [userNickAvailable, setUserNickAvailable] = useState<null | boolean>(null);
-  const [isEmailCodeMatch, setIsEmailCodeMatch] = useState<null | boolean>(null);
+  const { passwordMatch } = usePasswordMatch(form.password, form.passwordCheck);
+  const { handleEmail, isEmailCodeMatch } = useEmailVerification(form.email, form.code);
 
   const checkUserId = async () => {
     if (!form.userid) {
@@ -57,66 +61,10 @@ export default function SignupPage() {
     }
   };
 
-  const handleEmail = () => {
-    fetch("http://localhost:8000/auth/email", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: 'include',
-      body: JSON.stringify({ email: form.email }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          console.log(data.message);
-        } else {
-          console.log("이메일 인증 요청에 실패했습니다.");
-        }
-      })
-      .catch((err) => {
-        console.error("이메일 인증 요청 오류.", err);
-      });
-  }
-
-  const handleEmailCode = useEffect(() => {
-    if (form.code === "") {
-      return
-    }
-    fetch("http://localhost:8000/auth/verify", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: 'include',
-      body: JSON.stringify({ code: form.code }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.ok) {
-          console.log(data.message);
-          setIsEmailCodeMatch(data.ok);
-        } else {
-          console.log(data.message);
-          setIsEmailCodeMatch(data.ok)
-        }
-      })
-      .catch((err) => {
-        console.error("이메일 인증 요청 오류.", err);
-      });
-  }, [form.code])
-
-  useEffect(() => {
-    if (form.password && form.passwordCheck) {
-      setPasswordMatch(form.password === form.passwordCheck);
-    } else {
-      setPasswordMatch(null);
-    }
-  }, [form.password, form.passwordCheck]);
-
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (e.target.name === "userid") {
       setUserIdAvailable(null);
-    }
-    if (e.target.name === "code") {
-      handleEmailCode
     }
   };
 
@@ -173,80 +121,19 @@ export default function SignupPage() {
             </p>
           )}
         </div>
-        <div className="flex flex-col w-full max-w-xs mt-5">
-          <label className="text-[#FC4F00] mb-3">비밀번호</label>
-          <div>
-            <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
-              type="password"
-              placeholder="비밀번호"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-            />
-            <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
-              type="password"
-              placeholder="비밀번호 확인"
-              name="passwordCheck"
-              value={form.passwordCheck}
-              onChange={handleChange}
-            />
-            <p className="text-[#1E3E62] text-[60%]">
-              6~20자/영문 대문자, 소문자, 숫자, 특수문자 중 2가지 이상 조합
-            </p>
-            {passwordMatch === false && (
-              <p className="text-red-500 text-xs mt-1">
-                비밀번호가 일치하지 않습니다.
-              </p>
-            )}
-            {passwordMatch === true && (
-              <p className="text-green-600 text-xs mt-1">
-                비밀번호가 일치합니다.
-              </p>
-            )}
-          </div>
-        </div>
-        <div className="flex flex-col w-full max-w-xs mt-5">
-          <label className="text-[#FC4F00] mb-3">이메일</label>
-          <div className="flex w-full justify-between mb-3">
-            <Input
-              className="pl-2 rounded-lg border py-2"
-              type="text"
-              placeholder="example@exmaple.com"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-            />
-            <button
-              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg"
-              type="button"
-              onClick={handleEmail}
-            >
-              인증번호 받기
-            </button>
-          </div>
-          <div>
-            <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
-              type="text"
-              placeholder="인증번호 입력"
-              name="code"
-              value={form.code}
-              onChange={handleChange}
-            />
-          </div>
-          {isEmailCodeMatch === false && (
-            <p className="text-red-500 text-xs">
-              인증번호가 일치하지 않습니다.
-            </p>
-          )}
-          {isEmailCodeMatch === true && (
-            <p className="text-green-600 text-xs">
-              인증번호가 일치 합니다.
-            </p>
-          )}
-        </div>
+        <SignupPasswordInput
+          password={form.password}
+          passwordCheck={form.passwordCheck}
+          onChange={handleChange}
+          passwordMatch={passwordMatch}
+        />
+        <SignupEmailInput
+          email={form.email}
+          code={form.code}
+          onChange={handleChange}
+          onRequestCode={handleEmail}
+          isEmailCodeMatch={isEmailCodeMatch}
+        />
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">닉네임</label>
           <div className="flex justify-between">
