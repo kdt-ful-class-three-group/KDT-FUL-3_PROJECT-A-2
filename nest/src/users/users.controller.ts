@@ -2,11 +2,14 @@ import { Controller, Get, Post, Body, Res, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SigninDto } from './dto/signin.dto';
-import * as bcrypt from "bcryptjs";
+import { AuthService } from 'src/auth/auth.service';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly authService: AuthService
+  ) { }
 
   @Get()
   getHello(): string {
@@ -28,7 +31,13 @@ export class UsersController {
   @Post("signin")
   async Signin(@Body() data: SigninDto, @Res() res) {
     const isExist = await this.usersService.checkUser(data);
-    res.json({ ok: isExist });
+    if (isExist) {
+      const token = this.authService.provideJWT(data);
+      console.log(token);
+      res.json({ ok: isExist, token });
+    } else {
+      res.json({ ok: isExist });
+    }
   }
 
   @Post("register")
