@@ -66,7 +66,7 @@ export class UsersService {
 
   // 마지막으로 추가된 계정 확인
   async checkLastMember() {
-    const sql = "SELECT max(user_id) as pk FROM member"
+    const sql = "SELECT max(id) as pk FROM member"
     const result = await pool.query(sql);
     if (result.rows.length === 0) return false
     return result.rows[0];
