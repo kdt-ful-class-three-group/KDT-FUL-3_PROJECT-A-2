@@ -10,7 +10,7 @@ export default function BankPage() {
   const [loanAvailable, setLoanAvailable] = useState(50000000); //대출가능한돈
   const currentDebt = totalLoan; // 내빛은 총대출금액과 같게 했음
   const remainingDays: number = 120; //남은 날짜
-  const maxLimit: number = 5000000; //최대한도
+  const maxLimit: number = 50000000; //최대한도
   const creditGrade: string = "1"; //등급
   const interestRate: number = 5.0; // 현재이자
 
@@ -73,7 +73,7 @@ export default function BankPage() {
 
       {/* 여기에 회색 배경색 적용 */}
       <div className="flex justify-between border-b border-[#D9D9D9] py-2"></div>
-      <div className="bg-[#EEEEEE] rounded-md p-4 shadow-md min-h-screen">
+      <div className="bg-[#EEEEEE] rounded-md p-4 shadow-md min-h-[calc(100vh-100px)]">
         <div className="mb-6 space-y-2">
           <InfoItem label="현재 자산" value={currentAssets} />
           <InfoItem label="총대출금액" value={totalLoan} highlight />
@@ -110,9 +110,9 @@ export default function BankPage() {
         {/* <div className="border-b border-[#D9D9D9] py-2 w-full" /> */}
 
         <div className="space-y-2 text-sm">
-          <RowItem label="내 빚" value={currentDebt} />
+          <RowItem label="내 빚" value={`₩ ${currentDebt.toLocaleString()}`} />
           <RowItem label="상환 남은 날짜" value={`${remainingDays}일`} />
-          <RowItem label="최대한도" value={maxLimit} />
+          <RowItem label="최대한도" value={`₩ ${maxLimit.toLocaleString()}`} />
           <div className="flex justify-between border-b border-[#D9D9D9] py-2"></div>
           <RowItem label="신용등급" value={creditGrade} />
           <div className="flex justify-between border-b border-[#D9D9D9] py-2"></div>
