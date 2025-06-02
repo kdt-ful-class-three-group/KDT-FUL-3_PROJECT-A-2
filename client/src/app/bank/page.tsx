@@ -83,8 +83,8 @@ export default function BankPage() {
       <div className="bg-[#EEEEEE] rounded-md p-4 shadow-md min-h-[calc(100vh-100px)]">
         <div className="mb-6 space-y-2">
           <InfoItem label="현재 자산" value={currentAssets} />
-          <InfoItem label="총대출금액" value={totalLoan} highlight />
-          <InfoItem label="대출가능금액" value={loanAvailable} highlight />
+          <InfoItem label="총대출금액" value={totalLoan} />
+          <InfoItem label="대출가능금액" value={loanAvailable} />
         </div>
         <div className="flex justify-between border-b border-[#D9D9D9] py-2 w-full"></div>
 
