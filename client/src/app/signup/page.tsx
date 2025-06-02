@@ -3,6 +3,7 @@ import Input from "@/components/Input";
 import SignupEmailInput from "@/components/SignupEmailInput";
 import SignupPasswordInput from "@/components/SignupPasswordInput";
 import Title from "@/components/Title";
+import { usePasswordMatch } from "@/hooks/usePasswordMatch";
 import { SignupForm } from "@/interface/SignupForm";
 import { useEffect, useState } from "react";
 
@@ -16,10 +17,10 @@ export default function SignupPage() {
     nickname: "",
   });
 
-  const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
   const [userIdAvailable, setUserIdAvailable] = useState<null | boolean>(null);
   const [userNickAvailable, setUserNickAvailable] = useState<null | boolean>(null);
   const [isEmailCodeMatch, setIsEmailCodeMatch] = useState<null | boolean>(null);
+  const { passwordMatch } = usePasswordMatch(form.password, form.passwordCheck);
 
   const checkUserId = async () => {
     if (!form.userid) {
@@ -103,14 +104,6 @@ export default function SignupPage() {
         console.error("이메일 인증 요청 오류.", err);
       });
   }, [form.code])
-
-  useEffect(() => {
-    if (form.password && form.passwordCheck) {
-      setPasswordMatch(form.password === form.passwordCheck);
-    } else {
-      setPasswordMatch(null);
-    }
-  }, [form.password, form.passwordCheck]);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
