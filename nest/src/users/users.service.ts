@@ -7,7 +7,7 @@ import { BankService } from 'src/bank/bank.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly bankService: BankService) {}
+  constructor(private readonly bankService: BankService) { }
 
   getHello(): string {
     return 'Hello from UsersService!';
@@ -43,7 +43,8 @@ export class UsersService {
 
     try {
       await pool.query(sql, [userData.userid, userData.password, userData.email, userData.nickname]);
-      this.bankService.createBankAccount();
+      const member = await this.checkLastMember();
+      this.bankService.createBankAccount(member);
       return true;
     } catch (error) {
       console.error('회원가입 에러:', error);
@@ -61,5 +62,13 @@ export class UsersService {
     const isMatch = await bcrypt.compare(data.password, user.password);
 
     return isMatch;
+  }
+
+  // 마지막으로 추가된 계정 확인
+  async checkLastMember() {
+    const sql = "SELECT max(user_id) as pk FROM member"
+    const result = await pool.query(sql);
+    if (result.rows.length === 0) return false
+    return result.rows[0];
   }
 }
