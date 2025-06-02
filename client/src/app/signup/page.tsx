@@ -9,7 +9,7 @@ export default function SignupPage() {
     userid: "",
     password: "",
     passwordCheck: "",
-    phone: "",
+    email: "",
     code: "",
     nickname: "",
   });
@@ -17,6 +17,7 @@ export default function SignupPage() {
   const [passwordMatch, setPasswordMatch] = useState<null | boolean>(null);
   const [userIdAvailable, setUserIdAvailable] = useState<null | boolean>(null);
   const [userNickAvailable, setUserNickAvailable] = useState<null | boolean>(null);
+  const [isEmailCodeMatch, setIsEmailCodeMatch] = useState<null | boolean>(null);
 
   const checkUserId = async () => {
     if (!form.userid) {
@@ -56,6 +57,51 @@ export default function SignupPage() {
     }
   };
 
+  const handleEmail = () => {
+    fetch("http://localhost:8000/auth/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: 'include',
+      body: JSON.stringify({ email: form.email }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          console.log(data.message);
+        } else {
+          console.log("이메일 인증 요청에 실패했습니다.");
+        }
+      })
+      .catch((err) => {
+        console.error("이메일 인증 요청 오류.", err);
+      });
+  }
+
+  const handleEmailCode = useEffect(() => {
+    if (form.code === "") {
+      return
+    }
+    fetch("http://localhost:8000/auth/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: 'include',
+      body: JSON.stringify({ code: form.code }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok) {
+          console.log(data.message);
+          setIsEmailCodeMatch(data.ok);
+        } else {
+          console.log(data.message);
+          setIsEmailCodeMatch(data.ok)
+        }
+      })
+      .catch((err) => {
+        console.error("이메일 인증 요청 오류.", err);
+      });
+  }, [form.code])
+
   useEffect(() => {
     if (form.password && form.passwordCheck) {
       setPasswordMatch(form.password === form.passwordCheck);
@@ -68,6 +114,9 @@ export default function SignupPage() {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (e.target.name === "userid") {
       setUserIdAvailable(null);
+    }
+    if (e.target.name === "code") {
+      handleEmailCode
     }
   };
 
@@ -159,19 +208,20 @@ export default function SignupPage() {
           </div>
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
-          <label className="text-[#FC4F00] mb-3">휴대폰 번호</label>
+          <label className="text-[#FC4F00] mb-3">이메일</label>
           <div className="flex w-full justify-between mb-3">
             <Input
               className="pl-2 rounded-lg border py-2"
               type="text"
-              placeholder="휴대폰 번호"
-              name="phone"
-              value={form.phone}
+              placeholder="example@exmaple.com"
+              name="email"
+              value={form.email}
               onChange={handleChange}
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg"
               type="button"
+              onClick={handleEmail}
             >
               인증번호 받기
             </button>
@@ -186,6 +236,16 @@ export default function SignupPage() {
               onChange={handleChange}
             />
           </div>
+          {isEmailCodeMatch === false && (
+            <p className="text-red-500 text-xs">
+              인증번호가 일치하지 않습니다.
+            </p>
+          )}
+          {isEmailCodeMatch === true && (
+            <p className="text-green-600 text-xs">
+              인증번호가 일치 합니다.
+            </p>
+          )}
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">닉네임</label>
