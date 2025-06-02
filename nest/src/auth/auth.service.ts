@@ -32,8 +32,16 @@ export class AuthService {
     });
 
     return {
-      ok : true,
+      ok: true,
       message: '인증 이메일을 전송했습니다. 이메일을 확인해주세요.'
     };
+  }
+
+  async sendVerificationEmailCode(code: string, @Req() req: Request) {
+    if (req.session.code === code) {
+      return { ok: true, message: "인증번호가 일치합니다." }
+    } else {
+      return { ok: false, message: "인증번호가 일치하지 않습니다." };
+    }
   }
 }

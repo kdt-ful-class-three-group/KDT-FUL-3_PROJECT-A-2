@@ -10,4 +10,9 @@ export class AuthController {
   async requestEmail(@Body('email') email: string, @Req() req: Request) {
     return this.authService.sendVerificationEmail(email, req);
   }
+
+  @Post('verify')
+  async requestCode(@Body('code') code: string, @Req() req: Request) {
+    return this.authService.sendVerificationEmailCode(code, req);
+  }
 }
