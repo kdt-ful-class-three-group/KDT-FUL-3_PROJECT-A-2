@@ -12,7 +12,7 @@ export default function Nav() {
         <img src="./image/bookmark.svg" alt="" />
         <p className="mt-2 text-white">관심</p>
       </Link>
-      <Link href="/transaction-history" className="cursor-pointer flex flex-col items-center">
+      <Link href="/investment" className="cursor-pointer flex flex-col items-center">
         <img src="./image/investment.svg" alt="" />
         <p className="mt-2 text-white">투자내역</p>
       </Link>
