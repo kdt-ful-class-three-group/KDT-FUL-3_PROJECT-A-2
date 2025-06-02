@@ -5,8 +5,7 @@ import Nav from "@/components/Nav";
 
 export default function BankPage() {
   const [loanAmount, setLoanAmount] = useState("");
-
-  const currentAssets: number = 34000000; //현재자산
+  const [currentAssets, setCurrentAssets] = useState(0); //현재자산
   const [totalLoan, setTotalLoan] = useState(0); //총대출금액
   const [loanAvailable, setLoanAvailable] = useState(50000000); //대출가능한돈
   const currentDebt = totalLoan; // 내빛은 총대출금액과 같게 했음
@@ -32,6 +31,7 @@ export default function BankPage() {
     const newLoanAvailable = loanAvailable - loan;
     setTotalLoan(newTotalLoan);
     setLoanAvailable(newLoanAvailable);
+    setCurrentAssets(currentAssets + loan);
     alert(
       `${loan.toLocaleString()}원 대출 신청 완료\n총 대출금액: ${newTotalLoan.toLocaleString()}원\n남은 대출 가능 금액: ${newLoanAvailable.toLocaleString()}원`
     );
@@ -52,10 +52,16 @@ export default function BankPage() {
       return;
     }
 
+    if (loan > currentAssets) {
+      alert("현재 자산보다 많은 금액은 상환할 수 없습니다.");
+      return;
+    }
+
     const newTotalLoan = totalLoan - loan;
     const newLoanAvailable = loanAvailable + loan;
     setTotalLoan(newTotalLoan);
     setLoanAvailable(newLoanAvailable);
+    setCurrentAssets(currentAssets - loan);
     alert(
       `${loan.toLocaleString()}원 상환 완료\n총 대출금액: ${newTotalLoan.toLocaleString()}원\n남은 대출 가능 금액: ${newLoanAvailable.toLocaleString()}원`
     );
@@ -101,6 +107,8 @@ export default function BankPage() {
           </button>
         </div>
         <div className="flex justify-between border-b border-[#D9D9D9] py-2"></div>
+        {/* <div className="border-b border-[#D9D9D9] py-2 w-full" /> */}
+
         <div className="space-y-2 text-sm">
           <RowItem label="내 빚" value={currentDebt} />
           <RowItem label="상환 남은 날짜" value={`${remainingDays}일`} />
