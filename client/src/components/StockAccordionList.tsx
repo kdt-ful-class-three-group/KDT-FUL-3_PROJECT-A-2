@@ -1,4 +1,6 @@
 // /src/components/StockAccordionList.tsx
+
+"use client";
 import React, { useState } from "react";
 
 interface StockDetail {
