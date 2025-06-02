@@ -18,7 +18,7 @@ export default function ConfirmModal({
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
       <div className="bg-white rounded-lg w-[80%] max-w-sm p-6">
         <p className="text-center text-base mb-4">{message}</p>
         <div className="flex justify-around">
