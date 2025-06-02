@@ -1,5 +1,6 @@
 "use client";
 import Input from "@/components/Input";
+import SignupEmailInput from "@/components/SignupEmailInput";
 import SignupPasswordInput from "@/components/SignupPasswordInput";
 import Title from "@/components/Title";
 import { SignupForm } from "@/interface/SignupForm";
@@ -174,47 +175,19 @@ export default function SignupPage() {
             </p>
           )}
         </div>
-        <SignupPasswordInput password={form.password} passwordCheck={form.passwordCheck} onChange={handleChange} passwordMatch={passwordMatch} />
-        <div className="flex flex-col w-full max-w-xs mt-5">
-          <label className="text-[#FC4F00] mb-3">이메일</label>
-          <div className="flex w-full justify-between mb-3">
-            <Input
-              className="pl-2 rounded-lg border py-2"
-              type="text"
-              placeholder="example@exmaple.com"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-            />
-            <button
-              className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg"
-              type="button"
-              onClick={handleEmail}
-            >
-              인증번호 받기
-            </button>
-          </div>
-          <div>
-            <Input
-              className="pl-2 rounded-lg border py-2 w-full mb-3"
-              type="text"
-              placeholder="인증번호 입력"
-              name="code"
-              value={form.code}
-              onChange={handleChange}
-            />
-          </div>
-          {isEmailCodeMatch === false && (
-            <p className="text-red-500 text-xs">
-              인증번호가 일치하지 않습니다.
-            </p>
-          )}
-          {isEmailCodeMatch === true && (
-            <p className="text-green-600 text-xs">
-              인증번호가 일치 합니다.
-            </p>
-          )}
-        </div>
+        <SignupPasswordInput
+          password={form.password}
+          passwordCheck={form.passwordCheck}
+          onChange={handleChange}
+          passwordMatch={passwordMatch}
+        />
+        <SignupEmailInput
+          email={form.email}
+          code={form.code}
+          onChange={handleChange}
+          onRequestCode={handleEmail}
+          isEmailCodeMatch={isEmailCodeMatch}
+        />
         <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">닉네임</label>
           <div className="flex justify-between">
