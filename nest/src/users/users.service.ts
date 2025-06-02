@@ -3,9 +3,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { SigninDto } from './dto/signin.dto';
 import { pool } from 'src/DB/DB';
 import * as bcrypt from "bcryptjs";
+import { BankService } from 'src/bank/bank.service';
 
 @Injectable()
 export class UsersService {
+  constructor(private readonly bankService: BankService) {}
+
   getHello(): string {
     return 'Hello from UsersService!';
   }
@@ -32,12 +35,13 @@ export class UsersService {
   }
 
   async setUsers(userData: CreateUserDto): Promise<boolean> {
-    const sql = 'INSERT INTO member (user_id, password, phone_number, nickname) VALUES ($1, $2, $3, $4)';
+    const sql = 'INSERT INTO member (user_id, password, email, nickname) VALUES ($1, $2, $3, $4)';
     const hash = await bcrypt.genSalt(10);
     userData.password = await bcrypt.hash(userData.password, hash);
 
     try {
-      await pool.query(sql, [userData.userid, userData.password, userData.phone, userData.nickname]);
+      await pool.query(sql, [userData.userid, userData.password, userData.email, userData.nickname]);
+      this.bankService.createBankAccount();
       return true;
     } catch (error) {
       console.error('회원가입 에러:', error);
