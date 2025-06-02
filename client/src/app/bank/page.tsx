@@ -6,14 +6,14 @@ import Nav from "@/components/Nav";
 export default function BankPage() {
   const [loanAmount, setLoanAmount] = useState("");
 
-  const currentAssets = 34000000;
-  const totalLoan = 10000000;
-  const loanAvailable = 40000000;
-  const currentDebt = 5000000;
-  const remainingDays = 120;
-  const maxLimit = 5000000;
-  const creditGrade = 1;
-  const interestRate = 5.0;
+  const currentAssets: number = 34000000; //현재자산
+  const totalLoan: number = 10000000; //총대출금액
+  const loanAvailable: number = 40000000; //대출가능한돈
+  const currentDebt: number = 5000000; //내빛
+  const remainingDays: number = 120; //남은 날짜
+  const maxLimit: number = 5000000; //최대한도
+  const creditGrade: string = "1"; //등급
+  const interestRate: number = 5.0; // 현재이자
 
   const handleLoan = () => {
     alert(`${loanAmount} 대출 신청`);
