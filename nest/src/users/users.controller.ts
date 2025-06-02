@@ -33,7 +33,6 @@ export class UsersController {
     const isExist = await this.usersService.checkUser(data);
     if (isExist) {
       const token = this.authService.provideJWT(data);
-      console.log(token);
       res.json({ ok: isExist, token });
     } else {
       res.json({ ok: isExist });
