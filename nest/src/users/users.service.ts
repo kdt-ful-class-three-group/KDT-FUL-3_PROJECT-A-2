@@ -13,6 +13,7 @@ export class UsersService {
     return 'Hello from UsersService!';
   }
 
+  // 아이디디 중복 체크
   async checkId(id: string): Promise<{ exists: boolean }> {
     const sql = "SELECT * FROM member WHERE user_id = $1";
     try {
@@ -23,7 +24,7 @@ export class UsersService {
     }
   }
 
-
+  // 닉네임 중복 체크
   async checkNick(nickname: string): Promise<{ exists: boolean }> {
     const sql = "SELECT * FROM member WHERE nickname = $1";
     try {
@@ -34,6 +35,7 @@ export class UsersService {
     }
   }
 
+  // 회원가입
   async setUsers(userData: CreateUserDto): Promise<boolean> {
     const sql = 'INSERT INTO member (user_id, password, email, nickname) VALUES ($1, $2, $3, $4)';
     const hash = await bcrypt.genSalt(10);
@@ -49,6 +51,7 @@ export class UsersService {
     }
   }
 
+  // 로그인
   async checkUser(data: SigninDto): Promise<boolean> {
     const sql = "SELECT * FROM member WHERE user_id = $1";
     const result = await pool.query(sql, [data.userid]);
