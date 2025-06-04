@@ -1,5 +1,7 @@
+"use client";
 import { useEffect, useRef, useState } from "react";
 import { StockData } from "./useStockApi";
+import { useStockStore } from "@/store/stockStore";
 
 export interface SimulatedStock extends StockData {
   simulatedPrice: number;
@@ -8,22 +10,41 @@ export interface SimulatedStock extends StockData {
   simulatedColor: string;
 }
 
+export interface PriceHistory {
+  srtnCd: string;
+  time: string;
+  price: number;
+}
+
 const STORAGE_KEY = "simulatedStockMap";
 
 export function useMockStockSimulator(
   prevStocks: StockData[],
   nextStocks: StockData[]
-): SimulatedStock[] {
+): [SimulatedStock[], Record<string, PriceHistory[]>] {
+  // zustand의 값을 우선 사용
+  const zustandSimulatedList = useStockStore((state) => state.simulatedList);
+
   const [simulatedList, setSimulatedList] = useState<SimulatedStock[]>(() => {
+    if (zustandSimulatedList.length > 0) return zustandSimulatedList;
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) return JSON.parse(saved);
     }
     return [];
   });
+
   const prevSimMapRef = useRef<Record<string, number>>({});
   const timersRef = useRef<Record<string, NodeJS.Timeout>>({});
-
+  const setSimulatedListZustand = useStockStore(
+    (state) => state.setSimulatedList
+  );
+  const setPriceHistoryMapZustand = useStockStore(
+    (state) => state.setPriceHistoryMap
+  );
+  const [priceHistoryMap, setPriceHistoryMap] = useState<
+    Record<string, PriceHistory[]>
+  >({});
   useEffect(() => {
     if (!prevStocks.length || !nextStocks.length) return;
 
@@ -92,11 +113,32 @@ export function useMockStockSimulator(
             simulatedColor,
           });
           // 항상 nextStocks 순서대로 반환
-          return nextStocks
+          const storeresult = nextStocks
             .map((s) => prevMap.get(s.srtnCd))
             .filter(Boolean) as SimulatedStock[];
+          setSimulatedListZustand(storeresult); // zustand에도 저장
+          return storeresult;
         });
-
+        // 가격 변동 이력 누적
+        setPriceHistoryMap((prevMap) => {
+          const now = new Date();
+          const time = now.toLocaleTimeString();
+          const prevHistory = prevMap[stock.srtnCd] || [];
+          const newMap = {
+            ...prevMap,
+            [stock.srtnCd]: [
+              ...prevHistory,
+              {
+                srtnCd: stock.srtnCd,
+                time,
+                price: simulatedPrice,
+                trPrc: stock.trPrc,
+              },
+            ],
+          };
+          setPriceHistoryMapZustand(newMap); // zustand에도 저장
+          return newMap;
+        });
         // localStorage 저장
         if (typeof window !== "undefined") {
           const updatedList = simulatedList.filter(
@@ -118,7 +160,7 @@ export function useMockStockSimulator(
         }
 
         // 다음 갱신 예약 (0.5~2초 랜덤)
-        const nextDelay = 500 + Math.random() * 1500;
+        const nextDelay = 500 + Math.random() * 15000;
         timersRef.current[stock.srtnCd] = setTimeout(updateSim, nextDelay);
       };
 
@@ -133,6 +175,6 @@ export function useMockStockSimulator(
     };
     // eslint-disable-next-line
   }, [prevStocks, nextStocks]);
-
-  return simulatedList;
+  // console.log("시간별", priceHistoryMap);
+  return [simulatedList, priceHistoryMap];
 }

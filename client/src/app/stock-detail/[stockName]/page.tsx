@@ -1,4 +1,3 @@
-// 예: stock-detail/page.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -14,15 +13,22 @@ import PriceInfo from "@/components/PriceInfo"; // 가격 정보 탭 컴포넌�
 import { useStockApi } from "@/hooks/useStockApi"; // API 훅
 import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
 import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
+import { useStockStore } from "@/store/stockStore";
 
 export default function StockDetailPage() {
   const { prevStocks, nextStocks, isLoading } = useStockApi();
+  useMockStockSimulator(prevStocks, nextStocks);
   const [tab, setTab] = useState("orderPage");
   const params = useParams();
   const srtnCd = params?.stockName as string;
-
+  const simulatedList = useStockStore((state) => state.simulatedList);
   // 배열로 반환된 시뮬레이션 데이터에서 해당 종목 찾기
-  const simulatedList = useMockStockSimulator(prevStocks, nextStocks);
+  console.log("전역데이터관ㄹ", simulatedList);
+  // const [simulatedList, priceHistoryMap] = useMockStockSimulator(
+  //   prevStocks,
+  //   nextStocks
+  // );
+  // console.log(priceHistoryMap);
   const simulated = simulatedList.find((s) => s.srtnCd === srtnCd);
 
   if (isLoading || !simulated) {
@@ -45,7 +51,20 @@ export default function StockDetailPage() {
         {tab === "companyInfo" && <CompanyInfo />}
         {tab === "orderPage" && <OrderPage stockCode={srtnCd} />}
         {tab === "orderBook" && <OrderBook />}
-        {tab === "stockChart" && <StockChart />}
+        {tab === "stockChart" && (
+          <StockChart
+            stockNum={simulated.srtnCd}
+            // stocks={[
+            //   {
+            //     ...simulated,
+            //     fltRt: simulated.simulatedChangeRate.toString(),
+            //     mkp: simulated.simulatedPrice.toString(),
+            //     simulatedColor: simulated.simulatedColor,
+            //   },
+            // ]}
+            priceHistoryMap={priceHistoryMap}
+          />
+        )}
         {tab === "priceInfo" && <PriceInfo />}
       </div>
     </div>

@@ -1,51 +1,39 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Nav from "@/components/Nav";
 import Title from "@/components/Title";
 import Input from "@/components/Input";
 import StockTitleList from "@/components/StockTitleList";
 import StockPortfolio from "@/components/StockPortfolio";
 import { useStockApi, StockData } from "@/hooks/useStockApi";
-// import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
+import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
 import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
-
+import { useStockStore } from "@/store/stockStore";
 export default function ExchangePage() {
   const [search, setSearch] = useState("");
-  const { allStocks, prevStocks, nextStocks, isLoading } = useStockApi();
+  const { prevStocks, nextStocks, isLoading } = useStockApi();
   const [sortField, setSortField] = useState<"mkp" | "fltRt" | "trPrc" | null>(
     null
   );
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
-  const [sortedStocks, setSortedStocks] = useState<StockData[]>([]);
-  // const mockData = useMockStockSimulator(stocks);
 
-  console.log(allStocks);
+  useMockStockSimulator(prevStocks, nextStocks);
+  const simulatedList = useStockStore((state) => state.simulatedList);
+  // zustand setter 가져오기
+  const setFilteredStocks = useStockStore((state) => state.setFilteredStocks);
+
+  // filteredStocks 계산
+  const filteredStocks = useMemo(
+    () => simulatedList.filter((stock) => stock.itmsNm.includes(search)),
+    [simulatedList, search]
+  );
+
+  // zustand에 filteredStocks 저장
   useEffect(() => {
-    if (!sortField) {
-      setSortedStocks((prev) => {
-        // 값이 같으면 상태 변경하지 않음
-        if (
-          prev.length === allStocks.length &&
-          prev.every((v, i) => v.srtnCd === allStocks[i].srtnCd)
-        ) {
-          return prev;
-        }
-        return allStocks;
-      });
-      return;
-    }
-    const sorted = [...allStocks].sort((a, b) => {
-      const stocksUp = parseFloat(a[sortField]);
-      const stocksDown = parseFloat(b[sortField]);
-      return sortOrder === "desc"
-        ? stocksDown - stocksUp
-        : stocksUp - stocksDown;
-    });
-    setSortedStocks(sorted);
-    // setIsLoading(false);
-  }, [allStocks, sortField, sortOrder]);
-  // 정렬 기준/방향/원본 데이터가 바뀔 때마다 정렬
+    setFilteredStocks(filteredStocks);
+  }, [filteredStocks, setFilteredStocks]);
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -70,7 +58,7 @@ export default function ExchangePage() {
       <Title title="거래소" bookmark={false} dictionary={false} />
       <div className="max-w-full">
         {/* 종목 검색 */}
-        <div className="flex m-auto px-4">
+        <div className="flex w-full m-auto px-4">
           <img src="./image/search.svg" alt="" />
           <Input
             type="text"
@@ -86,12 +74,10 @@ export default function ExchangePage() {
         {/* 종목 테이블 */}
         <div className="overflow-x-auto mt-5">
           <StockTitleList
-            sortedStocks={sortedStocks}
             sortField={sortField}
             sortOrder={sortOrder}
             handleSort={handleSort}
-            prevStocks={prevStocks}
-            nextStocks={nextStocks}
+            stocks={filteredStocks}
           />
         </div>
         {/* <SimulatedStockTest /> */}

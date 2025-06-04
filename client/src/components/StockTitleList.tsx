@@ -1,4 +1,3 @@
-// components/StockTitleList.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import { StockData } from "@/hooks/useStockApi"; // API 훅
@@ -6,24 +5,13 @@ import { StockData } from "@/hooks/useStockApi"; // API 훅
 import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
 
 type Props = {
-  sortedStocks: StockData[];
   sortField: "mkp" | "fltRt" | "trPrc" | null;
   sortOrder: "desc" | "asc";
   handleSort: (field: "mkp" | "fltRt" | "trPrc") => void;
-  prevStocks: StockData[];
-  nextStocks: StockData[];
+  stocks: any[];
 };
-function StockTitleList({
-  sortedStocks,
-  sortField,
-  sortOrder,
-  handleSort,
-  prevStocks, // ✅ 추가
-  nextStocks,
-}: // mockData,
-Props) {
+function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
   const router = useRouter();
-  const simulatedStocks = useMockStockSimulator(prevStocks, nextStocks);
 
   return (
     <div>
@@ -81,36 +69,32 @@ Props) {
           />
         </div>
       </div>
-      {simulatedStocks.map((stock, id) => {
-        // const simulated = simulatedMap[stock.srtnCd];
-        // console.log(stock.srtnCd, simulated);
-        return (
-          <div
-            key={id}
-            className="flex px-2 border-[#D9D9D9] py-5 border-b"
-            onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
-          >
-            <div className="flex justify-center w-full">
-              <p className="text-[#313131]">{stock.itmsNm}</p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p style={{ color: stock.simulatedColor }}>
-                {stock.simulatedPrice.toLocaleString()}
-              </p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p style={{ color: stock.simulatedColor }}>
-                {stock.simulatedChangeRate}%
-              </p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p style={{ color: stock.simulatedColor }}>
-                {stock.simulatedTradeAmount.toLocaleString()}백만
-              </p>
-            </div>
+      {stocks.map((stock, id) => (
+        <div
+          key={id}
+          className="flex px-2 border-[#D9D9D9] py-5 border-b"
+          onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
+        >
+          <div className="flex justify-center w-full">
+            <p className="text-[#313131]">{stock.itmsNm}</p>
           </div>
-        );
-      })}
+          <div className="flex justify-center w-full">
+            <p style={{ color: stock.simulatedColor }}>
+              {stock.simulatedPrice.toLocaleString()}
+            </p>
+          </div>
+          <div className="flex justify-center w-full">
+            <p style={{ color: stock.simulatedColor }}>
+              {stock.simulatedChangeRate}%
+            </p>
+          </div>
+          <div className="flex justify-center w-full">
+            <p style={{ color: stock.simulatedColor }}>
+              {stock.simulatedTradeAmount.toLocaleString()}백만
+            </p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

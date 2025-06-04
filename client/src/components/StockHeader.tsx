@@ -1,3 +1,4 @@
+"use client";
 import { StockData } from "@/hooks/useStockApi";
 
 interface Props {

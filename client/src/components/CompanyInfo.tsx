@@ -1,5 +1,3 @@
-// src/components/CompanyInfo.tsx
-// next.js 13 이상에서 클라이언트 컴포넌트로 선언
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -62,7 +60,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
   // 뉴스 목록 fetch 로드
   useEffect(() => {
     setLoadingNews(true);
-   fetch(`http://localhost:8000/news/${encodeURIComponent(stockName)}`)
+    fetch(`http://localhost:8000/news/${encodeURIComponent(stockName)}`)
       // 응답을 JSON으로 파싱
       .then((res) => res.json())
       // .then((items: any[]) => setNewsList(items))
@@ -74,7 +72,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
       .finally(() => setLoadingNews(false));
   }, [stockName]);
 
-// 로딩 중 표시
+  // 로딩 중 표시
   if (loadingInfo) return <div>정보 로딩 중…</div>;
 
   return (
@@ -134,7 +132,9 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
           </div>
           <div>
             <dt>영업이익</dt>
-            <dd className="font-medium">{get(info?.financial?.operatingProfit)}</dd>
+            <dd className="font-medium">
+              {get(info?.financial?.operatingProfit)}
+            </dd>
           </div>
           <div>
             <dt>당기순이익</dt>
@@ -152,7 +152,9 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
             <dt>52주 최고/최저가</dt>
             <dd className="font-medium">
               {info?.financial
-                ? `${get(info.financial.high52w)} / ${get(info.financial.low52w)}`
+                ? `${get(info.financial.high52w)} / ${get(
+                    info.financial.low52w
+                  )}`
                 : "-"}
             </dd>
           </div>
@@ -162,7 +164,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
       {/* 4. 뉴스 */}
       <section>
         <h4 className="text-lg font-semibold mb-3">뉴스</h4>
-         {loadingNews ? (
+        {loadingNews ? (
           <div>뉴스 로딩 중…</div>
         ) : newsList.length === 0 ? (
           <div className="text-gray-500">뉴스가 없습니다.</div>
@@ -184,7 +186,6 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
           </ul>
         )}
       </section>
-
     </div>
   );
 }
