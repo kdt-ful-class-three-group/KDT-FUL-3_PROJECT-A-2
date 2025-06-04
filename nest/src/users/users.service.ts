@@ -84,6 +84,6 @@ export class UsersService {
   async searchPwFromIdAndEmail(data: {email: string, userId: string}) {
     const sql = "SELECT EXISTS( SELECT 1 FROM member WHERE email = $1 AND user_id = $2) AS exist";
     const result = await pool.query(sql, [data.email, data.userId]);
-    return result.rows[0].exists;
+    return result.rows[0].exist;
   }
 }

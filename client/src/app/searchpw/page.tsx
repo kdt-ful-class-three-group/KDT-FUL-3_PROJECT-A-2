@@ -6,8 +6,8 @@ import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { useState } from "react";
 
 export default function SearchPw() {
-  const [form, setForm] = useState<{ userid: string, email: string, code: string }>({
-    userid: "",
+  const [form, setForm] = useState<{ userId: string, email: string, code: string }>({
+    userId: "",
     email: "",
     code: "",
   });
@@ -20,7 +20,37 @@ export default function SearchPw() {
   };
 
   const handleSubmit = () => {
+    if (!isEmailCodeMatch) {
+      setIsError(true);
+      setError("이메일 인증을 완료해주세요.");
+      return;
+    }
 
+    fetch("http://localhost:8000/users/search-pw", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: form.userId,
+        email: form.email,
+      }),
+    }).then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        if (data.ok) {
+          setIsError(false);
+          window.location.href = "/changepw";
+        } else {
+          setIsError(true);
+          setError(data.message);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsError(true);
+        setError("요청에 실패했습니다. 다시 시도해주세요.");
+      });
   }
 
   return (
@@ -33,8 +63,8 @@ export default function SearchPw() {
             className="pl-2 rounded-lg border py-2 w-full"
             type="text"
             placeholder="아이디"
-            name="userid"
-            value={form.userid}
+            name="userId"
+            value={form.userId}
             onChange={handleChange}
           />
         </div>
