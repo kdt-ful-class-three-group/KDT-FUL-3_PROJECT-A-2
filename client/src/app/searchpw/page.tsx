@@ -40,6 +40,7 @@ export default function SearchPw() {
         console.log(data);
         if (data.ok) {
           setIsError(false);
+          sessionStorage.setItem("userId", form.userId);
           window.location.href = "/changepw";
         } else {
           setIsError(true);
