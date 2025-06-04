@@ -18,7 +18,29 @@ export default function SearchId() {
 
   const handleSubmit = () => {
     if (isEmailCodeMatch) {
-      setShowId(true);
+      fetch("http://localhost:8000/users/search-id", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email: emailForm.email }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          if (data.ok) {
+            console.log(data.user_id);
+            setShowId(true);
+            console.log("아이디 검색 성공");
+          } else {
+            console.log("아이디 검색 실패");
+            setShowId(false);
+          }
+        })
+        .catch((err) => {
+          setShowId(false);
+          console.log("요청 실패");
+        });
     } else {
       setShowId(false);
     }

@@ -49,9 +49,13 @@ export class UsersController {
     }
   }
 
-  @Get("search-id/:email")
-  async searchIdFromEmail(@Param('email') email: string, @Res() res) {
-    const result = await this.usersService.searchIdFromEmail(email);
-    res.json({ ok: true, result });
+  @Post("search-id")
+  async searchIdFromEmail(@Body() data: { email: string }, @Res() res) {
+    const result = await this.usersService.searchIdFromEmail(data.email);
+    if (result === false) {
+      res.status(401).json({ ok: false })
+    } else {
+      res.status(200).json({ ok: true, result });
+    }
   }
 }
