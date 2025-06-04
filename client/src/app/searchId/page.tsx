@@ -11,6 +11,7 @@ export default function SearchId() {
   });
   const { handleEmail, isEmailCodeMatch } = useEmailVerification(emailForm.email, emailForm.code);
   const [showId, setShowId] = useState(false);
+  const [userId, setUserId] = useState("");
 
   const handleChange = (e: { target: { name: string, value: string } }) => {
     setEmailForm({ ...emailForm, [e.target.name]: e.target.value });
@@ -27,9 +28,9 @@ export default function SearchId() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          console.log(data.result.user_id);
           if (data.ok) {
-            console.log(data.user_id);
+            setUserId(data.result.user_id);
             setShowId(true);
             console.log("아이디 검색 성공");
           } else {
@@ -67,7 +68,7 @@ export default function SearchId() {
       </div>
       {showId && (
         <p className="">
-          아이디 : yun
+          아이디 : {userId}
         </p>
       )}
     </div>
