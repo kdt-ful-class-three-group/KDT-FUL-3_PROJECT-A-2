@@ -3,14 +3,21 @@ import Title from "@/components/Title";
 import SignupPasswordInput from "@/components/SignupPasswordInput";
 import { usePasswordMatch } from "@/hooks/usePasswordMatch";
 import React, { useState } from "react";
+import { useEffect } from "react";
 
 export default function ChangePw() {
   const [form, setForm] = useState<{ password: string, passwordCheck: string }>({
     password: "",
     passwordCheck: "",
   });
-
   const { passwordMatch } = usePasswordMatch(form.password, form.passwordCheck);
+
+  useEffect(() => {
+    if (sessionStorage.getItem("userId") === null) {
+      window.location.replace("/");
+    }
+  }, []);
+
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
