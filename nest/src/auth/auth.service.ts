@@ -28,7 +28,7 @@ export class AuthService {
     const code = randomInt(100000, 999999).toString();
 
     req.session.code = code;
-    req.session.codeExpiresAt = Date.now() + 60 * 1000;
+    req.session.codeExpiresAt = Date.now() + 60 * 5000;
 
     await this.transporter.sendMail({
       to: email,
