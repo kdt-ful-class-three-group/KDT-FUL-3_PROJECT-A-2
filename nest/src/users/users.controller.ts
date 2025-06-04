@@ -8,8 +8,8 @@ import { AuthService } from 'src/auth/auth.service';
 export class UsersController {
   constructor(
     private readonly usersService: UsersService,
-    private readonly authService: AuthService
-  ) { }
+    private readonly authService: AuthService,
+  ) {}
 
   @Get()
   getHello(): string {
