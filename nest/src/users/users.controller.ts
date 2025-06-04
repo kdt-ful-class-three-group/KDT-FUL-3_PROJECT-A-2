@@ -70,7 +70,12 @@ export class UsersController {
   }
 
   @Put("change-pw")
-  async changePassword(@Body() data: { password: string }, @Res() res) {
-    console.log(data);
+  async changePassword(@Body() data: { password: string, userId: string }, @Res() res) {
+    const result = await this.usersService.changePassword(data);
+    if (result) {
+      res.status(200).json({ ok: result });
+    } else {
+      res.status(400).json({ ok: false });
+    }
   }
 }

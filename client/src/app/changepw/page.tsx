@@ -6,7 +6,8 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 
 export default function ChangePw() {
-  const [form, setForm] = useState<{ password: string, passwordCheck: string }>({
+  const [form, setForm] = useState<{ password: string, passwordCheck: string, userId: string }>({
+    userId: "",
     password: "",
     passwordCheck: "",
   });
@@ -22,8 +23,42 @@ export default function ChangePw() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    console.log("테스트");
+  const handleSubmit = async () => {
+    if (!passwordMatch) {
+      console.log("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    const userId = sessionStorage.getItem("userId");
+    if (!userId) {
+      alert("로그인이 필요합니다.");
+      window.location.replace("/");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:8000/users/change-pw", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          password: form.password,
+        }),
+      });
+      const data = await res.json();
+
+      if (data.ok) {
+        console.log("비밀번호가 성공적으로 변경되었습니다.");
+        sessionStorage.removeItem("userId");
+        window.location.replace("/");
+      } else {
+        console.log("비밀번호 변경에 실패했습니다.");
+      }
+    } catch (error) {
+      console.log("오류가 발생했습니다.", error);
+    }
   }
 
 
