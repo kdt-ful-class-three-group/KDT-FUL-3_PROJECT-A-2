@@ -61,6 +61,11 @@ export class UsersController {
 
   @Post("search-pw")
   async searchPwFromIdAndEmail(@Body() data: { email: string, userId: string }, @Res() res) {
-    console.log("들어옴", data);
+    const result = await this.usersService.searchPwFromIdAndEmail(data);
+    if (result) {
+      res.status(200).json({ ok: result });
+    } else {
+      res.status(404).json({ ok: result, message: "가입된 이메일이 아니거나 아이디가 올바르지 않습니다." });
+    }
   }
 }
