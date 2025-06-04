@@ -1,24 +1,26 @@
 "use client"
-import Input from "@/components/Input";
+import SignupEmailInput from "@/components/SignupEmailInput";
 import Title from "@/components/Title";
+import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { useState } from "react";
 
 export default function SearchId() {
-  const [phone, setPhone] = useState("");
-  const [code, setCode] = useState("");
+  const [emailForm, setEmailForm] = useState<{ email: string, code: string }>({
+    email: "",
+    code: "",
+  });
+  const { handleEmail, isEmailCodeMatch } = useEmailVerification(emailForm.email, emailForm.code);
   const [showId, setShowId] = useState(false);
 
-  const handlePhoneChange = (e: { target: { value: string } }) => {
-    setPhone(e.target.value);
-  };
-
-  const handleCodeChange = (e: { target: { value: string } }) => {
-    setCode(e.target.value);
+  const handleChange = (e: { target: { name: string, value: string } }) => {
+    setEmailForm({ ...emailForm, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = () => {
-    if (code === "123456") {
+    if (isEmailCodeMatch) {
       setShowId(true);
+    } else {
+      setShowId(false);
     }
   }
 
@@ -26,7 +28,14 @@ export default function SearchId() {
     <div className="m-auto flex flex-col items-center w-full px-5">
       <Title title="아이디 찾기" bookmark={false} dictionary={false} />
       <div className="flex flex-col w-full max-w-xs mt-10 mb-10">
-        <div className="flex flex-col w-full max-w-xs mt-5">
+        <SignupEmailInput
+          email={emailForm.email}
+          code={emailForm.code}
+          onChange={handleChange}
+          onRequestCode={handleEmail}
+          isEmailCodeMatch={isEmailCodeMatch}
+        />
+        {/* <div className="flex flex-col w-full max-w-xs mt-5">
           <label className="text-[#FC4F00] mb-3">휴대폰 번호</label>
           <div className="flex w-full justify-between mb-3">
             <Input
@@ -54,7 +63,7 @@ export default function SearchId() {
               onChange={handleCodeChange}
             />
           </div>
-        </div>
+        </div> */}
         <button
           type="button"
           className="w-full max-w-xs mt-5 border-1 text-center bg-[#1E3E62] text-[#FFFFFF] p-2 rounded-lg"
