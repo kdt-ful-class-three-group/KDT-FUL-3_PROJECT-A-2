@@ -58,4 +58,9 @@ export class UsersController {
       res.status(200).json({ ok: true, result });
     }
   }
+
+  @Post("search-pw")
+  async searchPwFromIdAndEmail(@Body() data: { email: string, userId: string }, @Res() res) {
+    console.log("들어옴", data);
+  }
 }
