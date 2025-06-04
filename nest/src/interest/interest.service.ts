@@ -3,10 +3,9 @@ import { pool } from '../DB/DB';
 
 export interface Interest {
   id: number;
-  user_id: number;
+  member_id: number;
   stock_code: string;
   stock_name: string;
-  added_at: string;
 }
 
 @Injectable()
@@ -17,14 +16,13 @@ export class InterestService {
   }
 
   async create(dto: {
-    user_id: number;
+    member_id: number;
     stock_code: string;
     stock_name: string;
-    added_at: string;
   }): Promise<Interest> {
     const result = await pool.query(
-      'INSERT INTO words (word, meaning) VALUES ($1, $2) RETURNING *',
-      [dto.user_id, dto.stock_code, dto.stock_name, dto.added_at],
+      `INSERT INTO interest_stock (member_id, stock_code, stock_name) VALUES ($1, $2, $3) RETURNING *`,
+      [dto.member_id, dto.stock_code, dto.stock_name],
     );
     return result.rows[0];
   }

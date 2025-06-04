@@ -14,10 +14,9 @@ export class InterestController {
   async create(
     @Body()
     dto: {
-      user_id: number;
+      member_id: number;
       stock_code: string;
       stock_name: string;
-      added_at: string;
     },
   ) {
     return this.interestService.create(dto);
