@@ -51,6 +51,7 @@ export class UsersController {
 
   @Get("search-id/:email")
   async searchIdFromEmail(@Param('email') email: string, @Res() res) {
-    res.json({ ok: true, email: email });
+    const result = await this.usersService.searchIdFromEmail(email);
+    res.json({ ok: true, result });
   }
 }

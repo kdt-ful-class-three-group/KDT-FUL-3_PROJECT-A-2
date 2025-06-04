@@ -71,4 +71,12 @@ export class UsersService {
     if (result.rows.length === 0) return false
     return result.rows[0];
   }
+
+  // 이메일을 기준으로 아이디 찾기
+  async searchIdFromEmail(email: string) {
+    const sql = "SELECT user_id FROM member WHERE email = $1";
+    const result = await pool.query(sql, [email]);
+    if (result.rows.length === 0) return false
+    return result.rows[0]
+  }
 }
