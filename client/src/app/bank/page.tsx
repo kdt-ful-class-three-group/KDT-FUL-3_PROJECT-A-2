@@ -76,7 +76,7 @@ export default function BankPage() {
   };
 
   return (
-    <div className="m-auto">
+    <div className="m-auto mb-25">
       <Title title="은행" bookmark={false} dictionary={false} />
 
       <div className="flex justify-between border-b border-[#D9D9D9] py-2 w-full"></div>

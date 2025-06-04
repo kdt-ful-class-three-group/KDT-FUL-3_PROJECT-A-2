@@ -122,7 +122,7 @@ export default function MyPage() {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mb-25">
 
      <Title title="마이페이지" bookmark={false} dictionary={false}  />
 

@@ -66,7 +66,7 @@ export default function ExchangePage() {
   };
 
   return (
-    <div>
+    <div className="mb-25">
       <Title title="거래소" bookmark={false} dictionary={false} />
       <div className="max-w-full">
         {/* 종목 검색 */}
