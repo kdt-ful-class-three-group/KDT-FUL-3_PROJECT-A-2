@@ -12,6 +12,7 @@ import { OrdersModule } from './orders/orders.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { UsersModule } from './users/users.module';
 import { NewsModule } from './news/news.module';
+import { WordsModule } from './words/words.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { NewsModule } from './news/news.module';
     PortfolioModule,
     UsersModule,
     NewsModule,
+    WordsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
