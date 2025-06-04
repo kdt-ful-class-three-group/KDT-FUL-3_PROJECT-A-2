@@ -48,4 +48,14 @@ export class UsersController {
       res.status(400).json({ ok: false, message: '회원가입 실패' });
     }
   }
+
+  @Post("search-id")
+  async searchIdFromEmail(@Body() data: { email: string }, @Res() res) {
+    const result = await this.usersService.searchIdFromEmail(data.email);
+    if (result === false) {
+      res.status(401).json({ ok: false })
+    } else {
+      res.status(200).json({ ok: true, result });
+    }
+  }
 }
