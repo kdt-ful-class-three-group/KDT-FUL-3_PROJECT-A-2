@@ -12,7 +12,8 @@ export default function SearchPw() {
     code: "",
   });
   const { handleEmail, isEmailCodeMatch } = useEmailVerification(form.email, form.code);
-  const [showId, setShowId] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e: { target: { name: string, value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -52,9 +53,9 @@ export default function SearchPw() {
           >
             비밀번호 찾기
           </button>
-          {showId && (
-            <p className="">
-              아이디 : yun
+          {isError && (
+            <p className="text-red-500 text-xs">
+              {error}
             </p>
           )}
         </div>
