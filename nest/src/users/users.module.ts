@@ -12,7 +12,7 @@ import { AuthModule } from 'src/auth/auth.module';
       isGlobal: true,
     }),
     JwtModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [UsersController],
   providers: [UsersService, BankService],
