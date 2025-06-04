@@ -14,7 +14,7 @@ export default function Page() {
   const [sortedStocks, setSortedStocks] = useState<StockData[]>([]);
 
   return (
-    <div className="p-4">
+    <div>
       {/* 상단 레이아웃 영역 */}
       <Title title="관심" bookmark={false} dictionary={false} />
 
