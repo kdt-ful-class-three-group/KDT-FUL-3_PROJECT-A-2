@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Res, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, Param, Put } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SigninDto } from './dto/signin.dto';
@@ -9,7 +9,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
-  ) {}
+  ) { }
 
   @Get()
   getHello(): string {
@@ -67,5 +67,10 @@ export class UsersController {
     } else {
       res.status(404).json({ ok: result, message: "가입된 이메일이 아니거나 아이디가 올바르지 않습니다." });
     }
+  }
+
+  @Put("change-pw")
+  async changePassword(@Body() data: { password: string }, @Res() res) {
+    console.log(data);
   }
 }
