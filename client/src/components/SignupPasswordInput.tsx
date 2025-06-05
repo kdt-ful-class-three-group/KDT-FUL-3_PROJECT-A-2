@@ -26,6 +26,7 @@ export default function SignupPasswordInput({
           value={password}
           onChange={onChange}
           pattern={REGEX.password.regex.source}
+          title={REGEX.password.title}
         />
         <Input
           className="pl-2 rounded-lg border py-2 w-full mb-3"
@@ -35,6 +36,7 @@ export default function SignupPasswordInput({
           value={passwordCheck}
           onChange={onChange}
           pattern={REGEX.password.regex.source}
+          title={REGEX.password.title}
         />
         <p className="text-[#1E3E62] text-[60%]">
           8~20자/영문자, 숫자, 특수문자 조합

@@ -28,6 +28,7 @@ export default function SignupEmailInput({
           value={email}
           onChange={onChange}
           pattern={REGEX.email.regex.source}
+          title={REGEX.email.title}
         />
         <button
           className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg"
@@ -46,6 +47,7 @@ export default function SignupEmailInput({
           value={code}
           onChange={onChange}
           pattern={REGEX.general.regex.source}
+          title={REGEX.email.title}
         />
       </div>
       {isEmailCodeMatch === false && (
