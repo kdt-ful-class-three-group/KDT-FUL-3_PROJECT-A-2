@@ -3,12 +3,14 @@
 import Input from "@/components/Input";
 import Title from "@/components/Title";
 import { LoginForm } from "@/interface/LoginForm";
+import { REGEX } from "@/utils/regex";
 import { useState } from "react";
 
 
 
 export default function LoginPage() {
   const [form, setForm] = useState<LoginForm>({ userid: "", password: "" });
+  const [isLogin, setIsLogin] = useState<boolean | null>(null);
 
   const handleChange = (e: { target: { name: string; value: string } }) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -29,6 +31,7 @@ export default function LoginPage() {
         window.location.href = "/";
       } else {
         console.log(data.message || "로그인 실패");
+        setIsLogin(false);
       }
     } catch (err) {
       console.log("서버 오류");
@@ -50,6 +53,7 @@ export default function LoginPage() {
             name="userid"
             value={form.userid}
             onChange={handleChange}
+            pattern={REGEX.general.source}
           />
         </div>
         <div className="w-full max-w-xs">
@@ -60,8 +64,14 @@ export default function LoginPage() {
             name="password"
             value={form.password}
             onChange={handleChange}
+            pattern={REGEX.password.source}
           />
         </div>
+        {isLogin === false && (
+          <p className="text-red-500 mt-1">
+            아이디와 비밀번호가 일치하지 않습니다.
+          </p>
+        )}
         <button
           type="submit"
           className="w-full max-w-xs mt-5 border-1 text-center bg-[#1E3E62] text-[#FFFFFF] p-2 rounded-lg"
@@ -70,8 +80,8 @@ export default function LoginPage() {
         </button>
       </form>
       <div className="flex justify-between w-full max-w-xs mt-10 mb-10">
-        <a href="">아이디 찾기</a>
-        <a href="">비밀번호 찾기</a>
+        <a href="/searchId">아이디 찾기</a>
+        <a href="/searchpw">비밀번호 찾기</a>
         <a href="/signup">회원가입</a>
       </div>
     </div>

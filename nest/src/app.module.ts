@@ -12,8 +12,12 @@ import { OrdersModule } from './orders/orders.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { UsersModule } from './users/users.module';
 import { NewsModule } from './news/news.module';
+
 import { StockSimulatorModule } from './commonStocks/stocksSimulated.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
+import { WordsModule } from './words/words.module';
+
 
 @Module({
   imports: [
@@ -36,7 +40,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     PortfolioModule,
     UsersModule,
     NewsModule,
+<<<<<<< HEAD
     StockSimulatorModule,
+=======
+    WordsModule,
+>>>>>>> 906275422e8373064bf0b982aefade26b4f234a2
   ],
   controllers: [AppController],
   providers: [AppService],

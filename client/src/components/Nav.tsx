@@ -20,7 +20,7 @@ export default function Nav() {
   }, []);
 
   return (
-    <div className="absolute bottom-0 p-5 flex bg-[#1E3E62] w-full justify-between items-center">
+    <div className="fixed bottom-0 left-0 w-full z-50 p-5 flex bg-[#1E3E62] justify-between items-center">
       <Link href="/" className="cursor-pointer flex flex-col items-center">
         <img src="/image/home.svg" alt="" />
         <p className="mt-2 text-white">거래소</p>
@@ -33,7 +33,7 @@ export default function Nav() {
         <p className="mt-2 text-white">관심</p>
       </Link>
       <Link
-        href="/transaction-history"
+        href="/investment"
         className="cursor-pointer flex flex-col items-center"
       >
         <img src="/image/investment.svg" alt="" />

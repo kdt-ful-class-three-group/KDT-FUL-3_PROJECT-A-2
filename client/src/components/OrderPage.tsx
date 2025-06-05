@@ -16,12 +16,12 @@ export default function OrderPage({ stockCode }: OrderPageProps) {
   return (
     <div className="p-4">
       <div className="flex">
-        {/* ② 호가창 영역 (빈 자리) */}
+        {/* 호가창 영역 (빈 자리) */}
         <div className="w-1/3 border rounded bg-gray-50">
           <OrderBook stockCode={stockCode} />
         </div>
 
-        {/* ① 탭 + ③/④ 콘텐츠 영역 */}
+        {/* 탭 + 콘텐츠 영역 */}
         <div className="w-2/3 ml-6">
           <div className="flex border-b-2 border-gray-200">
             <button

@@ -4,7 +4,7 @@
 import React, { useState } from "react";
 import Nav from "@/components/Nav";
 import Title from "@/components/Title";
-import WatchListPage from "@/components/WatchListPage";
+// import WatchListPage from "@/components/WatchListPage";
 import StockPortfolio from "@/components/StockPortfolio";
 import StockTitleList from "@/components/StockTitleList";
 import { StockData } from "@/hooks/useStockApi";
@@ -14,7 +14,7 @@ export default function Page() {
   const [sortedStocks, setSortedStocks] = useState<StockData[]>([]);
 
   return (
-    <div className="p-4">
+    <div className="mb-25">
       {/* 상단 레이아웃 영역 */}
       <Title title="관심" bookmark={false} dictionary={false} />
 
@@ -25,7 +25,7 @@ export default function Page() {
       <StockTitleList sortedStocks={sortedStocks} />
 
       {/* 관심종목 리스트 컴포넌트 */}
-      <WatchListPage />
+      {/* <WatchListPage /> */}
 
       {/* 네비게이션 */}
       <Nav />

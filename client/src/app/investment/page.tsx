@@ -58,7 +58,7 @@ export default function InvestmentPage() {
   }));
 
   return (
-    <div className="min-h-screen bg-gray-100 pb-16">
+    <div className="min-h-screen bg-gray-100 mb-25">
       {/* 페이지 상단 타이틀 */}
       <Title title="투자내역" bookmark={false} dictionary={false} />
       

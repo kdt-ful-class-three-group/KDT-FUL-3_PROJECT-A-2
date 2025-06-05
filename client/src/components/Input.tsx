@@ -11,6 +11,8 @@ function Input({
   name,
   value,
   onChange,
+  pattern,
+  title,
 }: inputProps) {
   const [inputPattern, setInputPattern] = useState(true);
   //! ChangeEvent<HTMLInputElement> : React에서 input onChange 이벤트 타입 지정할 때 사용하는 타입
@@ -38,6 +40,8 @@ function Input({
         placeholder={placeholder}
         onChange={inputForbiddenPattern}
         required
+        pattern={pattern}
+        title={title}
       />
     </div>
   );
