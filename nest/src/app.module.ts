@@ -18,7 +18,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { WordsModule } from './words/words.module';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,11 +39,10 @@ import { WordsModule } from './words/words.module';
     PortfolioModule,
     UsersModule,
     NewsModule,
-<<<<<<< HEAD
+
     StockSimulatorModule,
-=======
+
     WordsModule,
->>>>>>> 906275422e8373064bf0b982aefade26b4f234a2
   ],
   controllers: [AppController],
   providers: [AppService],
