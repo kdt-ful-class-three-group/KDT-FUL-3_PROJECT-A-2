@@ -7,6 +7,7 @@ import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { usePasswordMatch } from "@/hooks/usePasswordMatch";
 import { SignupForm } from "@/interface/SignupForm";
 import { useEffect, useState } from "react";
+import { REGEX } from "@/utils/regex";
 
 export default function SignupPage() {
   const [form, setForm] = useState<SignupForm>({
@@ -70,20 +71,24 @@ export default function SignupPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const res = await fetch("http://localhost:8000/users/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (data.ok) {
-        window.location.href = "/login";
-      } else {
-        console.log(data.message);
+    if (userIdAvailable && userNickAvailable && passwordMatch && isEmailCodeMatch) {
+      try {
+        const res = await fetch("http://localhost:8000/users/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          window.location.href = "/login";
+        } else {
+          console.log(data.message);
+        }
+      } catch (err) {
+        console.log("에러 발생 : ", err);
       }
-    } catch (err) {
-      console.log("에러 발생 : ", err);
+    } else {
+      console.log("유효성 검사 실패");
     }
   };
 
@@ -101,6 +106,8 @@ export default function SignupPage() {
               name="userid"
               value={form.userid}
               onChange={handleChange}
+              pattern={REGEX.general.regex.source}
+              title={REGEX.general.title}
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
@@ -144,6 +151,8 @@ export default function SignupPage() {
               name="nickname"
               value={form.nickname}
               onChange={handleChange}
+              pattern={REGEX.general.regex.source}
+              title={REGEX.general.title}
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
@@ -153,14 +162,14 @@ export default function SignupPage() {
               중복확인
             </button>
           </div>
-          {userNickAvailable === false && (
-            <p className="text-red-500 text-xs mt-1">
-              사용 할 수 없는 닉네임 입니다.
-            </p>
-          )}
           {userNickAvailable === true && (
             <p className="text-green-600 text-xs mt-1">
               사용 핤 수 있는 닉네임 입니다.
+            </p>
+          )}
+          {userNickAvailable === false && (
+            <p className="text-red-500 text-xs mt-1">
+              사용 할 수 없는 닉네임 입니다.
             </p>
           )}
         </div>

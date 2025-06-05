@@ -3,6 +3,7 @@ import Input from "@/components/Input";
 import SignupEmailInput from "@/components/SignupEmailInput";
 import Title from "@/components/Title";
 import { useEmailVerification } from "@/hooks/useEmailVerification";
+import { REGEX } from "@/utils/regex";
 import { useState } from "react";
 
 export default function SearchPw() {
@@ -67,6 +68,7 @@ export default function SearchPw() {
             name="userId"
             value={form.userId}
             onChange={handleChange}
+            pattern={REGEX.general.source}
           />
         </div>
         <div className="flex flex-col w-full max-w-xs mt-5">
