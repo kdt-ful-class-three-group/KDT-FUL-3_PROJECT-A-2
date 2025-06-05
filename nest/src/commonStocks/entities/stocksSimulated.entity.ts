@@ -1,13 +1,7 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  Unique,
-  CreateDateColumn,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 
 @Entity({ name: 'stock' })
-@Unique(['srtn_cd'])
+@Index(['bas_dt', 'srtn_cd'])
 export class SimulatedStock {
   @PrimaryGeneratedColumn()
   id: number;
@@ -44,9 +38,6 @@ export class SimulatedStock {
 
   @Column({ name: 'tr_prc', type: 'bigint', nullable: true })
   tr_prc: string | null;
-
-  @CreateDateColumn({ name: 'created_at', type: 'timestamp' })
-  created_at: Date;
 
   constructor(stock: Partial<SimulatedStock>) {
     Object.assign(this, stock);

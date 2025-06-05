@@ -12,11 +12,19 @@ import { OrdersModule } from './orders/orders.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { UsersModule } from './users/users.module';
 import { NewsModule } from './news/news.module';
+import { StockSimulatorModule } from './commonStocks/stocksSimulated.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DB_URL, // 환경변수 사용
+      autoLoadEntities: true, // entity 자동 인식
+      synchronize: true, // 개발용, 운영시 false 권장
     }),
     HttpModule,
     StockModule,
@@ -28,6 +36,7 @@ import { NewsModule } from './news/news.module';
     PortfolioModule,
     UsersModule,
     NewsModule,
+    StockSimulatorModule,
   ],
   controllers: [AppController],
   providers: [AppService],

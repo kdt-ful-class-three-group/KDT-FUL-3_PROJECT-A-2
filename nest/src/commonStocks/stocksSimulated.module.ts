@@ -10,4 +10,4 @@ import { StockController } from './stocksSimulated.controller';
   providers: [StockSimulatorService],
   controllers: [StockController],
 })
-export class StockModule {}
+export class StockSimulatorModule {}
