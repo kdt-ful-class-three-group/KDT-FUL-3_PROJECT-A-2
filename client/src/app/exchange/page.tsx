@@ -61,7 +61,7 @@ export default function ExchangePage() {
     setSortOrder(nextOrder);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: { target: { name: string; value: string } }) => {
     setSearch(e.target.value);
   };
 
@@ -77,6 +77,7 @@ export default function ExchangePage() {
             name="search"
             value={search}
             onChange={handleChange}
+            pattern={""}
             placeholder="종목 검색"
             className="w-full p-2 text-black placeholder-gray-500 outline-none"
           />
