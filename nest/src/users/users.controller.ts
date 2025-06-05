@@ -30,12 +30,12 @@ export class UsersController {
 
   @Post('signin')
   async Signin(@Body() data: SigninDto, @Res() res) {
-    const isExist = await this.usersService.checkUser(data);
-    if (isExist) {
+    const user = await this.usersService.checkUser(data);
+    if (!user === false) {
       const token = this.authService.provideJWT(data);
-      res.json({ ok: isExist, token });
+      res.json({ ok: true, token, user });
     } else {
-      res.json({ ok: isExist });
+      res.json({ ok: user });
     }
   }
 
