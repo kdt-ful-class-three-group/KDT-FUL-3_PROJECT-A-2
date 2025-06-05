@@ -43,7 +43,7 @@ export default function StockDetailPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // member_id: 1, 
+          member_id: 43, 
           stock_code: stock.srtnCd,
           stock_name: stock.itmsNm,
         }),
