@@ -16,8 +16,12 @@ function Input({
   //! ChangeEvent<HTMLInputElement> : React에서 input onChange 이벤트 타입 지정할 때 사용하는 타입
   const inputForbiddenPattern = (e: ChangeEvent<HTMLInputElement>) => {
     let inputValue = e.target.value;
-    const hasInputForbiddenPattern = forbiddenPattern.test(inputValue);
-    if (hasInputForbiddenPattern) {
+    if (inputValue === "") {
+      onChange({ target: { name, value: inputValue } })
+      return
+    };
+    const hasInputForbiddenPattern = pattern.test(inputValue);
+    if (!hasInputForbiddenPattern) {
       setInputPattern(false);
       alert("허용되지 않는 문자가 포함되어 있습니다.");
       inputValue = inputValue.replace(forbiddenPattern, "");
@@ -37,8 +41,8 @@ function Input({
         value={value}
         placeholder={placeholder}
         onChange={inputForbiddenPattern}
-        pattern={pattern}
         required
+        pattern={pattern.source}
       />
     </div>
   );
