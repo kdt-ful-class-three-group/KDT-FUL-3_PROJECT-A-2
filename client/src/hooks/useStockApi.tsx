@@ -18,25 +18,16 @@ export interface StockData {
   vs: number; // 전일 대비
 }
 const url = "http://localhost:8000/stock/simulated";
-async function fetchStocks(
-  url: string,
-  storageKey: string
-): Promise<StockData[]> {
-  // 2. 없으면 API 호출
+async function fetchStocks(url: string): Promise<StockData[]> {
   const resStocks = await axios.get(url);
-  const data = resStocks.data || [];
-  // 3. 받아온 데이터 localStorage에 저장
-  if (typeof window !== "undefined") {
-    localStorage.setItem(storageKey, JSON.stringify(data));
-  }
-  return data;
+  // resStocks.data가 이미 JSON 객체이므로 그대로 반환
+  return resStocks.data || [];
 }
 export function useStockApi() {
   const stockUrl = url;
-  const stockStorageKey = "simulatedStocks";
   const { data: apiStocks = [], isLoading: isLoadingNext } = useQuery({
-    queryKey: ["stocks", "next", stockUrl],
-    queryFn: () => fetchStocks(stockUrl, stockStorageKey),
+    queryKey: ["stocks", stockUrl],
+    queryFn: () => fetchStocks(stockUrl),
     staleTime: 1000 * 60 * 60, // 1시간 유지
   });
   const allStocks = apiStocks;

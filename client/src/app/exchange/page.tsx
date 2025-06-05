@@ -1,15 +1,15 @@
 "use client";
 
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useState } from "react";
 import Nav from "@/components/Nav";
 import Title from "@/components/Title";
 import Input from "@/components/Input";
 import StockTitleList from "@/components/StockTitleList";
 import StockPortfolio from "@/components/StockPortfolio";
 import { useStockApi } from "@/hooks/useStockApi";
-// import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
+
 import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
-// import { useStockStore } from "@/store/stockStore";
+
 export default function ExchangePage() {
   const [search, setSearch] = useState("");
   const { allStocks, isLoading } = useStockApi();
@@ -18,16 +18,9 @@ export default function ExchangePage() {
   );
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
-  // filteredStocks 계산
-  // const filteredStocks = allStocks.filter((stock) =>
-  //   stock.itms_nm.includes(search)
-  // );
-  // console.log(filteredStocks);
-
   if (isLoading) {
     return <Spinner />;
   }
-
   const handleSort = (field: "mkp" | "fltRt" | "trPrc") => {
     let nextOrder: "desc" | "asc" = sortOrder;
     if (sortField === field) {

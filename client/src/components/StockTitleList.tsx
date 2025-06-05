@@ -8,10 +8,17 @@ type Props = {
   sortField: "mkp" | "fltRt" | "trPrc" | null;
   sortOrder: "desc" | "asc";
   handleSort: (field: "mkp" | "fltRt" | "trPrc") => void;
-  stocks: any[];
+  stocks: StockData[];
 };
 function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
   const router = useRouter();
+  // 종목코드 기준으로 중복 제거 (가장 첫 번째 데이터만 남김)
+  const uniqueStocks = Array.from(
+    new Map(stocks.map((s) => [s.srtn_cd, s])).values()
+  );
+
+  // 이름순 정렬 (원하면)
+  uniqueStocks.sort((a, b) => a.itms_nm.localeCompare(b.itms_nm));
 
   return (
     <div>
@@ -69,30 +76,24 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
           />
         </div>
       </div>
-      {stocks.map((stock, id) => (
+      {uniqueStocks.map((stock, id) => (
         <div
           key={id}
           className="flex px-2 border-[#D9D9D9] py-5 border-b"
-          onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
+          onClick={() => router.push("/stock-detail/" + stock.srtn_cd)}
         >
           <div className="flex justify-center w-full">
-            <p className="text-[#313131]">{stock.itmsNm}</p>
-          </div>
-          {/* <div className="flex justify-center w-full">
-            <p style={{ color: stock.simulatedColor }}>
-              {stock.simulatedPrice.toLocaleString()}
-            </p>
+            <p className="text-[#313131]">{stock.itms_nm}</p>
           </div>
           <div className="flex justify-center w-full">
-            <p style={{ color: stock.simulatedColor }}>
-              {stock.simulatedChangeRate}%
-            </p>
+            <p style={{ color: stock.simulatedColor }}>{stock.clpr}</p>
           </div>
           <div className="flex justify-center w-full">
-            <p style={{ color: stock.simulatedColor }}>
-              {stock.simulatedTradeAmount.toLocaleString()}백만
-            </p>
-          </div> */}
+            <p style={{ color: stock.simulatedColor }}>{stock.flt_rt}%</p>
+          </div>
+          <div className="flex justify-center w-full">
+            <p style={{ color: stock.simulatedColor }}>{stock.tr_prc}백만</p>
+          </div>
         </div>
       ))}
     </div>
