@@ -45,12 +45,12 @@ export default function Nav() {
       </Link>
       {isExistsToken ? (
         <Link href="/my-page" className="cursor-pointer flex flex-col items-center">
-          <img src="./image/mypage.svg" alt="" />
+          <img src="/image/mypage.svg" alt="" />
           <p className="mt-2 text-white">마이페이지</p>
         </Link>
       ) : (
         <Link href="/login" className="cursor-pointer flex flex-col items-center">
-          <img src="./image/mypage.svg" alt="" />
+          <img src="/image/mypage.svg" alt="" />
           <p className="mt-2 text-white">로그인</p>
         </Link>
       )}

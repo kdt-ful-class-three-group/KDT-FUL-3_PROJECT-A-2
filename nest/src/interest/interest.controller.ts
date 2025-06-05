@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { InterestService } from './interest.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -12,6 +12,11 @@ export class InterestController {
     return this.interestService.findAll();
   }
 
+  // @Get()
+  // findAll(): Promise<InterestEntity[]> {
+  //   return this.interestService.findAll();
+  // }
+
   @Post()
   async create(
     @Body()
@@ -22,6 +27,11 @@ export class InterestController {
     },
   ) {
     return this.interestService.create(dto);
+  }
+
+  @Delete(':stock_code')
+  async remove(@Param('stock_code') stock_code: string) {
+    return this.interestService.remove(stock_code);
   }
 
   @Get('hello')

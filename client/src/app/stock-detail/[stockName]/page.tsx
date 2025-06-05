@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation"; // URL 파라미터 가져오기
 import Title from "@/components/Title";
 
@@ -19,6 +19,7 @@ export default function StockDetailPage() {
   const { allStocks, isLoading } = useStockApi();
   // useMockStockSimulator(prevStocks, nextStocks);
   const [tab, setTab] = useState("orderPage");
+  const [isStar, setIsStar] = useState(false);
   const params = useParams();
   const srtnCd = params?.srtn_cd as string;
   // const simulatedList = useStockStore((state) => state.simulatedList);
@@ -33,6 +34,47 @@ export default function StockDetailPage() {
   // const simulated = simulatedList.find((s) => s.srtnCd === srtnCd);
 
   if (isLoading) {
+  const srtnCd = params?.stockName as string;
+
+  // 종목 데이터에서 해당 종목 찾기
+  const stock = allStocks.find((s) => s.srtnCd === srtnCd);
+
+  // 관심종목 등록 여부 확인 (마운트 시)
+  useEffect(() => {
+    if (sessionStorage.getItem("member_id") === null) return
+    if (!stock) return;
+    fetch(`http://localhost:8000/interest`)
+      .then((res) => res.json())
+      .then((data) => {
+        const found = data.find((item: any) => item.stock_code === stock.srtnCd);
+        setIsStar(!!found);
+      });
+  }, [stock?.srtnCd]);
+
+  // 북마크 클릭 시 관심종목 추가/삭제
+  const handleBookmarkClick = async () => {
+    if (sessionStorage.getItem("member_id") === null) return
+    if (!stock) return;
+    if (!isStar) {
+      await fetch("http://localhost:8000/interest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          member_id: sessionStorage.getItem("member_id"),
+          stock_code: stock.srtnCd,
+          stock_name: stock.itmsNm,
+        }),
+      });
+      setIsStar(true);
+    } else {
+      await fetch(`http://localhost:8000/interest/${stock.srtnCd}`, {
+        method: "DELETE",
+      });
+      setIsStar(false);
+    }
+  };
+
+  if (isLoading || !stock) {
     return <Spinner />;
   }
 
@@ -46,6 +88,16 @@ export default function StockDetailPage() {
           flt_rt: allStocks.flt_rt,
           mkp: allStocks.mkp,
         }}
+      <Title
+        title={stock.itmsNm}
+        bookmark={true}
+        dictionary={false}
+        onBookmarkClick={handleBookmarkClick}
+        star={isStar}
+      />
+      <StockHeader
+        onSelectTab={setTab}
+        stockValue={stock}
       />
       <div className="p-4">
         {tab === "companyInfo" && <CompanyInfo />}
