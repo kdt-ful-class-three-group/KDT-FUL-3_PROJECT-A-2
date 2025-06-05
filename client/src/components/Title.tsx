@@ -7,11 +7,12 @@ type TitleProps = {
   bookmark: boolean;
   dictionary: boolean;
   onBookmarkClick?: () => void;
+  star?: boolean
 };
 
-export default function Title({ title, bookmark, dictionary, onBookmarkClick }: TitleProps) {
+export default function Title({ title, bookmark, dictionary, onBookmarkClick, star }: TitleProps) {
   const router = useRouter();
-
+  console.log("in title.tsx", bookmark);
   return (
     <div className="w-[95%] flex items-center justify-center relative m-auto p-5">
       <img
@@ -23,9 +24,9 @@ export default function Title({ title, bookmark, dictionary, onBookmarkClick }: 
       <h2 className="text-[#FC4F00] text-2xl font-bold">{title}</h2>
       <div className="absolute right-0">
         {/* 북마크 기능이 필요한 경우에만 bookmark !== undefined로 전달되도록 조건 분기 */}
-        {typeof bookmark === "boolean" && (
+        {bookmark && (
           <img
-            src={bookmark ? "/image/star_solid.svg" : "/image/titlebookmark.svg"}
+            src={star ? "/image/star_solid.svg" : "/image/titlebookmark.svg"}
             alt="북마크"
             onClick={onBookmarkClick}
             style={{ cursor: "pointer" }}

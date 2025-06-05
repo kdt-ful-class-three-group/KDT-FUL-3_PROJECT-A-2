@@ -17,7 +17,7 @@ import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
 export default function StockDetailPage() {
   const { allStocks, isLoading } = useStockApi();
   const [tab, setTab] = useState("orderPage");
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [isStar, setIsStar] = useState(false);
   const params = useParams();
   const srtnCd = params?.stockName as string;
 
@@ -31,29 +31,29 @@ export default function StockDetailPage() {
       .then((res) => res.json())
       .then((data) => {
         const found = data.find((item: any) => item.stock_code === stock.srtnCd);
-        setIsBookmarked(!!found);
+        setIsStar(!!found);
       });
   }, [stock?.srtnCd]);
 
   // 북마크 클릭 시 관심종목 추가/삭제
   const handleBookmarkClick = async () => {
     if (!stock) return;
-    if (!isBookmarked) {
+    if (!isStar) {
       await fetch("http://localhost:8000/interest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          member_id: 43, 
+          member_id: 43,
           stock_code: stock.srtnCd,
           stock_name: stock.itmsNm,
         }),
       });
-      setIsBookmarked(true);
+      setIsStar(true);
     } else {
       await fetch(`http://localhost:8000/interest/${stock.srtnCd}`, {
         method: "DELETE",
       });
-      setIsBookmarked(false);
+      setIsStar(false);
     }
   };
 
@@ -65,9 +65,10 @@ export default function StockDetailPage() {
     <div>
       <Title
         title={stock.itmsNm}
-        bookmark={isBookmarked}
+        bookmark={true}
         dictionary={false}
         onBookmarkClick={handleBookmarkClick}
+        star={isStar}
       />
       <StockHeader
         onSelectTab={setTab}
