@@ -26,6 +26,7 @@ export default function StockDetailPage() {
 
   // 관심종목 등록 여부 확인 (마운트 시)
   useEffect(() => {
+    if (sessionStorage.getItem("member_id") === null) return
     if (!stock) return;
     fetch(`http://localhost:8000/interest`)
       .then((res) => res.json())
@@ -37,13 +38,14 @@ export default function StockDetailPage() {
 
   // 북마크 클릭 시 관심종목 추가/삭제
   const handleBookmarkClick = async () => {
+    if (sessionStorage.getItem("member_id") === null) return
     if (!stock) return;
     if (!isStar) {
       await fetch("http://localhost:8000/interest", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          member_id: 43,
+          member_id: sessionStorage.getItem("member_id"),
           stock_code: stock.srtnCd,
           stock_name: stock.itmsNm,
         }),
