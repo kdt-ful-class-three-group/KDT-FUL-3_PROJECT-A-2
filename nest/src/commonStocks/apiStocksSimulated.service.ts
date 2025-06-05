@@ -10,7 +10,7 @@ export class StockApiService {
   constructor(private readonly httpService: HttpService) {}
 
   async fetchStockData(date: string): Promise<any[]> {
-    const url = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${this.serviceKey}&endBasDt=${date}&numOfRows=10&pageNo=1&resultType=json`;
+    const url = `https://apis.data.go.kr/1160100/service/GetStockSecuritiesInfoService/getStockPriceInfo?serviceKey=${this.serviceKey}&endBasDt=${date}&numOfRows=40&pageNo=1&resultType=json`;
     const response: AxiosResponse = await this.httpService.axiosRef.get(url, {
       responseType: 'text',
     });

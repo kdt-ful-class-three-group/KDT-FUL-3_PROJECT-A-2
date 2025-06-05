@@ -36,27 +36,29 @@ export class StockSimulatorService implements OnModuleInit {
   private prevDate: string = '20200108'; // 기본값
   private nextDate: string = '20200109'; // 기본값
 
+  private prevStocksCache: any[] | null = null;
+  private nextStocksCache: any[] | null = null;
+
   setSimulateDates(prev: string, next: string) {
     this.prevDate = prev;
     this.nextDate = next;
   }
 
   async onModuleInit() {
+    // 최초 1회만 API 호출해서 캐시
+    this.prevStocksCache = await this.stockApiService.fetchStockData(
+      this.prevDate,
+    );
+    this.nextStocksCache = await this.stockApiService.fetchStockData(
+      this.nextDate,
+    );
+
     setInterval(() => {
-      this.simulateAndSaveStocks(this.prevDate, this.nextDate)
+      this.simulateAndSaveStocks()
         .then(() => console.log('시뮬레이션 데이터 저장 완료'))
         .catch((e) => console.error('시뮬레이션 에러:', e));
     }, 1000);
   }
-  // getPrevDate(): string {
-  //   const now = new Date();
-  //   now.setDate(now.getDate() - 1);
-  //   return now.toISOString().slice(0, 10).replace(/-/g, '');
-  // }
-  // getNextDate(): string {
-  //   const now = new Date();
-  //   return now.toISOString().slice(0, 10).replace(/-/g, '');
-  // }
 
   getTickSize(price: number): number {
     if (price < 1000) return 1;
@@ -68,12 +70,10 @@ export class StockSimulatorService implements OnModuleInit {
     return 1000;
   }
 
-  async simulateAndSaveStocks(
-    prevDate: string,
-    nextDate: string,
-  ): Promise<void> {
-    const prevStocksRaw = await this.stockApiService.fetchStockData(prevDate);
-    const nextStocksRaw = await this.stockApiService.fetchStockData(nextDate);
+  async simulateAndSaveStocks(): Promise<void> {
+    // 캐시된 데이터 사용
+    const prevStocksRaw = this.prevStocksCache || [];
+    const nextStocksRaw = this.nextStocksCache || [];
 
     // 실제 내려온 날짜 추출
     const prevActualDate =
@@ -154,7 +154,7 @@ export class StockSimulatorService implements OnModuleInit {
 
       // DB 저장용 엔티티 생성
       const entity = this.stockRepo.create({
-        bas_dt: nextDate,
+        bas_dt: this.nextDate,
         srtn_cd,
         itms_nm,
         clpr: simulatedPrice,
@@ -172,7 +172,7 @@ export class StockSimulatorService implements OnModuleInit {
     console.log('디비 저장 전 데이터 확인', simulatedEntities);
 
     if (simulatedEntities.length > 0) {
-      await this.stockRepo.save(simulatedEntities);
+      // await this.stockRepo.save(simulatedEntities);
     }
   }
 
