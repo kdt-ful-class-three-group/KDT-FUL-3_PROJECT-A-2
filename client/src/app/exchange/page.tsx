@@ -80,6 +80,7 @@ export default function ExchangePage() {
             pattern={""}
             placeholder="종목 검색"
             className="w-full p-2 text-black placeholder-gray-500 outline-none"
+            title=""
           />
         </div>
         {/* 사용자 요약 정보 */}
