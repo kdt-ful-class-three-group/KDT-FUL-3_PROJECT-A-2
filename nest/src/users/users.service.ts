@@ -60,8 +60,8 @@ export class UsersService {
     if (result.rows.length === 0) return false;
     const user = result.rows[0];
     const isMatch = await bcrypt.compare(data.password, user.password);
-
-    return isMatch;
+    if (isMatch) return user
+    else return false
   }
 
   // 마지막으로 추가된 계정 확인
@@ -81,7 +81,7 @@ export class UsersService {
   }
 
   // 이메일과 아이디가 일치할 경우 true 반환
-  async searchPwFromIdAndEmail(data: {email: string, userId: string}) {
+  async searchPwFromIdAndEmail(data: { email: string, userId: string }) {
     const sql = "SELECT EXISTS( SELECT 1 FROM member WHERE email = $1 AND user_id = $2) AS exist";
     const result = await pool.query(sql, [data.email, data.userId]);
     return result.rows[0].exist;
