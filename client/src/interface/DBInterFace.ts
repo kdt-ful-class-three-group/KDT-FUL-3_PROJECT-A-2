@@ -86,4 +86,5 @@ export interface inputProps {
   name: string;
   value: string;
   onChange: (e: { target: { name: string; value: string } }) => void;
+  pattern: string;
 }
