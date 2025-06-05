@@ -10,6 +10,11 @@ export class InterestController {
     return this.interestService.findAll();
   }
 
+  // @Get()
+  // findAll(): Promise<InterestEntity[]> {
+  //   return this.interestService.findAll();
+  // }
+
   @Post()
   async create(
     @Body()

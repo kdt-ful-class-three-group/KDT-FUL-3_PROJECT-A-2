@@ -24,7 +24,7 @@ async function bootstrap() {
       cookie: {
         maxAge: 1000 * 60 * 60,
       },
-    })
+    }),
   );
 
   await app.listen(process.env.PORT ?? 8000);
