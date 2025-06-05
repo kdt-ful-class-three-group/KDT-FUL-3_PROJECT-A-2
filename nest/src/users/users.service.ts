@@ -60,8 +60,8 @@ export class UsersService {
     if (result.rows.length === 0) return false;
     const user = result.rows[0];
     const isMatch = await bcrypt.compare(data.password, user.password);
-
-    return isMatch;
+    if (isMatch) return user
+    else return false
   }
 
   // 마지막으로 추가된 계정 확인
