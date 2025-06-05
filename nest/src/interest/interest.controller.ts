@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { InterestService } from './interest.service';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('interest')
 export class InterestController {
   constructor(private readonly interestService: InterestService) {}

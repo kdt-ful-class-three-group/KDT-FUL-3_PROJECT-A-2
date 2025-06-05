@@ -59,7 +59,7 @@ export default function SearchId() {
           isEmailCodeMatch={isEmailCodeMatch}
         />
         <button
-          type="button"
+          type="submit"
           className="w-full max-w-xs mt-5 border-1 text-center bg-[#1E3E62] text-[#FFFFFF] p-2 rounded-lg"
           onClick={handleSubmit}
         >
