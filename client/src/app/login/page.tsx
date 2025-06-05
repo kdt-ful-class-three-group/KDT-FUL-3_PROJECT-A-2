@@ -3,6 +3,7 @@
 import Input from "@/components/Input";
 import Title from "@/components/Title";
 import { LoginForm } from "@/interface/LoginForm";
+import { REGEX } from "@/utils/regex";
 import { useState } from "react";
 
 
@@ -52,6 +53,7 @@ export default function LoginPage() {
             name="userid"
             value={form.userid}
             onChange={handleChange}
+            pattern={REGEX.general.source}
           />
         </div>
         <div className="w-full max-w-xs">
@@ -62,6 +64,7 @@ export default function LoginPage() {
             name="password"
             value={form.password}
             onChange={handleChange}
+            pattern={REGEX.password.source}
           />
         </div>
         {isLogin === false && (
