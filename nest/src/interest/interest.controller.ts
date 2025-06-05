@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Delete, Param } from '@nestjs/common';
 import { InterestService } from './interest.service';
 
 @Controller('interest')
@@ -25,6 +25,11 @@ export class InterestController {
     },
   ) {
     return this.interestService.create(dto);
+  }
+
+  @Delete(':stock_code')
+  async remove(@Param('stock_code') stock_code: string) {
+    return this.interestService.remove(stock_code);
   }
 
   @Get('hello')

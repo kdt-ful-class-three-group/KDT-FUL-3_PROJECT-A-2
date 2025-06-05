@@ -15,6 +15,10 @@ export class InterestService {
     return result.rows;
   }
 
+  async remove(stock_code: string) {
+  return pool.query('DELETE FROM interest_stock WHERE stock_code = $1', [stock_code]);
+  }
+
   async create(dto: {
     member_id: number;
     stock_code: string;
@@ -22,7 +26,7 @@ export class InterestService {
   }): Promise<Interest> {
     const result = await pool.query(
       `INSERT INTO interest_stock (member_id, stock_code, stock_name) VALUES ($1, $2, $3) RETURNING *`,
-      [dto.member_id, dto.stock_code, dto.stock_name],
+      [dto.member_id ?? null, dto.stock_code, dto.stock_name],
     );
     return result.rows[0];
   }
