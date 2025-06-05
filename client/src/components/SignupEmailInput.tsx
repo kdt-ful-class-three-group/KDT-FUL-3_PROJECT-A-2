@@ -1,4 +1,5 @@
 import Input from "@/components/Input";
+import { REGEX } from "@/utils/regex";
 
 interface SignupEmailInputProps {
   email: string;
@@ -26,6 +27,7 @@ export default function SignupEmailInput({
           name="email"
           value={email}
           onChange={onChange}
+          pattern={REGEX.email.source}
         />
         <button
           className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg"
@@ -43,6 +45,7 @@ export default function SignupEmailInput({
           name="code"
           value={code}
           onChange={onChange}
+          pattern={REGEX.general.source}
         />
       </div>
       {isEmailCodeMatch === false && (

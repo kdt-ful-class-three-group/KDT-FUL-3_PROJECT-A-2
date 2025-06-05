@@ -7,6 +7,7 @@ import { useEmailVerification } from "@/hooks/useEmailVerification";
 import { usePasswordMatch } from "@/hooks/usePasswordMatch";
 import { SignupForm } from "@/interface/SignupForm";
 import { useEffect, useState } from "react";
+import { REGEX } from "@/utils/regex";
 
 export default function SignupPage() {
   const [form, setForm] = useState<SignupForm>({
@@ -101,6 +102,7 @@ export default function SignupPage() {
               name="userid"
               value={form.userid}
               onChange={handleChange}
+              pattern={REGEX.general.source}
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
@@ -144,6 +146,7 @@ export default function SignupPage() {
               name="nickname"
               value={form.nickname}
               onChange={handleChange}
+              pattern={REGEX.general.source}
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"

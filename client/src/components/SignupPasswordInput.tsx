@@ -1,4 +1,5 @@
 import Input from "@/components/Input";
+import { REGEX } from "@/utils/regex";
 
 interface SignupPasswordInputProps {
   password: string;
@@ -24,6 +25,7 @@ export default function SignupPasswordInput({
           name="password"
           value={password}
           onChange={onChange}
+          pattern={REGEX.password.source}
         />
         <Input
           className="pl-2 rounded-lg border py-2 w-full mb-3"
@@ -32,9 +34,10 @@ export default function SignupPasswordInput({
           name="passwordCheck"
           value={passwordCheck}
           onChange={onChange}
+          pattern={REGEX.password.source}
         />
         <p className="text-[#1E3E62] text-[60%]">
-          6~20자/영문 대문자, 소문자, 숫자, 특수문자 중 2가지 이상 조합
+          8~20자/영문자, 숫자, 특수문자 조합
         </p>
         {passwordMatch === false && (
           <p className="text-red-500 text-xs mt-1">
