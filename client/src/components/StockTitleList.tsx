@@ -1,29 +1,24 @@
-// components/StockTitleList.tsx
 "use client";
 import { useRouter } from "next/navigation";
 import { StockData } from "@/hooks/useStockApi"; // API 훅
 
-import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
+// import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
 
 type Props = {
-  sortedStocks: StockData[];
   sortField: "mkp" | "fltRt" | "trPrc" | null;
   sortOrder: "desc" | "asc";
   handleSort: (field: "mkp" | "fltRt" | "trPrc") => void;
-  prevStocks: StockData[];
-  nextStocks: StockData[];
+  stocks: StockData[];
 };
-function StockTitleList({
-  sortedStocks,
-  sortField,
-  sortOrder,
-  handleSort,
-  prevStocks, // ✅ 추가
-  nextStocks,
-}: // mockData,
-Props) {
+function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
   const router = useRouter();
-  const simulatedStocks = useMockStockSimulator(prevStocks, nextStocks);
+  // 종목코드 기준으로 중복 제거 (가장 첫 번째 데이터만 남김)
+  const uniqueStocks = Array.from(
+    new Map(stocks.map((s) => [s.srtn_cd, s])).values()
+  );
+
+  // 이름순 정렬 (원하면)
+  uniqueStocks.sort((a, b) => a.itms_nm.localeCompare(b.itms_nm));
 
   return (
     <div>
@@ -81,36 +76,26 @@ Props) {
           />
         </div>
       </div>
-      {simulatedStocks.map((stock, id) => {
-        // const simulated = simulatedMap[stock.srtnCd];
-        // console.log(stock.srtnCd, simulated);
-        return (
-          <div
-            key={id}
-            className="flex px-2 border-[#D9D9D9] py-5 border-b"
-            onClick={() => router.push("/stock-detail/" + stock.srtnCd)}
-          >
-            <div className="flex justify-center w-full">
-              <p className="text-[#313131]">{stock.itmsNm}</p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p style={{ color: stock.simulatedColor }}>
-                {stock.simulatedPrice.toLocaleString()}
-              </p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p style={{ color: stock.simulatedColor }}>
-                {stock.simulatedChangeRate}%
-              </p>
-            </div>
-            <div className="flex justify-center w-full">
-              <p style={{ color: stock.simulatedColor }}>
-                {stock.simulatedTradeAmount.toLocaleString()}백만
-              </p>
-            </div>
+      {uniqueStocks.map((stock, id) => (
+        <div
+          key={id}
+          className="flex px-2 border-[#D9D9D9] py-5 border-b"
+          onClick={() => router.push("/stock-detail/" + stock.srtn_cd)}
+        >
+          <div className="flex justify-center w-full">
+            <p className="text-[#313131]">{stock.itms_nm}</p>
           </div>
-        );
-      })}
+          <div className="flex justify-center w-full">
+            <p style={{ color: stock.simulatedColor }}>{stock.clpr}</p>
+          </div>
+          <div className="flex justify-center w-full">
+            <p style={{ color: stock.simulatedColor }}>{stock.flt_rt}%</p>
+          </div>
+          <div className="flex justify-center w-full">
+            <p style={{ color: stock.simulatedColor }}>{stock.tr_prc}백만</p>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

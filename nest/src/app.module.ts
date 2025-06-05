@@ -12,12 +12,23 @@ import { OrdersModule } from './orders/orders.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { UsersModule } from './users/users.module';
 import { NewsModule } from './news/news.module';
+
+import { StockSimulatorModule } from './commonStocks/stocksSimulated.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { WordsModule } from './words/words.module';
+
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DB_URL, // 환경변수 사용
+      autoLoadEntities: true, // entity 자동 인식
+      synchronize: true, // 개발용, 운영시 false 권장
     }),
     HttpModule,
     StockModule,
@@ -29,7 +40,11 @@ import { WordsModule } from './words/words.module';
     PortfolioModule,
     UsersModule,
     NewsModule,
+<<<<<<< HEAD
+    StockSimulatorModule,
+=======
     WordsModule,
+>>>>>>> 906275422e8373064bf0b982aefade26b4f234a2
   ],
   controllers: [AppController],
   providers: [AppService],

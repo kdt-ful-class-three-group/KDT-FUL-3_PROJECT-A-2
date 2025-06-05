@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { ChangeEvent } from "react";
 import { inputProps } from "../interface/DBInterFace";

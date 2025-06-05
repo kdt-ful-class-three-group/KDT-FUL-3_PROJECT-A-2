@@ -9,7 +9,7 @@ export class UsersController {
   constructor(
     private readonly usersService: UsersService,
     private readonly authService: AuthService,
-  ) { }
+  ) {}
 
   @Get()
   getHello(): string {
@@ -60,17 +60,26 @@ export class UsersController {
   }
 
   @Post('search-pw')
-  async searchPwFromIdAndEmail(@Body() data: { email: string, userId: string }, @Res() res) {
+  async searchPwFromIdAndEmail(
+    @Body() data: { email: string; userId: string },
+    @Res() res,
+  ) {
     const result = await this.usersService.searchPwFromIdAndEmail(data);
     if (result) {
       res.status(200).json({ ok: result });
     } else {
-      res.status(404).json({ ok: result, message: '가입된 이메일이 아니거나 아이디가 올바르지 않습니다.' });
+      res.status(404).json({
+        ok: result,
+        message: '가입된 이메일이 아니거나 아이디가 올바르지 않습니다.',
+      });
     }
   }
 
   @Put('change-pw')
-  async changePassword(@Body() data: { password: string, userId: string }, @Res() res) {
+  async changePassword(
+    @Body() data: { password: string; userId: string },
+    @Res() res,
+  ) {
     const result = await this.usersService.changePassword(data);
     if (result) {
       res.status(200).json({ ok: result });
