@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { StockData } from "@/hooks/useStockApi"; // API 훅
 
-import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
+// import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
 
 type Props = {
   sortField: "mkp" | "fltRt" | "trPrc" | null;
@@ -78,7 +78,7 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
           <div className="flex justify-center w-full">
             <p className="text-[#313131]">{stock.itmsNm}</p>
           </div>
-          <div className="flex justify-center w-full">
+          {/* <div className="flex justify-center w-full">
             <p style={{ color: stock.simulatedColor }}>
               {stock.simulatedPrice.toLocaleString()}
             </p>
@@ -92,7 +92,7 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
             <p style={{ color: stock.simulatedColor }}>
               {stock.simulatedTradeAmount.toLocaleString()}백만
             </p>
-          </div>
+          </div> */}
         </div>
       ))}
     </div>

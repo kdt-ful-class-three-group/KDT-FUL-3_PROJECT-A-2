@@ -19,9 +19,10 @@ export default function ExchangePage() {
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
   // filteredStocks 계산
-  const filteredStocks = allStocks.filter((stock) =>
-    stock.itms_nm.includes(search)
-  );
+  // const filteredStocks = allStocks.filter((stock) =>
+  //   stock.itms_nm.includes(search)
+  // );
+  // console.log(filteredStocks);
 
   if (isLoading) {
     return <Spinner />;
@@ -66,7 +67,7 @@ export default function ExchangePage() {
             sortField={sortField}
             sortOrder={sortOrder}
             handleSort={handleSort}
-            stocks={filteredStocks}
+            stocks={allStocks}
           />
         </div>
         {/* <SimulatedStockTest /> */}
