@@ -175,4 +175,8 @@ export class StockSimulatorService implements OnModuleInit {
       await this.stockRepo.save(simulatedEntities);
     }
   }
+
+  async getSimulatedStocks() {
+    return await this.stockRepo.find();
+  }
 }

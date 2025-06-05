@@ -6,33 +6,22 @@ import Title from "@/components/Title";
 import Input from "@/components/Input";
 import StockTitleList from "@/components/StockTitleList";
 import StockPortfolio from "@/components/StockPortfolio";
-import { useStockApi, StockData } from "@/hooks/useStockApi";
-import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
+import { useStockApi } from "@/hooks/useStockApi";
+// import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
 import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
-import { useStockStore } from "@/store/stockStore";
+// import { useStockStore } from "@/store/stockStore";
 export default function ExchangePage() {
   const [search, setSearch] = useState("");
-  const { prevStocks, nextStocks, isLoading } = useStockApi();
+  const { allStocks, isLoading } = useStockApi();
   const [sortField, setSortField] = useState<"mkp" | "fltRt" | "trPrc" | null>(
     null
   );
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
-  useMockStockSimulator(prevStocks, nextStocks);
-  const simulatedList = useStockStore((state) => state.simulatedList);
-  // zustand setter 가져오기
-  const setFilteredStocks = useStockStore((state) => state.setFilteredStocks);
-
   // filteredStocks 계산
-  const filteredStocks = useMemo(
-    () => simulatedList.filter((stock) => stock.itmsNm.includes(search)),
-    [simulatedList, search]
+  const filteredStocks = allStocks.filter((stock) =>
+    stock.itms_nm.includes(search)
   );
-
-  // zustand에 filteredStocks 저장
-  useEffect(() => {
-    setFilteredStocks(filteredStocks);
-  }, [filteredStocks, setFilteredStocks]);
 
   if (isLoading) {
     return <Spinner />;
