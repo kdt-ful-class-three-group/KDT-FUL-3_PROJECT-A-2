@@ -106,7 +106,7 @@ export default function SignupPage() {
               name="userid"
               value={form.userid}
               onChange={handleChange}
-              pattern={REGEX.general.source}
+              pattern={REGEX.general.regex.source}
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
@@ -150,7 +150,7 @@ export default function SignupPage() {
               name="nickname"
               value={form.nickname}
               onChange={handleChange}
-              pattern={REGEX.general.source}
+              pattern={REGEX.general.regex.source}
             />
             <button
               className="bg-[#E5E5E5] text-[#1E3E62] rounded-lg px-2 ml-2"
