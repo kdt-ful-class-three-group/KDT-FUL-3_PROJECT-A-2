@@ -12,13 +12,14 @@ type Props = {
 };
 function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
   const router = useRouter();
+  console.log(stocks);
   // 종목코드 기준으로 중복 제거 (가장 첫 번째 데이터만 남김)
-  const uniqueStocks = Array.from(
-    new Map(stocks.map((s) => [s.srtn_cd, s])).values()
-  );
+  // const uniqueStocks = Array.from(
+  //   new Map(stocks.map((s) => [s.srtn_cd, s])).values()
+  // );
 
   // 이름순 정렬 (원하면)
-  uniqueStocks.sort((a, b) => a.itms_nm.localeCompare(b.itms_nm));
+  // uniqueStocks.sort((a, b) => a.itms_nm.localeCompare(b.itms_nm));
 
   return (
     <div>
@@ -76,7 +77,7 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
           />
         </div>
       </div>
-      {uniqueStocks.map((stock, id) => (
+      {stocks.map((stock, id) => (
         <div
           key={id}
           className="flex px-2 border-[#D9D9D9] py-5 border-b"
