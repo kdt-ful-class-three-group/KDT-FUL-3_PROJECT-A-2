@@ -77,6 +77,11 @@ export default function OrderSummary({stock, stockCode, side }: OrderSummaryProp
       alert("수량을 입력해주세요");
       return;
     }
+    if(sessionStorage.getItem('member_id') === null) {
+      alert('로그인 후 이용해 주세요');
+      return
+    }
+
     const payload: any = {
       member_id: sessionStorage.getItem('member_id'),
       stockCode,
