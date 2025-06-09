@@ -33,6 +33,10 @@ export default function TradeHistory({
 
   // 전체 주문 가져오기
   useEffect(() => {
+    if(sessionStorage.getItem('token') === null) {
+      alert('로그인을 진행한 후 확인이 가능합니다.');
+      return
+    }
     fetch('http://localhost:8000/orders/stock', {
       method: 'POST',
       headers: {
