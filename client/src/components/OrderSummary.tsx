@@ -23,7 +23,7 @@ export interface OrderSummaryProps {
 }
 
 export default function OrderSummary({stock, stockCode, side }: OrderSummaryProps) {
-  const isBuy = side;
+  const isBuy = side === "BUY";
   // 주문 타입: 지정가(limit) / 시장가(market)
   const [orderType, setOrderType] = useState<"limit" | "market">("limit");
   // 2) 공통 state
@@ -83,7 +83,7 @@ export default function OrderSummary({stock, stockCode, side }: OrderSummaryProp
 
     const payload: any = {
       member_id: sessionStorage.getItem('member_id'),
-      stock_code: stock.srtn_cd,
+      stock_code: stockCode,
       stock_name: stock.itms_nm,
       order_type: side,
       quantity: Number(quantity),
