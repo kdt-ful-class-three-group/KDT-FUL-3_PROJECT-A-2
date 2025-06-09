@@ -1,5 +1,5 @@
 "use client";
-import { useMockStockSimulator } from "@/hooks/useMockStockSimulator";
+
 import React from "react";
 import {
   Chart as ChartJS,
@@ -26,26 +26,28 @@ ChartJS.register(
   Legend
 );
 
-type ChartProps = {
-  stockNum: string;
-  priceHistoryMap: Record<
-    string,
-    { time: string; price: number; trPrc: number }[]
-  >; // 종목별 시간당 데이터
+type StockData = {
+  bas_dt: string; // 기준일자
+  itms_nm: string; // 종목명
+  clpr: number; // 종가
+  tr_prc: number; // 거래대금
+  flt_rt: number; // 전일대비율
 };
 
-// export default function Chart({ stockNum, priceHistoryMap }: ChartProps) {
-export default function Chart({ stockNum, priceHistoryMap }: ChartProps) {
-  // console.log(priceHistoryMap);
-  console.log("차트 데이터 확인", priceHistoryMap, stockNum);
-  const history = priceHistoryMap[stockNum] || [];
+type ChartProps = {
+  history: StockData[];
+};
+
+export default function Chart({ history }: ChartProps) {
   const chartData = {
-    labels: history.map((item) => item.time), // 시간 라벨
+    labels: history.map((item) => item.bas_dt), // 날짜(기준일자) 라벨
     datasets: [
       {
-        label: stockNum,
-        data: history.map((item) => item.price),
-        backgroundColor: ["red", "blue", "green"],
+        label: history[0]?.itms_nm ?? "종목",
+        data: history.map((item) => item.clpr), // 종가(현재가)
+        backgroundColor: "rgba(75,192,192,0.4)",
+        borderColor: "rgba(75,192,192,1)",
+        fill: false,
       },
     ],
   };
@@ -55,14 +57,13 @@ export default function Chart({ stockNum, priceHistoryMap }: ChartProps) {
     plugins: {
       tooltip: {
         callbacks: {
-          label: function (context) {
+          label: function (context: any) {
             const idx = context.dataIndex;
             const item = history[idx];
             return [
-              `가격: ${item.price.toLocaleString()}원`,
-              `거래대금: ${
-                item.trPrc ? Number(item.trPrc).toLocaleString() : "-"
-              }원`,
+              `가격: ${item.clpr.toLocaleString()}원`,
+              `거래대금: ${Number(item.tr_prc).toLocaleString()}원`,
+              `전일대비: ${item.flt_rt}%`,
             ];
           },
         },
@@ -70,17 +71,11 @@ export default function Chart({ stockNum, priceHistoryMap }: ChartProps) {
     },
     scales: {
       x: {
-        type: "category" as const, // "time" → "category"
-        title: {
-          display: true,
-          text: "시간",
-        },
+        type: "category" as const,
+        title: { display: true, text: "날짜" },
       },
       y: {
-        title: {
-          display: true,
-          text: "가격 (원)",
-        },
+        title: { display: true, text: "가격 (원)" },
       },
     },
   };

@@ -9,18 +9,18 @@ import OrderPage from "@/components/OrderPage";
 import OrderBook from "@/components/OrderBook";
 import StockChart from "@/components/StockChart";
 import PriceInfo from "@/components/PriceInfo";
-import { useStockApi } from "@/hooks/useStockApi";
+import { useStockApi, getFltRtColor } from "@/hooks/useStockApi";
 import Spinner from "@/components/Spinner";
 
 export default function StockDetailPage() {
-  const { allStocks, isLoading } = useStockApi();
+  const { latestStocks, isLoading } = useStockApi();
   const [tab, setTab] = useState("orderPage");
   const [isStar, setIsStar] = useState(false);
   const params = useParams();
-  const srtnCd = params?.stockName as string;
+  const srtn_cd = params?.stockName as string;
 
   // 종목 데이터에서 해당 종목 찾기
-  const stock = allStocks.find((s) => s.srtnCd === srtnCd);
+  const stock = latestStocks.find((s) => s.srtn_cd === srtn_cd);
 
   useEffect(() => {
     if (sessionStorage.getItem("member_id") === null) return;
@@ -29,11 +29,11 @@ export default function StockDetailPage() {
       .then((res) => res.json())
       .then((data) => {
         const found = data.find(
-          (item: any) => item.stock_code === stock.srtnCd
+          (item: any) => item.stock_code === stock.srtn_cd
         );
         setIsStar(!!found);
       });
-  }, [stock?.srtnCd]);
+  }, [stock?.srtn_cd]);
 
   const handleBookmarkClick = async () => {
     if (sessionStorage.getItem("member_id") === null) return;
@@ -44,8 +44,8 @@ export default function StockDetailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           member_id: sessionStorage.getItem("member_id"),
-          stock_code: stock.srtnCd,
-          stock_name: stock.itmsNm,
+          stock_code: stock.srtn_cd,
+          stock_name: stock.itms_nm,
         }),
       });
       setIsStar(true);
@@ -64,18 +64,26 @@ export default function StockDetailPage() {
   return (
     <div>
       <Title
-        title={stock.itmsNm}
+        title={stock.itms_nm}
         bookmark={true}
         dictionary={false}
         onBookmarkClick={handleBookmarkClick}
         star={isStar}
       />
-      <StockHeader onSelectTab={setTab} stockValue={stock} />
+      <StockHeader
+        onSelectTab={setTab}
+        stocks={latestStocks}
+        stockNum={stock.srtn_cd}
+        stockValue={stock}
+        getFltRtColor={getFltRtColor}
+      />
       <div className="p-4">
         {tab === "companyInfo" && <CompanyInfo />}
-        {tab === "orderPage" && <OrderPage stockCode={srtnCd} />}
+        {tab === "orderPage" && <OrderPage stockCode={srtn_cd} />}
         {tab === "orderBook" && <OrderBook />}
-        {tab === "stockChart" && <StockChart stockNum={stock.srtnCd} />}
+        {tab === "stockChart" && (
+          <StockChart stocks={latestStocks} stockNum={stock.srtn_cd} />
+        )}
         {tab === "priceInfo" && <PriceInfo />}
       </div>
     </div>

@@ -6,13 +6,13 @@ import Title from "@/components/Title";
 import Input from "@/components/Input";
 import StockTitleList from "@/components/StockTitleList";
 import StockPortfolio from "@/components/StockPortfolio";
-import { useStockApi } from "@/hooks/useStockApi";
+import { useStockApi, getFltRtColor } from "@/hooks/useStockApi";
 
 import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
 
 export default function ExchangePage() {
   const [search, setSearch] = useState("");
-  const { allStocks, isLoading } = useStockApi();
+  const { latestStocks, isLoading } = useStockApi(); //
   const [sortField, setSortField] = useState<"mkp" | "fltRt" | "trPrc" | null>(
     null
   );
@@ -62,7 +62,8 @@ export default function ExchangePage() {
             sortField={sortField}
             sortOrder={sortOrder}
             handleSort={handleSort}
-            stocks={allStocks}
+            stocks={latestStocks}
+            getFltRtColor={getFltRtColor}
           />
         </div>
         {/* <SimulatedStockTest /> */}
