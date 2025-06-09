@@ -76,15 +76,13 @@ export default function TradeHistory({
   // 주문취소 버튼
   const handleCancelOne = () => {
     if (!selectedId) return;
-    fetch(`/api/orders/${selectedId}/cancel`, {
-      method: 'POST',
-    }).then(() =>
-      setOrders((os) =>
-        os.map((o) =>
-          o.id === selectedId ? { o, status: 'CANCELLED' } : o
-        )
-      )
-    );
+    fetch(`/api/orders/cancel`, {
+      method: 'DELETE',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: selectedId }),
+    })
     // 취소 후 radio 버튼 초기화
     setSelectedId(null);
   };
