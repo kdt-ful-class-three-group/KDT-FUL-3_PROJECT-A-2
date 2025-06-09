@@ -27,7 +27,7 @@ export class OrdersController {
 
   @Delete('cancel')
   async cancelStockOrder(@Body() data: {id: string}) {
-    console.log(data);
+    return this.ordersService.cancelStockOrder(data);
   }
 
 

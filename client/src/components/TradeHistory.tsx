@@ -33,10 +33,6 @@ export default function TradeHistory({
 
   // 전체 주문 가져오기
   useEffect(() => {
-    if(sessionStorage.getItem('token') === null) {
-      alert('로그인을 진행한 후 확인이 가능합니다.');
-      return
-    }
     fetch('http://localhost:8000/orders/stock', {
       method: 'POST',
       headers: {
@@ -76,12 +72,14 @@ export default function TradeHistory({
   // 주문취소 버튼
   const handleCancelOne = () => {
     if (!selectedId) return;
-    fetch(`/api/orders/cancel`, {
+    fetch(`http://localhost:8000/orders/cancel`, {
       method: 'DELETE',
       headers: {
       'Content-Type': 'application/json',
       },
       body: JSON.stringify({ id: selectedId }),
+    }).then(res => res.json()).then(data => {
+      console.log(data);
     })
     // 취소 후 radio 버튼 초기화
     setSelectedId(null);

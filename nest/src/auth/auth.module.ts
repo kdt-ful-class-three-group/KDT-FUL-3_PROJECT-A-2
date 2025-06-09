@@ -26,7 +26,7 @@ import { JwtStrategy } from './jwt.strategy';
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'superSecretKey', // 비밀키 (환경변수 추천!)
-      signOptions: { expiresIn: '1h' }, // 토큰 만료시간
+      signOptions: { expiresIn: '10h' }, // 토큰 만료시간
     }),
   ],
   controllers: [AuthController],

@@ -38,10 +38,21 @@ export class OrdersService {
     return result.rows[0];
   }
 
-  async getStockOrders(dto: {member_id: string, stock_code: string}) {
+  async getStockOrders(dto: { member_id: string, stock_code: string }) {
     const sql = 'SELECT * FROM stock_order WHERE member_id = $1 AND stock_code = $2';
     const result = await pool.query(sql, [dto.member_id, dto.stock_code]);
     return result.rows
+  }
+
+  async cancelStockOrder(data: { id: string }) {
+    try {
+      const sql = 'UPDATE stock_order SET = "CANCELLED" WHERE id = $1';
+      await pool.query(sql, [data.id]);
+      return true;
+    } catch (error) {
+      console.error(error);
+      return false
+    }
   }
 
   getHello(): string {
