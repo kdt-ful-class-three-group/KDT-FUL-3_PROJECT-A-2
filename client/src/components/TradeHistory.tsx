@@ -75,7 +75,8 @@ export default function TradeHistory({
     fetch(`http://localhost:8000/orders/cancel`, {
       method: 'DELETE',
       headers: {
-      'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
       },
       body: JSON.stringify({ id: selectedId }),
     }).then(res => res.json()).then(data => {
