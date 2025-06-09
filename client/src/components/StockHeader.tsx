@@ -21,9 +21,9 @@ export default function StockHeader({
   console.log("history", history);
   const tabs = [
     { name: "주문", key: "orderPage" },
-    { name: "호가", key: "orderBook" },
+    // { name: "호가", key: "orderBook" },
     { name: "차트", key: "stockChart" },
-    { name: "시세", key: "priceInfo" },
+    // { name: "시세", key: "priceInfo" },
     { name: "정보", key: "companyInfo" },
   ];
 

@@ -15,6 +15,7 @@ export function useStockList(fetchUrl: string) {
     fetch(fetchUrl)
       .then((res) => res.json())
       .then((data) => {
+        console.log("fetch data", data);
         setStocks(data);
         setLoading(false);
       })
@@ -40,7 +41,7 @@ export function useStockList(fetchUrl: string) {
   };
 
   return {
-    stocks: filtered,
+    stocks,
     loading,
     search,
     setSearch,
