@@ -5,18 +5,18 @@ import React, { useState, useEffect } from "react";
 
 export interface OrderSummaryProps {
   stock: {
-    id: number,
     bas_dt: string,
-    srtn_cd: string,
+    clpr: number,
+    flt_rt: number,
+    hipr: number,
+    id: number,
     itms_nm: string,
-    clpr: number
-    vs: number
-    flt_rt: number
-    mkp: number
-    hipr: number
-    lopr: number
-    trqu: number
-    tr_prc: number
+    lopr: number,
+    mkp: number,
+    srtn_cd: string,
+    tr_prc: string,
+    trqu: string,
+    vs: number,
   }
   stockCode: string;
   side: "buy" | "sell";
@@ -29,7 +29,7 @@ export default function OrderSummary({stock, stockCode, side }: OrderSummaryProp
   const [orderType, setOrderType] = useState<"limit" | "market">("limit");
   // 2) 공통 state
   const [availableQty, setAvailableQty] = useState<number>(0);
-  const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [currentPrice, setCurrentPrice] = useState<number>(stock.mkp);
   const [quantity, setQuantity] = useState<number | "">("");
   const [percentage, setPercentage] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
@@ -111,7 +111,7 @@ export default function OrderSummary({stock, stockCode, side }: OrderSummaryProp
             type="radio"
             checked={orderType === "limit"}
             onChange={() => setOrderType("limit")}
-          />{stocks.mkp}
+          />{" "}
           지정가
         </label>
         <label>

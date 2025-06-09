@@ -8,25 +8,24 @@ import TradeHistory from './TradeHistory';
 
 interface OrderPageProps {
   stock: {
-    id: number,
     bas_dt: string,
-    srtn_cd: string,
+    clpr: number,
+    flt_rt: number,
+    hipr: number,
+    id: number,
     itms_nm: string,
-    clpr: number
-    vs: number
-    flt_rt: number
-    mkp: number
-    hipr: number
-    lopr: number
-    trqu: number
-    tr_prc: number
+    lopr: number,
+    mkp: number,
+    srtn_cd: string,
+    tr_prc: string,
+    trqu: string,
+    vs: number,
   }
   stockCode: string;
 }
 
 export default function OrderPage({ stock, stockCode }: OrderPageProps) {
   const [tab, setTab] = useState<'buy' | 'sell' | 'history'>('buy');
-  console.log(stock);
 
   return (
     <div className="p-4">
