@@ -21,7 +21,6 @@ export class OrdersController {
 
   @Post('stock')
   async getStockOrders(@Body() data: {member_id: string, stock_code: string}) {
-    console.log(data);
     return this.ordersService.getStockOrders(data);
   }
 

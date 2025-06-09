@@ -46,7 +46,7 @@ export class OrdersService {
 
   async cancelStockOrder(data: { id: string }) {
     try {
-      const sql = 'UPDATE stock_order SET = "CANCELLED" WHERE id = $1';
+      const sql = "UPDATE stock_order SET status = 'CANCELLED' WHERE id = $1";
       await pool.query(sql, [data.id]);
       return true;
     } catch (error) {

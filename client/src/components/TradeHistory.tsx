@@ -79,9 +79,13 @@ export default function TradeHistory({
         'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
       },
       body: JSON.stringify({ id: selectedId }),
-    }).then(res => res.json()).then(data => {
-      console.log(data);
-    })
+    }).then(() =>
+      setOrders((os) =>
+        os.map((o) =>
+          o.id === selectedId ? { o, status: 'CANCELLED' } : o
+        )
+      )
+    );
     // 취소 후 radio 버튼 초기화
     setSelectedId(null);
   };
