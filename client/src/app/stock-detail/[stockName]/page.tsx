@@ -76,7 +76,8 @@ export default function StockDetailPage() {
         {tab === "orderPage" && <OrderPage stockCode={srtnCd} />}
         {tab === "orderBook" && <OrderBook />}
         {tab === "stockChart" && <StockChart stockNum={stock.srtnCd} />}
-        {tab === "priceInfo" && <PriceInfo />}
+        {/* {tab === "priceInfo" && <PriceInfo />} */}
+        {tab === "priceInfo" && <PriceInfo stockCode={srtnCd} />}
       </div>
     </div>
   );

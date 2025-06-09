@@ -5,7 +5,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 // 이 컨트롤러는 /stock으로 시작하는 URL 요청을 처리함
 @Controller('stock')
-// @UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'))
 export class StockController {
   constructor(private readonly stockService: StockService) {}
 

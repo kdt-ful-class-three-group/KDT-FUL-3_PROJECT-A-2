@@ -1,6 +1,9 @@
 "use client";
 import Title from "@/components/Title";
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import Spinner from "@/components/Spinner";
 
 type TradeData = {
   time: string;
@@ -15,21 +18,39 @@ type DailyData = {
   volume: string;
 };
 
-const tradeData: TradeData[] = new Array(25).fill(null).map(() => ({
-  time: "16:37:13",
-  price: "149,099,000",
-  volume: "0.0033514",
-}));
-
-const dailyData: DailyData[] = new Array(25).fill(null).map(() => ({
-  date: "5.16",
-  close: "3,382",
-  change: "0.56%/19",
-  volume: "41,309,700.039",
-}));
-
-export default function MarketDetailPage() {
+export default function PriceInfo({ stockCode }: PriceInfoProps) {
   const [activeTab, setActiveTab] = useState<"체결" | "일별">("체결");
+
+  // fetch 체결 데이터
+  const { data: tradeData = [], isLoading: isTradeLoading } = useQuery({
+    queryKey: ["tradeData", stockCode],
+    queryFn: async () => {
+      const res = await axios.get(
+        `http://localhost:8000/stock/trade?code=${stockCode}`
+      );
+      return res.data as TradeData[];
+    },
+    staleTime: 1000 * 30,
+  });
+
+  // fetch 일별 데이터
+  const { data: dailyData = [], isLoading: isDailyLoading } = useQuery({
+    queryKey: ["dailyData", stockCode],
+    queryFn: async () => {
+      const res = await axios.get(
+        `http://localhost:8000/stock/daily?code=${stockCode}`
+      );
+      return res.data as DailyData[];
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+
+  if (
+    (activeTab === "체결" && isTradeLoading) ||
+    (activeTab === "일별" && isDailyLoading)
+  ) {
+    return <Spinner />;
+  }
 
   return (
     <div className="p-4">
