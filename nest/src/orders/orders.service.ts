@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { pool } from '../DB/DB';
+import { CreateOrderDto } from './dto/create-order.dto';
 
 export interface Order {
   id: number;
@@ -20,15 +21,7 @@ export class OrdersService {
     return result.rows;
   }
 
-  async create(dto: {
-    member_id: number;
-    stock_code: string;
-    stock_name: string;
-    order_type: string;
-    quantity: number;
-    price: number;
-    status: string;
-  }): Promise<Order> {
+  async create(dto: CreateOrderDto): Promise<Order> {
     const result = await pool.query(
       `INSERT INTO stock_order (member_id, stock_code, stock_name, order_type, quantity, price, status, ordered_at)
        VALUES ($1, $2, $3, $4, $5, $6, $7, NOW()) RETURNING *`,
