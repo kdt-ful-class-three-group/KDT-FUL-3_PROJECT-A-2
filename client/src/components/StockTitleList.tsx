@@ -1,33 +1,16 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { StockData } from "@/hooks/useStockApi"; // API 훅
-
-// import { useMockStockSimulator } from "@/hooks/useMockStockSimulator"; // 모의 투자 훅
+import { StockData, getFltRtColor } from "@/hooks/useStockApi"; // API 훅
 
 type Props = {
   sortField: "mkp" | "fltRt" | "trPrc" | null;
   sortOrder: "desc" | "asc";
   handleSort: (field: "mkp" | "fltRt" | "trPrc") => void;
   stocks: StockData[];
-  getFltRtColor: (flt_rt: number) => string;
 };
-function StockTitleList({
-  sortField,
-  sortOrder,
-  handleSort,
-  stocks,
-  getFltRtColor,
-}: Props) {
+function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
   const router = useRouter();
   console.log(stocks);
-  // 종목코드 기준으로 중복 제거 (가장 첫 번째 데이터만 남김)
-  // const uniqueStocks = Array.from(
-  //   new Map(stocks.map((s) => [s.srtn_cd, s])).values()
-  // );
-
-  // 이름순 정렬 (원하면)
-  // uniqueStocks.sort((a, b) => a.itms_nm.localeCompare(b.itms_nm));
-
   return (
     <div>
       <div className="flex justify-between px-2 mb-6">

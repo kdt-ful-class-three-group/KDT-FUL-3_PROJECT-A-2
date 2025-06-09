@@ -1,5 +1,5 @@
 // Nav.tsx
-"use client"
+"use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -13,7 +13,8 @@ export default function Nav() {
       setIsExistsToken(false);
     }
 
-    const handleStorage = () => setIsExistsToken(sessionStorage.getItem("token") === null);
+    const handleStorage = () =>
+      setIsExistsToken(sessionStorage.getItem("token") === null);
     window.addEventListener("storage", handleStorage);
 
     return () => window.removeEventListener("storage", handleStorage);
@@ -21,12 +22,17 @@ export default function Nav() {
 
   return (
     <div className="fixed bottom-0 left-0 w-full z-50 p-5 flex bg-[#1E3E62] justify-between items-center">
-      <Link href="/" className="cursor-pointer flex flex-col items-center">
+      <Link
+        href="/"
+        className="cursor-pointer flex flex-col items-center"
+        onClick={() => setTab("exchange")}
+      >
         <img src="/image/home.svg" alt="" />
         <p className="mt-2 text-white">거래소</p>
       </Link>
       <Link
         href="/watch-list"
+        onClick={() => setTab("watch")}
         className="cursor-pointer flex flex-col items-center"
       >
         <img src="/image/bookmark.svg" alt="" />
@@ -44,12 +50,18 @@ export default function Nav() {
         <p className="mt-2 text-white">은행</p>
       </Link>
       {isExistsToken ? (
-        <Link href="/my-page" className="cursor-pointer flex flex-col items-center">
+        <Link
+          href="/my-page"
+          className="cursor-pointer flex flex-col items-center"
+        >
           <img src="/image/mypage.svg" alt="" />
           <p className="mt-2 text-white">마이페이지</p>
         </Link>
       ) : (
-        <Link href="/login" className="cursor-pointer flex flex-col items-center">
+        <Link
+          href="/login"
+          className="cursor-pointer flex flex-col items-center"
+        >
           <img src="/image/mypage.svg" alt="" />
           <p className="mt-2 text-white">로그인</p>
         </Link>

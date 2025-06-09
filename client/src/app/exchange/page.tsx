@@ -6,69 +6,46 @@ import Title from "@/components/Title";
 import Input from "@/components/Input";
 import StockTitleList from "@/components/StockTitleList";
 import StockPortfolio from "@/components/StockPortfolio";
+import TitleList from "@/components/TitleList";
+import { useStockList } from "@/hooks/useStockList";
+import StockPageLayout from "@/components/StockPageLayout";
 import { useStockApi, getFltRtColor } from "@/hooks/useStockApi";
 
 import Spinner from "@/components/Spinner"; // 로딩 스피너 컴포넌트
 
 export default function ExchangePage() {
-  const [search, setSearch] = useState("");
   const { latestStocks, isLoading } = useStockApi(); //
-  const [sortField, setSortField] = useState<"mkp" | "fltRt" | "trPrc" | null>(
-    null
+
+  // 검색 상태
+  const [search, setSearch] = useState("");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  // 검색된 종목만 필터링
+  const filteredStocks = latestStocks.filter(
+    (s) => s.itms_nm?.includes(search) || s.srtn_cd?.includes(search)
   );
-  const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
   if (isLoading) {
     return <Spinner />;
   }
-  const handleSort = (field: "mkp" | "fltRt" | "trPrc") => {
-    let nextOrder: "desc" | "asc" = sortOrder;
-    if (sortField === field) {
-      nextOrder = sortOrder === "desc" ? "asc" : "desc";
-    } else {
-      nextOrder = "desc";
-    }
-    setSortField(field);
-    setSortOrder(nextOrder);
-  };
-
-  const handleChange = (e: { target: { name: string; value: string } }) => {
-    setSearch(e.target.value);
-  };
 
   return (
     <div className="mb-25">
-      <Title title="거래소" bookmark={false} dictionary={false} />
-      <div className="max-w-full">
-        {/* 종목 검색 */}
-        <div className="flex w-full m-auto px-4">
-          <img src="./image/search.svg" alt="" />
-          <Input
-            type="text"
-            name="search"
-            value={search}
-            onChange={handleChange}
-            pattern={""}
-            placeholder="종목 검색"
-            className="w-full p-2 text-black placeholder-gray-500 outline-none"
-            title=""
-          />
-        </div>
-        {/* 사용자 요약 정보 */}
-        <StockPortfolio />
-        {/* 종목 테이블 */}
-        <div className="overflow-x-auto mt-5">
-          <StockTitleList
-            sortField={sortField}
-            sortOrder={sortOrder}
-            handleSort={handleSort}
-            stocks={latestStocks}
-            getFltRtColor={getFltRtColor}
-          />
-        </div>
-        {/* <SimulatedStockTest /> */}
-      </div>
-      <Nav />
+      <StockPageLayout
+        title="거래소"
+        search={search}
+        handleChange={handleChange}
+      >
+        <StockTitleList
+          sortField={null}
+          sortOrder="desc"
+          handleSort={() => {}}
+          stocks={filteredStocks}
+          getFltRtColor={getFltRtColor}
+        />
+      </StockPageLayout>
     </div>
   );
 }

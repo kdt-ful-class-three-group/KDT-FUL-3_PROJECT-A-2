@@ -1,16 +1,16 @@
 // /src/app/my-page/page.tsx
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 // 나중에 연결할 supabase (지금은 주석 처리했으나, 임시 더미로 테스트)
-// import { supabase } from '@/lib/supabaseClient'; 
-import ScoreCircle from '@/components/ScoreCircle';
-import RatingChart from '@/components/RatingChart';
-import ConfirmModal from '@/components/ConfirmModal';
-import Nav from '@/components/Nav';
-import Title from '@/components/Title';
+// import { supabase } from '@/lib/supabaseClient';
+import ScoreCircle from "@/components/ScoreCircle";
+import RatingChart from "@/components/RatingChart";
+import ConfirmModal from "@/components/ConfirmModal";
+import Nav from "@/components/Nav";
+import Title from "@/components/Title";
 
 function mapScoreToCreditGrade(score: number): number {
   if (score >= 950 && score <= 1000) return 1;
@@ -25,11 +25,11 @@ function mapScoreToCreditGrade(score: number): number {
 interface UserProfile {
   id: string;
   nickname: string;
-  credit_score: number;       
-  credit_grade: number;       
-  invest_grade: number;       
-  credit_percentile: number;  
-  invest_percentile: number;  
+  credit_score: number;
+  credit_grade: number;
+  invest_grade: number;
+  credit_percentile: number;
+  invest_percentile: number;
 }
 
 export default function MyPage() {
@@ -76,8 +76,8 @@ export default function MyPage() {
       const dummyScore = 962;
       const dummyGrade = mapScoreToCreditGrade(dummyScore);
       setUser({
-        id: 'dummy-id',
-        nickname: '윥',
+        id: "dummy-id",
+        nickname: "윥",
         credit_score: dummyScore,
         credit_grade: dummyGrade,
         invest_grade: 5,
@@ -93,12 +93,12 @@ export default function MyPage() {
   // 로그아웃 핸들러
   const handleLogout = async () => {
     // sessionStorigie에 저장된 사용자 정보 삭제
-      sessionStorage.clear();
+    sessionStorage.clear();
     // 2) 페이지 내 user 상태 초기화
-      setUser(null);
+    setUser(null);
 
     // 3) 거래소 페이지로 리다이렉트
-      router.replace('/');
+    router.replace("/");
   };
 
   // 파산신청(계정 삭제) 핸들러
@@ -110,7 +110,7 @@ export default function MyPage() {
     // await supabase.from('profiles').delete().eq('id', user.id);
     // await supabase.auth.signOut();
 
-    router.replace('/');
+    router.replace("/");
   };
 
   if (isLoading) {
@@ -123,12 +123,13 @@ export default function MyPage() {
 
   return (
     <div className="flex flex-col mb-25">
-
-     <Title title="마이페이지" bookmark={false} dictionary={false}  />
+      <Title title="마이페이지" bookmark={false} dictionary={false} />
 
       {/* 닉네임 */}
       <section className="mt-4 px-4 flex justify-center">
-        <h2 className="text-xl font-semibold flex justify-center">{user?.nickname}님, 반갑습니다</h2>
+        <h2 className="text-xl font-semibold flex justify-center">
+          {user?.nickname}님, 반갑습니다
+        </h2>
       </section>
 
       {/* 동그라미: 등급 + 점수 */}
