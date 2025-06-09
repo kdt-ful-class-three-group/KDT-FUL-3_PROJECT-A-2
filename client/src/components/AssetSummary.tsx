@@ -2,9 +2,9 @@
 import React from "react";
 
 interface AssetSummaryProps {
-  cash: number;            // 현재 보유 현금(원 단위)
-  holdingsValue: number;   // 보유 종목들의 총 자산(원 단위)
-  profitLoss: number;      // 평가 손익(원 단위)
+  cash: number; // 현재 보유 현금(원 단위)
+  holdingsValue: number; // 보유 종목들의 총 자산(원 단위)
+  profitLoss: number; // 평가 손익(원 단위)
 }
 
 export default function AssetSummary({
@@ -42,15 +42,21 @@ export default function AssetSummary({
         {/* 평가 손익 */}
         <div className="flex justify-between">
           <span>평가 손익</span>
-          <span className={`${profitLoss >= 0 ? "text-red-500" : "text-blue-500"}`}>
+          <span
+            className={`${profitLoss >= 0 ? "text-red-500" : "text-blue-500"}`}
+          >
             {formatKRW(profitLoss)}원
           </span>
         </div>
         {/* 수익률 */}
         <div className="flex justify-between">
           <span>수익률</span>
-          <span className={`${Number(returnRate) >= 0 ? "text-red-500" : "text-blue-500"}`}>
-            {returnRate}% 
+          <span
+            className={`${
+              Number(returnRate) >= 0 ? "text-red-500" : "text-blue-500"
+            }`}
+          >
+            {returnRate}%
           </span>
         </div>
       </div>
