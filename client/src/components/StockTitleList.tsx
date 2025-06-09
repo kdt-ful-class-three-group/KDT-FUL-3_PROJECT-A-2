@@ -9,8 +9,15 @@ type Props = {
   sortOrder: "desc" | "asc";
   handleSort: (field: "mkp" | "fltRt" | "trPrc") => void;
   stocks: StockData[];
+  getFltRtColor: (flt_rt: number) => string;
 };
-function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
+function StockTitleList({
+  sortField,
+  sortOrder,
+  handleSort,
+  stocks,
+  getFltRtColor,
+}: Props) {
   const router = useRouter();
   console.log(stocks);
   // 종목코드 기준으로 중복 제거 (가장 첫 번째 데이터만 남김)
@@ -87,13 +94,17 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
             <p className="text-[#313131]">{stock.itms_nm}</p>
           </div>
           <div className="flex justify-center w-full">
-            <p style={{ color: stock.simulatedColor }}>{stock.clpr}</p>
+            <p style={{ color: getFltRtColor(stock.flt_rt) }}>{stock.clpr}</p>
           </div>
           <div className="flex justify-center w-full">
-            <p style={{ color: stock.simulatedColor }}>{stock.flt_rt}%</p>
+            <p style={{ color: getFltRtColor(stock.flt_rt) }}>
+              {stock.flt_rt}%
+            </p>
           </div>
           <div className="flex justify-center w-full">
-            <p style={{ color: stock.simulatedColor }}>{stock.tr_prc}백만</p>
+            <p style={{ color: getFltRtColor(stock.flt_rt) }}>
+              {stock.tr_prc}백만
+            </p>
           </div>
         </div>
       ))}

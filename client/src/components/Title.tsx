@@ -7,10 +7,16 @@ type TitleProps = {
   bookmark: boolean;
   dictionary: boolean;
   onBookmarkClick?: () => void;
-  star?: boolean
+  star?: boolean;
 };
 
-export default function Title({ title, bookmark, dictionary, onBookmarkClick, star }: TitleProps) {
+export default function Title({
+  title,
+  bookmark,
+  dictionary,
+  onBookmarkClick,
+  star,
+}: TitleProps) {
   const router = useRouter();
   return (
     <div className="w-[95%] flex items-center justify-center relative m-auto p-5">

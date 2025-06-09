@@ -46,7 +46,7 @@ export class StockSimulatorService implements OnModuleInit {
       this.simulateAndSaveStocks(this.prevDate, this.nextDate)
         .then(() => console.log('시뮬레이션 데이터 저장 완료'))
         .catch((e) => console.error('시뮬레이션 에러:', e));
-    }, 1000);
+    }, 3600000);
   }
   // getPrevDate(): string {
   //   const now = new Date();
@@ -177,6 +177,6 @@ export class StockSimulatorService implements OnModuleInit {
   }
 
   async getSimulatedStocks() {
-    // return await this.stockRepo.find();
+    return await this.stockRepo.find();
   }
 }

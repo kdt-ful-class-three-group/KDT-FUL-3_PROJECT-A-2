@@ -17,7 +17,7 @@ export interface StockData {
   trqu: string; // 거래량
   vs: number; // 전일 대비
 }
-const url = "http://localhost:8000/stock/stockCommon";
+const url = "http://localhost:8000/stock/simulated";
 async function fetchStocks(url: string): Promise<StockData[]> {
   const resStocks = await axios.get(url);
   // resStocks.data가 이미 JSON 객체이므로 그대로 반환
@@ -31,9 +31,21 @@ export function useStockApi() {
     staleTime: 1000 * 60 * 60, // 1시간 유지
   });
   const allStocks = apiStocks;
-  console.log(allStocks);
+  // console.log(allStocks);
+  const latestStocks = useMemo(() => {
+    const map = new Map<string, StockData>();
+    allStocks.forEach((s) => {
+      map.set(s.srtn_cd, s); // 같은 종목코드끼리 중복 덮어씀
+    });
+    return Array.from(map.values());
+  }, [allStocks]);
+  console.log("memo 데이터 확인", latestStocks);
   return {
-    allStocks,
+    latestStocks,
     isLoading: isLoadingNext,
   };
+}
+
+export function getFltRtColor(flt_rt: number) {
+  return flt_rt < 0 ? "#1A68CC" : "#E23C4F";
 }
