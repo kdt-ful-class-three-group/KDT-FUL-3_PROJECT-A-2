@@ -60,7 +60,7 @@ export default function StockDetailPage() {
   if (isLoading || !stock) {
     return <Spinner />;
   }
-
+  
   return (
     <div>
       <Title
@@ -79,7 +79,7 @@ export default function StockDetailPage() {
       />
       <div className="p-4">
         {tab === "companyInfo" && <CompanyInfo />}
-        {tab === "orderPage" && <OrderPage stockCode={srtn_cd} />}
+        {tab === "orderPage" && <OrderPage stock={stock} stockCode={srtn_cd} />}
         {tab === "orderBook" && <OrderBook />}
         {tab === "stockChart" && (
           <StockChart stocks={latestStocks} stockNum={stock.srtn_cd} />

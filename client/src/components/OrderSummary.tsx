@@ -4,35 +4,48 @@
 import React, { useState, useEffect } from "react";
 
 export interface OrderSummaryProps {
+  stock: {
+    bas_dt: string,
+    clpr: number,
+    flt_rt: number,
+    hipr: number,
+    id: number,
+    itms_nm: string,
+    lopr: number,
+    mkp: number,
+    srtn_cd: string,
+    tr_prc: string,
+    trqu: string,
+    vs: number,
+  }
   stockCode: string;
-  side: "buy" | "sell";
+  side: "BUY" | "SELL";
 }
 
-export default function OrderSummary({ stockCode, side }: OrderSummaryProps) {
-  const isBuy = side === "buy";
-
+export default function OrderSummary({stock, stockCode, side }: OrderSummaryProps) {
+  const isBuy = side === "BUY";
   // 주문 타입: 지정가(limit) / 시장가(market)
   const [orderType, setOrderType] = useState<"limit" | "market">("limit");
   // 2) 공통 state
   const [availableQty, setAvailableQty] = useState<number>(0);
-  const [currentPrice, setCurrentPrice] = useState<number>(0);
+  const [currentPrice, setCurrentPrice] = useState<number>(stock.mkp);
   const [quantity, setQuantity] = useState<number | "">("");
   const [percentage, setPercentage] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
 
   // API로 주문가능 수량 & 현재 시세 받아오기
-  useEffect(() => {
-    fetch(``) // 공공데이터 포털 시세 API URL 넣기
-      .then((res) => res.json())
-      .then((data) => {
-        // 실제 필드명에 맞춰 꺼내주세요.
-        setAvailableQty(data.availableQty);
-        setCurrentPrice(data.currentPrice);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [stockCode]);
+  // useEffect(() => {
+  //   fetch(``) // 공공데이터 포털 시세 API URL 넣기
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       // 실제 필드명에 맞춰 꺼내주세요.
+  //       setAvailableQty(data.availableQty);
+  //       setCurrentPrice(data.currentPrice);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, [stockCode]);
 
   // 수량·퍼센트·orderType·currentPrice 변경 시 총액 계산
   useEffect(() => {
@@ -63,20 +76,30 @@ export default function OrderSummary({ stockCode, side }: OrderSummaryProps) {
       alert("수량을 입력해주세요");
       return;
     }
+    if(sessionStorage.getItem('member_id') === null) {
+      alert('로그인 후 이용해 주세요');
+      return
+    }
+
     const payload: any = {
-      stockCode,
-      side,
+      member_id: sessionStorage.getItem('member_id'),
+      stock_code: stockCode,
+      stock_name: stock.itms_nm,
+      order_type: side,
       quantity: Number(quantity),
+      status: "FILLED"
     };
     if (orderType === "limit") {
-      payload.limitPrice = Math.floor(
+      payload.price = Math.floor(
         currentPrice * (isBuy ? 1 + percentage / 100 : 1 - percentage / 100)
       );
     }
-    const res = await fetch("/api/order", {
+    console.log(payload);
+    const res = await fetch("http://localhost:8000/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
       },
       body: JSON.stringify(payload),
     });

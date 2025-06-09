@@ -6,9 +6,9 @@ import React, { useState, useEffect } from 'react';
 // 거래내역 컴포넌트(체결, 미체결, 주문취소)
 interface OrderItem {
   id: string;
-  stockName: string;
-  side: 'buy' | 'sell';
-  limitPrice: number;
+  stock_name: string;
+  order_type: 'BUY' | 'SELL';
+  price: number;
   quantity: number;
   remainingQuantity: number;
   status: 'PENDING' | 'FILLED';
@@ -33,9 +33,26 @@ export default function TradeHistory({
 
   // 전체 주문 가져오기
   useEffect(() => {
-    fetch(`/api/orders?stockCode=${stockCode}`)
+    if(sessionStorage.getItem('token') === null) {
+      alert('로그인을 진행한 후 확인이 가능합니다.');
+      return
+    }
+    fetch('http://localhost:8000/orders/stock', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
+      },
+      body: JSON.stringify({
+        stock_code: stockCode,
+        member_id: sessionStorage.getItem('member_id'), // 실제 member_id로 교체
+      }),
+    })
       .then((res) => res.json())
-      .then((data: OrderItem[]) => setOrders(data))
+      .then((data: OrderItem[]) => {
+        console.log(data);
+        setOrders(data)
+      })
       .catch(console.error);
   }, [stockCode]);
 
@@ -59,15 +76,13 @@ export default function TradeHistory({
   // 주문취소 버튼
   const handleCancelOne = () => {
     if (!selectedId) return;
-    fetch(`/api/orders/${selectedId}/cancel`, {
-      method: 'POST',
-    }).then(() =>
-      setOrders((os) =>
-          os.map((o) =>
-          o.id === selectedId ? { o, status: 'CANCELLED' } : o
-        )
-      )
-    );
+    fetch(`/api/orders/cancel`, {
+      method: 'DELETE',
+      headers: {
+      'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ id: selectedId }),
+    })
     // 취소 후 radio 버튼 초기화
     setSelectedId(null);
   };
@@ -77,21 +92,19 @@ export default function TradeHistory({
       {/* 미체결 & 체결 탭 */}
       <div className="flex border-b-2 border-gray-200">
         <button
-          className={`pb-2 ${
-            view === 'pending'
-              ? 'border-b-4 border-orange-500 font-semibold'
-              : 'text-gray-400'
-          }`}
+          className={`pb-2 ${view === 'pending'
+            ? 'border-b-4 border-orange-500 font-semibold'
+            : 'text-gray-400'
+            }`}
           onClick={() => setView('pending')}
         >
           미체결
         </button>
         <button
-          className={`ml-6 pb-2 ${
-            view === 'filled'
-              ? 'border-b-4 border-orange-500 font-semibold'
-              : 'text-gray-400'
-          }`}
+          className={`ml-6 pb-2 ${view === 'filled'
+            ? 'border-b-4 border-orange-500 font-semibold'
+            : 'text-gray-400'
+            }`}
           onClick={() => setView('filled')}
         >
           체결
@@ -135,7 +148,7 @@ export default function TradeHistory({
                 />
               )}
               <span className="font-medium">
-                {o.stockName} {o.side === 'buy' ? '매수' : '매도'}
+                {o.stock_name} {o.order_type === 'BUY' ? '매수' : '매도'}
               </span>
               <span className="text-sm text-gray-500">
                 {o.orderedAt}
@@ -145,7 +158,7 @@ export default function TradeHistory({
             {/* 주문가격, 수량, 미체결량 표시 */}
             <div className="text-sm">
               <div>
-                주문가격: {o.limitPrice.toLocaleString()}원
+                주문가격: {o.price.toLocaleString()}원
               </div>
               <div>주문수량: {o.quantity}주</div>
               {view === 'pending' && (
