@@ -9,7 +9,7 @@ export default function Home() {
       {/* body 컬러 변경해야함 */}
       <Exchange />
       {/* 네비게이션 바 */}
-      <Nav />
+      {/* <Nav /> */}
     </div>
   );
 }
