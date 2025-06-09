@@ -19,12 +19,11 @@ export interface OrderSummaryProps {
     vs: number,
   }
   stockCode: string;
-  side: "buy" | "sell";
+  side: "BUY" | "SELL";
 }
 
 export default function OrderSummary({stock, stockCode, side }: OrderSummaryProps) {
-  const isBuy = side === "buy";
-
+  const isBuy = side;
   // 주문 타입: 지정가(limit) / 시장가(market)
   const [orderType, setOrderType] = useState<"limit" | "market">("limit");
   // 2) 공통 state
@@ -84,7 +83,7 @@ export default function OrderSummary({stock, stockCode, side }: OrderSummaryProp
 
     const payload: any = {
       member_id: sessionStorage.getItem('member_id'),
-      stockCode,
+      stock_code: stock.srtn_cd,
       stock_name: stock.itms_nm,
       order_type: side,
       quantity: Number(quantity),
@@ -96,10 +95,11 @@ export default function OrderSummary({stock, stockCode, side }: OrderSummaryProp
       );
     }
     console.log(payload);
-    const res = await fetch("/api/order", {
+    const res = await fetch("http://localhost:8000/orders", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        'Authorization': `Bearer ${sessionStorage.getItem('token')}`,
       },
       body: JSON.stringify(payload),
     });

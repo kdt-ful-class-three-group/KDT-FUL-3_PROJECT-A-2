@@ -72,10 +72,10 @@ export default function OrderPage({ stock, stockCode }: OrderPageProps) {
 
           <div className="mt-6">
             {tab === 'buy' && (
-              <OrderSummary stock={stock} stockCode={stockCode} side="buy" />
+              <OrderSummary stock={stock} stockCode={stockCode} side="BUY" />
             )}
             {tab === 'sell' && (
-              <OrderSummary stock={stock} stockCode={stockCode} side="sell" />
+              <OrderSummary stock={stock} stockCode={stockCode} side="SELL" />
             )}
             {tab === 'history' && (
               <TradeHistory stockCode={stockCode} />
