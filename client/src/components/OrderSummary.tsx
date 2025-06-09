@@ -4,11 +4,25 @@
 import React, { useState, useEffect } from "react";
 
 export interface OrderSummaryProps {
+  stock: {
+    id: number,
+    bas_dt: string,
+    srtn_cd: string,
+    itms_nm: string,
+    clpr: number
+    vs: number
+    flt_rt: number
+    mkp: number
+    hipr: number
+    lopr: number
+    trqu: number
+    tr_prc: number
+  }
   stockCode: string;
   side: "buy" | "sell";
 }
 
-export default function OrderSummary({ stockCode, side }: OrderSummaryProps) {
+export default function OrderSummary({stock, stockCode, side }: OrderSummaryProps) {
   const isBuy = side === "buy";
 
   // 주문 타입: 지정가(limit) / 시장가(market)
@@ -21,18 +35,18 @@ export default function OrderSummary({ stockCode, side }: OrderSummaryProps) {
   const [total, setTotal] = useState<number>(0);
 
   // API로 주문가능 수량 & 현재 시세 받아오기
-  useEffect(() => {
-    fetch(``) // 공공데이터 포털 시세 API URL 넣기
-      .then((res) => res.json())
-      .then((data) => {
-        // 실제 필드명에 맞춰 꺼내주세요.
-        setAvailableQty(data.availableQty);
-        setCurrentPrice(data.currentPrice);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [stockCode]);
+  // useEffect(() => {
+  //   fetch(``) // 공공데이터 포털 시세 API URL 넣기
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       // 실제 필드명에 맞춰 꺼내주세요.
+  //       setAvailableQty(data.availableQty);
+  //       setCurrentPrice(data.currentPrice);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }, [stockCode]);
 
   // 수량·퍼센트·orderType·currentPrice 변경 시 총액 계산
   useEffect(() => {
@@ -97,7 +111,7 @@ export default function OrderSummary({ stockCode, side }: OrderSummaryProps) {
             type="radio"
             checked={orderType === "limit"}
             onChange={() => setOrderType("limit")}
-          />{" "}
+          />{stocks.mkp}
           지정가
         </label>
         <label>

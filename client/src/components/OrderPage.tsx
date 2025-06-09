@@ -7,11 +7,26 @@ import OrderSummary from './OrderSummary';
 import TradeHistory from './TradeHistory';
 
 interface OrderPageProps {
+  stock: {
+    id: number,
+    bas_dt: string,
+    srtn_cd: string,
+    itms_nm: string,
+    clpr: number
+    vs: number
+    flt_rt: number
+    mkp: number
+    hipr: number
+    lopr: number
+    trqu: number
+    tr_prc: number
+  }
   stockCode: string;
 }
 
-export default function OrderPage({ stockCode }: OrderPageProps) {
+export default function OrderPage({ stock, stockCode }: OrderPageProps) {
   const [tab, setTab] = useState<'buy' | 'sell' | 'history'>('buy');
+  console.log(stock);
 
   return (
     <div className="p-4">
@@ -58,10 +73,10 @@ export default function OrderPage({ stockCode }: OrderPageProps) {
 
           <div className="mt-6">
             {tab === 'buy' && (
-              <OrderSummary stockCode={stockCode} side="buy" />
+              <OrderSummary stock={stock} stockCode={stockCode} side="buy" />
             )}
             {tab === 'sell' && (
-              <OrderSummary stockCode={stockCode} side="sell" />
+              <OrderSummary stock={stock} stockCode={stockCode} side="sell" />
             )}
             {tab === 'history' && (
               <TradeHistory stockCode={stockCode} />
