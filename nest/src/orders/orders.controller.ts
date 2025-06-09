@@ -19,6 +19,12 @@ export class OrdersController {
     return this.ordersService.create(data);
   }
 
+  @Post('stock')
+  async getStockOrders(@Body() data: {member_id: string, stock_code: string}) {
+    console.log(data);
+    return this.ordersService.getStockOrders(data);
+  }
+
   @Get('hello')
   getHello(): string {
     return this.ordersService.getHello();

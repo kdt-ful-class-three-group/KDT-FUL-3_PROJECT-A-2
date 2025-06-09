@@ -38,6 +38,12 @@ export class OrdersService {
     return result.rows[0];
   }
 
+  async getStockOrders(dto: {member_id: string, stock_code: string}) {
+    const sql = 'SELECT * FROM stock_order WHERE member_id = $1 AND stock_code = $2';
+    const result = await pool.query(sql, [dto.member_id, dto.stock_code]);
+    return result.rows
+  }
+
   getHello(): string {
     return 'Hello from OrdersService!';
   }
