@@ -78,15 +78,19 @@ export default function OrderSummary({stock, stockCode, side }: OrderSummaryProp
       return;
     }
     const payload: any = {
+      member_id: sessionStorage.getItem('member_id'),
       stockCode,
-      side,
+      stock_name: stock.itms_nm,
+      order_type: side,
       quantity: Number(quantity),
+      status: "FILLED"
     };
     if (orderType === "limit") {
-      payload.limitPrice = Math.floor(
+      payload.price = Math.floor(
         currentPrice * (isBuy ? 1 + percentage / 100 : 1 - percentage / 100)
       );
     }
+    console.log(payload);
     const res = await fetch("/api/order", {
       method: "POST",
       headers: {

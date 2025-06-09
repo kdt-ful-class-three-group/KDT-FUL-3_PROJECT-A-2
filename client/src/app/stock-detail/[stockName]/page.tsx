@@ -60,7 +60,7 @@ export default function StockDetailPage() {
   if (isLoading || !stock) {
     return <Spinner />;
   }
-  console.log(stock, "데이터 확인");
+  
   return (
     <div>
       <Title
