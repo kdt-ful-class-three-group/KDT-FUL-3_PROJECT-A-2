@@ -3,7 +3,7 @@ import { NewsService } from './news.service';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('news')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
