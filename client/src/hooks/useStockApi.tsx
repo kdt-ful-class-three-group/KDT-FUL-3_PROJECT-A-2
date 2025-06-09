@@ -17,7 +17,7 @@ export interface StockData {
   trqu: string; // 거래량
   vs: number; // 전일 대비
 }
-const url = "http://localhost:8000/stock/simulated";
+const url = "http://localhost:8000/stock/stockCommon";
 async function fetchStocks(url: string): Promise<StockData[]> {
   const resStocks = await axios.get(url);
   // resStocks.data가 이미 JSON 객체이므로 그대로 반환
