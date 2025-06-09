@@ -26,7 +26,7 @@ export default function PriceInfo({ stockCode }: PriceInfoProps) {
     queryKey: ["tradeData", stockCode],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:8000/stock/trade?code=${stockCode}`
+        `http://localhost:8000/interest/${stockCode}`
       );
       return res.data as TradeData[];
     },
@@ -38,7 +38,7 @@ export default function PriceInfo({ stockCode }: PriceInfoProps) {
     queryKey: ["dailyData", stockCode],
     queryFn: async () => {
       const res = await axios.get(
-        `http://localhost:8000/stock/daily?code=${stockCode}`
+        `http://localhost:8000/interest/${stockCode}`
       );
       return res.data as DailyData[];
     },
