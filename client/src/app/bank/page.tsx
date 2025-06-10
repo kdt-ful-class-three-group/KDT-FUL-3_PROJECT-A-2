@@ -51,7 +51,7 @@ export default function BankPage() {
 
   const interestRate: number = getInterestRateByGrade(creditGrade);
 
-  const handleLoan = () => {
+  const handleLoan = async () => {
     const loan = Number(loanAmount.replace(/,/g, ""));
     if (isNaN(loan) || loan <= 0) {
       alert("올바른 금액을 입력해주세요.");
@@ -61,6 +61,27 @@ export default function BankPage() {
       alert(`최대 대출 가능 금액은 ${loanAvailable.toLocaleString()}원입니다.`);
       return;
     }
+    if (sessionStorage.getItem('member_id') === null) {
+      alert('로그인 후 이용이 가능합니다');
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:8000/bank", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ loan_amount: loan, cash_balance: currentAssets }),
+      });
+      const data = await res.json();
+      console.log(data);
+    } catch (error) {
+      console.error("대출 요청 실패:", error);
+      return;
+    }
+
     const newTotalLoan = totalLoan + loan;
     const newLoanAvailable = loanAvailable - loan;
     setTotalLoan(newTotalLoan);
@@ -71,7 +92,7 @@ export default function BankPage() {
     );
   };
 
-  const handleRepay = () => {
+  const handleRepay = async () => {
     const loan = Number(loanAmount.replace(/,/g, ""));
     if (isNaN(loan) || loan <= 0) {
       alert("올바른 금액을 입력해주세요.");
@@ -85,6 +106,10 @@ export default function BankPage() {
     }
     if (loan > currentAssets) {
       alert("현재 자산보다 많은 금액은 상환할 수 없습니다.");
+      return;
+    }
+    if (sessionStorage.getItem('member_id') === null) {
+      alert('로그인 후 이용이 가능합니다');
       return;
     }
     const newTotalLoan = totalLoan - loan;

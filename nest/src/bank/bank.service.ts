@@ -33,4 +33,17 @@ export class BankService {
       console.error(error);
     }
   }
+
+  async updateBank(member_id: string, updateData: { loan_amount: string, cash_balance: string }) {
+    const sql = `UPDATE bank SET loan_amount = $1, cash_balance = $2 WHERE member_id = $3 RETURNING *`;
+    try {
+      const result = await pool.query(sql, [updateData.loan_amount, updateData.cash_balance, member_id]);
+      if (result.rows.length === 0) return [];
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error updating bank:', error);
+      return null;
+    }
+  }
+
 }
