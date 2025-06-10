@@ -25,7 +25,9 @@ export default function StockDetailPage() {
   useEffect(() => {
     if (sessionStorage.getItem("member_id") === null) return;
     if (!stock) return;
-    fetch(`http://localhost:8000/interest`)
+    fetch(`http://localhost:8000/interest`, {
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
         const found = data.find(
