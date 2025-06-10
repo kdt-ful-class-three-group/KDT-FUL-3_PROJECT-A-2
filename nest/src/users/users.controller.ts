@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Res, Param, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Res, Param, Put, Req } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SigninDto } from './dto/signin.dto';
@@ -29,8 +29,8 @@ export class UsersController {
   }
 
   @Post('signin')
-  async Signin(@Body() data: SigninDto, @Res() res) {
-    const user = await this.usersService.checkUser(data);
+  async Signin(@Body() data: SigninDto, @Res() res, @Req() req) {
+    const user = await this.usersService.checkUser(data, req);
     if (!user === false) {
       const token = this.authService.provideJWT(data);
       res.json({ ok: true, token, user });
