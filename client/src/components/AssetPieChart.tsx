@@ -56,7 +56,7 @@ export default function AssetPieChart({ holdings }: AssetPieChartProps) {
     afterDatasetsDraw: (chart) => {
       const { ctx, data } = chart;
       const rawValues = data.datasets[0].data as number[];
-      const totalValue = rawValues.reduce((a, b) => a + b, 0);
+      const totalValue = rawValues.reduce((a, b) => a + Number(b), 0);
 
       ctx.save();
       ctx.textAlign = "center";
@@ -88,10 +88,10 @@ export default function AssetPieChart({ holdings }: AssetPieChartProps) {
       tooltip: {
         callbacks: {
           label: (ctx) => {
-            const rawVals = ctx.dataset.data as number[];
-            const total = rawVals.reduce((a, b) => a + b, 0);
             const current = ctx.parsed as number;
-            const pct = ((current / total) * 100).toFixed(1) + "%";
+            const rawValues = ctx.dataset.data as number[];
+            const totalValue = rawValues.reduce((a, b) => a + Number(b), 0);
+            const pct = ((current / totalValue) * 100).toFixed(1) + "%";
             return `${ctx.label}: ${pct}`;
           },
         },
@@ -107,7 +107,7 @@ export default function AssetPieChart({ holdings }: AssetPieChartProps) {
     return holdings.map((h, idx) => ({
       name: h.name,
       color: bgColors[idx],
-      percent: ((h.value / totalQuantity) * 100).toFixed(1) + "%",
+      percent: ((Number(h.value) / totalQuantity) * 100).toFixed(1) + "%",
     }));
   }, [chartData, holdings]);
 
