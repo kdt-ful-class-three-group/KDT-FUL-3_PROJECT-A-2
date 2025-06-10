@@ -60,15 +60,16 @@ export class UsersService {
   }
 
   // 로그인
-  async checkUser(data: SigninDto, @Req() req: Request): Promise<boolean> {
+  async checkUser(data: SigninDto, req: Request): Promise<boolean> {
     const sql = 'SELECT * FROM member WHERE user_id = $1';
     const result = await pool.query(sql, [data.userid]);
 
     if (result.rows.length === 0) return false;
     const user = result.rows[0];
     const isMatch = await bcrypt.compare(data.password, user.password);
+    console.log(user.id);
     if (isMatch) {
-      req.session.member_id = user.member_id;
+      req.session.member_id = user.id;
       return user
     }
     else return false
