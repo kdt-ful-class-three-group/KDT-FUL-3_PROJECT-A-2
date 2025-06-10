@@ -26,7 +26,7 @@ ChartJS.register(
   Legend
 );
 
-type StockData = {
+type StockDataHistory = {
   bas_dt: string; // 기준일자
   itms_nm: string; // 종목명
   clpr: number; // 종가
@@ -35,10 +35,11 @@ type StockData = {
 };
 
 type ChartProps = {
-  history: StockData[];
+  history: StockDataHistory[];
 };
 
 export default function Chart({ history }: ChartProps) {
+  // console.log("stockHistories데이터 확인", stockHistories);
   const chartData = {
     labels: history.map((item) => item.bas_dt), // 날짜(기준일자) 라벨
     datasets: [

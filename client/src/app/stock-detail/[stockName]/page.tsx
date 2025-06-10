@@ -13,7 +13,7 @@ import { useStockApi, getFltRtColor } from "@/hooks/useStockApi";
 import Spinner from "@/components/Spinner";
 
 export default function StockDetailPage() {
-  const { latestStocks, isLoading } = useStockApi();
+  const { latestStocks, isLoading, stockHistories } = useStockApi();
   const [tab, setTab] = useState("orderPage");
   const [isStar, setIsStar] = useState(false);
   const params = useParams();
@@ -50,7 +50,7 @@ export default function StockDetailPage() {
       });
       setIsStar(true);
     } else {
-      await fetch(`http://localhost:8000/interest/${stock.srtnCd}`, {
+      await fetch(`http://localhost:8000/interest/${stock.srtn_cd}`, {
         method: "DELETE",
       });
       setIsStar(false);
@@ -60,7 +60,7 @@ export default function StockDetailPage() {
   if (isLoading || !stock) {
     return <Spinner />;
   }
-  
+
   return (
     <div>
       <Title
@@ -78,11 +78,15 @@ export default function StockDetailPage() {
         getFltRtColor={getFltRtColor}
       />
       <div className="p-4">
-        {tab === "companyInfo" && <CompanyInfo />}
+        {tab === "companyInfo" && <CompanyInfo stockName={srtn_cd} />}
         {tab === "orderPage" && <OrderPage stock={stock} stockCode={srtn_cd} />}
         {tab === "orderBook" && <OrderBook />}
         {tab === "stockChart" && (
-          <StockChart stocks={latestStocks} stockNum={stock.srtn_cd} />
+          <StockChart
+            stocks={latestStocks}
+            stockHistories={stockHistories[stock.srtn_cd] || []}
+            stockNum={stock.srtn_cd}
+          />
         )}
         {tab === "priceInfo" && <PriceInfo />}
       </div>

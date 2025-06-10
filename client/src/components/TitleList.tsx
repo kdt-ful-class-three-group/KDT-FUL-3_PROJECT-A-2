@@ -11,7 +11,7 @@ type Props = {
 };
 function TitleList({ sortedStocks, sortField, sortOrder, handleSort }: Props) {
   const router = useRouter();
-  const { latestStocks, isLoading } = useStockApi(); //
+  const { latestStocks } = useStockApi();
 
   return (
     <div>
@@ -74,7 +74,6 @@ function TitleList({ sortedStocks, sortField, sortOrder, handleSort }: Props) {
         const live = latestStocks.find(
           (item) => item.srtn_cd === stock.stock_code
         );
-
         return (
           <div
             key={id}
