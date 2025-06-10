@@ -66,7 +66,7 @@ export default function BankPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:8000/bank", {
+      const res = await fetch("http://localhost:8000/bank/loan", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -103,14 +103,23 @@ export default function BankPage() {
       alert('로그인 후 이용이 가능합니다');
       return;
     }
-    const newTotalLoan = totalLoan - loan;
-    const newLoanAvailable = loanAvailable + loan;
-    setTotalLoan(newTotalLoan);
-    setLoanAvailable(newLoanAvailable);
-    setCurrentAssets(currentAssets - loan);
-    alert(
-      `${loan.toLocaleString()}원 상환 완료\n총 대출금액: ${newTotalLoan.toLocaleString()}원\n남은 대출 가능 금액: ${newLoanAvailable.toLocaleString()}원`
-    );
+
+    try {
+      const res = await fetch("http://localhost:8000/bank/repay", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ loan_amount: loan, cash_balance: currentAssets }),
+      });
+      const data = await res.json();
+      console.log(data);
+      setLoanAvailable(data.max_loan_limit);
+    } catch (error) {
+      console.error("상환 요청 실패:", error);
+      return;
+    }
   };
 
   return (

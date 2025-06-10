@@ -6,7 +6,7 @@ import { Request } from 'express';
 @Controller('bank')
 // @UseGuards(AuthGuard('jwt'))
 export class BankController {
-  constructor(private readonly bankService: BankService) {}
+  constructor(private readonly bankService: BankService) { }
 
   @Get()
   async findAll() {
@@ -19,10 +19,16 @@ export class BankController {
     return this.bankService.getPersonalBank(member_id);
   }
 
-  @Put()
-  async updateBank(@Req() req: Request, @Body() updateData) {
+  @Put('loan')
+  async updateBankLoan(@Req() req: Request, @Body() updateData) {
     const member_id = req.session.member_id === undefined ? '0' : String(req.session.member_id);
-    return this.bankService.updateBank(member_id, updateData);
+    return this.bankService.updateBankLoan(member_id, updateData);
+  }
+
+  @Put('repay')
+  async updateBankRepay(@Req() req: Request, @Body() updateData) {
+    const member_id = req.session.member_id === undefined ? '0' : String(req.session.member_id);
+    return this.bankService.updateBankRepay(member_id, updateData);
   }
 
   @Get('hello')

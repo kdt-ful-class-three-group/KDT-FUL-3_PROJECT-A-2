@@ -34,7 +34,7 @@ export class BankService {
     }
   }
 
-  async updateBank(member_id: string, updateData: { loan_amount: string, cash_balance: string }) {
+  async updateBankRepay(member_id: string, updateData: { loan_amount: string, cash_balance: string }) {
     const sql = `
       UPDATE bank 
       SET loan_amount = loan_amount + $1,
@@ -53,4 +53,22 @@ export class BankService {
     }
   }
 
+  async updateBankLoan(member_id: string, updateData: { loan_amount: string, cash_balance: string }) {
+    const sql = `
+      UPDATE bank 
+      SET loan_amount = loan_amount + $1,
+      cash_balance = cash_balance + $1,
+      repayment = loan_amount + $1,
+      max_loan_limit = max_loan_limit - $1
+      WHERE member_id = $2 RETURNING *`;
+    try {
+      const result = await pool.query(sql, [updateData.loan_amount, member_id]);
+      console.log(result);
+      if (result.rows.length === 0) return [];
+      return result.rows[0];
+    } catch (error) {
+      console.error('Error updating bank:', error);
+      return null;
+    }
+  }
 }
