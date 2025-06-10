@@ -38,7 +38,10 @@ export default function StockDetailPage() {
   }, [stock?.srtn_cd]);
 
   const handleBookmarkClick = async () => {
-    if (sessionStorage.getItem("member_id") === null) return;
+    if (sessionStorage.getItem("member_id") === null) {
+      console.log('로그인 후 이용가능 합니다.');
+      return;
+    }
     if (!stock) return;
     if (!isStar) {
       await fetch("http://localhost:8000/interest", {
