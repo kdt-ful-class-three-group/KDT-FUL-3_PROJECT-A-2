@@ -12,7 +12,10 @@ export function useStockList(fetchUrl: string) {
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
   useEffect(() => {
-    fetch(fetchUrl)
+    fetch(fetchUrl, {
+      method: "GET",
+      credentials: "include",
+    })
       .then((res) => res.json())
       .then((data) => {
         console.log("fetch data", data);

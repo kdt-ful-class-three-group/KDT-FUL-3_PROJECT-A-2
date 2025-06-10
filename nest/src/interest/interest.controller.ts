@@ -9,8 +9,12 @@ export class InterestController {
   constructor(private readonly interestService: InterestService) { }
 
   @Get()
-  async getInterestForMemberId(@Req() req: Request) {
-    return this.interestService.getInterestForMemberId(req);
+  async getInterestForMemberId(@Res() res, @Req() req: Request) {
+    const member_id = req.session.member_id === undefined ? '0' : String(req.session.member_id);
+    console.log(member_id, "in controller");
+    const result = await this.interestService.getInterestForMemberId(member_id);
+    console.log(result);
+    return res.json(result);
   }
 
   // @Get()
