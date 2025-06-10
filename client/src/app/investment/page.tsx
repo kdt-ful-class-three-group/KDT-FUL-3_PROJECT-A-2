@@ -53,7 +53,7 @@ export default function InvestmentPage() {
     }).then((res) => res.json())
       .then((data) => {
         console.log(data);
-        setHoldings(data.stock);
+        setHoldings(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));

@@ -11,11 +11,7 @@ export class PortfolioController {
   @Get()
   async findByMemberId(@Req() req: Request) {
     const member_id = req.session.member_id === undefined ? '0' : String(req.session.member_id);
-    const stock = await this.portfolioService.findByMemberId(Number(member_id));
-    console.log(stock);
-    const portfolio = await this.portfolioService.getTotalQuantity(Number(member_id));
-    console.log(portfolio);
-    return {stock: stock, portfolio: portfolio}
+    return this.portfolioService.findByMemberId(Number(member_id));
   }
 
   @Get('hello')
