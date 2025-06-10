@@ -45,9 +45,9 @@ export default function TradeHistory({
       }),
     })
       .then((res) => res.json())
-      .then((data: OrderItem[]) => {
-        console.log(data);
-        setOrders(data)
+      .then((data) => {
+      console.log('API data:', data);
+      setOrders(Array.isArray(data) ? data : (data.orders || []));
       })
       .catch(console.error);
   }, [stockCode]);
