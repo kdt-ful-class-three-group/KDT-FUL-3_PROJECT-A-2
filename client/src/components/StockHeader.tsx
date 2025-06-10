@@ -28,11 +28,11 @@ export default function StockHeader({
   ];
 
   return (
-    <div className="bg-white p-4 shadow">
-      <div className="text-xl font-bold  text-black mb-2">
+    <div className="bg-white shadow">
+      <div className="text-xl font-bold pl-5 pt-5  text-black mb-2">
         {stockValue.itms_nm}
       </div>
-      <div className=" mb-3">
+      <div className=" pl-5 mb-3">
         <span className="text-2 font-bold text-red-500 mr-2">
           <span
             className="text-2xl font-bold mr-2"
@@ -49,12 +49,12 @@ export default function StockHeader({
         </span>
       </div>
 
-      <div className="flex justify-around border-t pt-1 text-sm text-gray-600">
+      <div className="flex justify-around border-t text-sm text-gray-600">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             onClick={() => onSelectTab(tab.key)}
-            className="hover:text-black"
+            className="hover:text-black p-4"
           >
             {tab.name}
           </button>
