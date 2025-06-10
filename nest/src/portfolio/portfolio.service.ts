@@ -28,6 +28,8 @@ export class PortfolioService {
     return result.rows;
   }
 
+  //! 필요핟고 판단하여 만들었지만 사용하지 않고 있다.
+  //! 언젠가는 사용할까 싶어 삭제하지는 않았다.
   async getTotalQuantity(member_id: number) {
     const sql = `
       SELECT stock_name, max(quantity)
