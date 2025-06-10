@@ -12,11 +12,14 @@ export interface Interest {
 @Injectable()
 export class InterestService {
   async getInterestForMemberId(req: Request) {
-    console.log(req.session.member_id);
+    const member_id = req.session.member_id;
+    if(member_id === undefined) {
+      return []
+    }
     const sql = 'SELECT * FROM interest_stock WHERE member_id = $1';
-    const result = await pool.query(sql, "1");
+    const result = await pool.query(sql, member_id);
     console.log(result.rows);
-    if (result.rows.length === 0) return false;
+    if (result.rows.length === 0) return [];
     return result.rows;
   }
 
