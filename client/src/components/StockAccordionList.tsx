@@ -4,10 +4,10 @@
 import React, { useState } from "react";
 
 interface StockDetail {
-  evaluatedPL: number;    // 평가 손익 (원 단위)
-  returnRate: number;     // 수익률(%)
-  quantity: number;       // 보유 수량(주 단위)
-  avgPrice: number;       // 매수 평균가(원 단위)
+  // evaluatedPL: number;    // 평가 손익 (원 단위)
+  // returnRate: number;     // 수익률(%)
+  quantity: string;       // 보유 수량(주 단위)
+  avgPrice: string;       // 매수 평균가(원 단위)
 }
 
 interface StockAccordionItem {
@@ -47,7 +47,7 @@ export default function StockAccordionList({ items }: StockAccordionListProps) {
             {/* 아코디언 본문 (열렸을 때만) */}
             {isOpen && (
               <div className="px-6 py-4 bg-gray-50 space-y-2 text-gray-700 text-sm">
-                <div className="flex justify-between">
+                {/* <div className="flex justify-between">
                   <span>평가 손익</span>
                   <span
                     className={
@@ -58,8 +58,8 @@ export default function StockAccordionList({ items }: StockAccordionListProps) {
                   >
                     {formatKRW(item.detail.evaluatedPL)}원
                   </span>
-                </div>
-                <div className="flex justify-between">
+                </div> */}
+                {/* <div className="flex justify-between">
                   <span>수익률</span>
                   <span
                     className={
@@ -70,7 +70,7 @@ export default function StockAccordionList({ items }: StockAccordionListProps) {
                   >
                     {item.detail.returnRate.toFixed(2)}%
                   </span>
-                </div>
+                </div> */}
                 <div className="flex justify-between">
                   <span>보유 수량</span>
                   <span>{item.detail.quantity.toLocaleString()}주</span>

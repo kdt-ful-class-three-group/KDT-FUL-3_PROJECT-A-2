@@ -1,6 +1,6 @@
 // /src/investment/page.tsx
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AssetSummary from "@/components/AssetSummary";
 import AssetPieChart from "@/components/AssetPieChart";
 import StockAccordionList from "@/components/StockAccordionList";
@@ -34,7 +34,31 @@ const dummyHoldings = [
   // 여기에 유저가 산 종목이 늘어나면 배열에 추가/ db에서 가져오면 됨
 ];
 
+interface Holding {
+  stock_code: string;
+  stock_name: string;
+  quantity: string;
+  avg_price: string;
+}
+
 export default function InvestmentPage() {
+  const [holdings, setHoldings] = useState<Holding[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const memberId = sessionStorage.getItem("member_id");
+    if (!memberId) return;
+    fetch(`http://localhost:8000/portfolio`, {
+      credentials: "include",
+    }).then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setHoldings(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
   // holdingsValue: 보유 종목 가치 합
   const holdingsValue = dummyHoldings.reduce((acc, cur) => acc + cur.value, 0);
 
@@ -46,15 +70,18 @@ export default function InvestmentPage() {
   );
 
   // Pie 차트에 넘겨줄 데이터: name + value
-  const pieData = dummyHoldings.map((h) => ({
-    name: h.name,
-    value: h.value,
+  const pieData = holdings.map((h) => ({
+    name: h.stock_name,
+    value: h.quantity,
   }));
 
   // Accordion에 넘겨줄 데이터: name + detail
-  const accordionItems = dummyHoldings.map((h) => ({
-    name: h.name,
-    detail: h.detail,
+  const accordionItems = holdings.map((h) => ({
+    name: h.stock_name,
+    detail: {
+      quantity: h.quantity,
+      avgPrice: h.avg_price,
+    },
   }));
 
   return (
