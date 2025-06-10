@@ -28,7 +28,7 @@ export default function OrderSummary({stock, stockCode, side }: OrderSummaryProp
   const [orderType, setOrderType] = useState<"limit" | "market">("limit");
   // 2) 공통 state
   const [availableQty, setAvailableQty] = useState<number>(0);
-  const [currentPrice, setCurrentPrice] = useState<number>(stock.mkp);
+  const [currentPrice, setCurrentPrice] = useState<number>(stock.clpr);
   const [quantity, setQuantity] = useState<number | "">("");
   const [percentage, setPercentage] = useState<number>(0);
   const [total, setTotal] = useState<number>(0);
