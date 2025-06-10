@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { pool } from '../DB/DB';
 
 export interface Interest {
@@ -10,13 +11,17 @@ export interface Interest {
 
 @Injectable()
 export class InterestService {
-  async findAll(): Promise<Interest[]> {
-    const result = await pool.query('SELECT * FROM interest_stock ORDER BY id ASC');
+  async getInterestForMemberId(@Req() req: Request) {
+    console.log(req.session.member_id);
+    const sql = 'SELECT * FROM interest_stock WHERE member_id = $1';
+    const result = await pool.query(sql);
+    console.log(result.rows);
+    if (result.rows.length === 0) return false;
     return result.rows;
   }
 
   async remove(stock_code: string) {
-  return pool.query('DELETE FROM interest_stock WHERE stock_code = $1', [stock_code]);
+    return pool.query('DELETE FROM interest_stock WHERE stock_code = $1', [stock_code]);
   }
 
   async create(dto: {
