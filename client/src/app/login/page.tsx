@@ -23,6 +23,7 @@ export default function LoginPage() {
       const res = await fetch("http://localhost:8000/users/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(form),
       });
       const data = await res.json();
