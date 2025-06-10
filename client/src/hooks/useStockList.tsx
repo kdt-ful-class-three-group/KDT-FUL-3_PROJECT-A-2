@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useStockApi, getFltRtColor, StockData } from "@/hooks/useStockApi";
+import axios from "axios";
+import { useStockApi, StockData } from "@/hooks/useStockApi";
 
 export function useStockList(fetchUrl: string) {
   const [stocks, setStocks] = useState<StockData[]>([]);
@@ -8,18 +9,15 @@ export function useStockList(fetchUrl: string) {
   const [sortField, setSortField] = useState<"mkp" | "fltRt" | "trPrc" | null>(
     null
   );
-  const { latestStocks, isLoading } = useStockApi(); //
+
   const [sortOrder, setSortOrder] = useState<"desc" | "asc">("desc");
 
   useEffect(() => {
-    fetch(fetchUrl, {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("fetch data", data);
-        setStocks(data);
+    axios
+      .get(fetchUrl)
+      .then((res) => {
+        console.log("fetch data", res.data);
+        setStocks(res.data);
         setLoading(false);
       })
       .catch(() => setLoading(false));

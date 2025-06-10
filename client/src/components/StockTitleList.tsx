@@ -10,7 +10,7 @@ type Props = {
 };
 function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
   const router = useRouter();
-  console.log(stocks);
+  // console.log(stocks);
   return (
     <div>
       <div className="flex justify-between px-2 mb-6">
