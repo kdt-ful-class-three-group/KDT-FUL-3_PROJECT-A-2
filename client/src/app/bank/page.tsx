@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import Title from "@/components/Title";
 import Nav from "@/components/Nav";
+import { useEffect } from "react";
 
 export default function BankPage() {
   const [loanAmount, setLoanAmount] = useState("");
@@ -13,16 +14,37 @@ export default function BankPage() {
   const maxLimit: number = 50000000; //최대한도
   const [creditGrade, setCreditGrade] = useState("5"); //등급
 
+  useEffect(() => {
+    const sendBankData = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/bank", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        console.log(data);
+        setCurrentAssets(data[0].cash_balance);
+        setLoanAvailable(data[0].max_loan_limit);
+        setCreditGrade(data[0].credit_grade);
+        setTotalLoan(data[0].loan_amount);
+      } catch (error) {
+        console.error("은행 데이터 전송 실패:", error);
+      }
+    };
+
+    sendBankData();
+  }, []);
+
   // 등급 → 이자율 계산 함수
   const getInterestRateByGrade = (grade: string): number => {
     const rateMap: { [key: string]: number } = {
-      "1": 1.75,
-      "2": 3.0,
-      "3": 4.0,
-      "4": 5.25,
-      "5": 7.0,
-      "6": 10.0,
-      "7": 16.0,
+      "1등급": 1.75,
+      "2등급": 3.0,
+      "3등급": 4.0,
+      "4등급": 5.25,
+      "5등급": 7.0,
+      "6등급": 10.0,
+      "7등급": 16.0,
     };
     return rateMap[grade] || 0;
   };

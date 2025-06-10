@@ -23,11 +23,12 @@ export class BankService {
     return result.rows;
   }
 
-  async getPersonalBank(data: { member_id: string }) {
+  async getPersonalBank(member_id: string) {
     try {
       const sql = "SELECT * FROM bank WHERE member_id = $1";
-      const result = await pool.query(sql, [data.member_id]);
-      return result.rows;
+      const result = await pool.query(sql, [member_id]);
+      if (result.rows.length === 0) return []
+      return result.rows[0];
     } catch (error) {
       console.error(error);
     }
