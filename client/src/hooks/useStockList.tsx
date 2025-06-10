@@ -14,7 +14,7 @@ export function useStockList(fetchUrl: string) {
 
   useEffect(() => {
     axios
-      .get(fetchUrl)
+      .get(fetchUrl, {withCredentials: true})
       .then((res) => {
         console.log("fetch data", res.data);
         setStocks(res.data);

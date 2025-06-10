@@ -2,34 +2,55 @@
 import React, { useState } from "react";
 import Title from "@/components/Title";
 import Nav from "@/components/Nav";
+import { useEffect } from "react";
 
 export default function BankPage() {
   const [loanAmount, setLoanAmount] = useState("");
   const [currentAssets, setCurrentAssets] = useState(0); //현재자산
   const [totalLoan, setTotalLoan] = useState(0); //총대출금액
-  const [loanAvailable, setLoanAvailable] = useState(50000000); //대출가능한돈
+  const [loanAvailable, setLoanAvailable] = useState(0); //대출가능한돈
   const currentDebt = totalLoan; // 내빛은 총대출금액과 같게 했음
   const remainingDays: number = 120; //남은 날짜
   const maxLimit: number = 50000000; //최대한도
   const [creditGrade, setCreditGrade] = useState("5"); //등급
 
+  useEffect(() => {
+    const sendBankData = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/bank", {
+          method: "GET",
+          credentials: "include",
+        });
+        const data = await res.json();
+        setCurrentAssets(data[0].cash_balance);
+        setLoanAvailable(data[0].max_loan_limit);
+        setCreditGrade(data[0].credit_grade);
+        setTotalLoan(data[0].loan_amount);
+      } catch (error) {
+        console.error("은행 데이터 전송 실패:", error);
+      }
+    };
+
+    sendBankData();
+  }, [loanAvailable]);
+
   // 등급 → 이자율 계산 함수
   const getInterestRateByGrade = (grade: string): number => {
     const rateMap: { [key: string]: number } = {
-      "1": 1.75,
-      "2": 3.0,
-      "3": 4.0,
-      "4": 5.25,
-      "5": 7.0,
-      "6": 10.0,
-      "7": 16.0,
+      "1등급": 1.75,
+      "2등급": 3.0,
+      "3등급": 4.0,
+      "4등급": 5.25,
+      "5등급": 7.0,
+      "6등급": 10.0,
+      "7등급": 16.0,
     };
     return rateMap[grade] || 0;
   };
 
   const interestRate: number = getInterestRateByGrade(creditGrade);
 
-  const handleLoan = () => {
+  const handleLoan = async () => {
     const loan = Number(loanAmount.replace(/,/g, ""));
     if (isNaN(loan) || loan <= 0) {
       alert("올바른 금액을 입력해주세요.");
@@ -39,17 +60,30 @@ export default function BankPage() {
       alert(`최대 대출 가능 금액은 ${loanAvailable.toLocaleString()}원입니다.`);
       return;
     }
-    const newTotalLoan = totalLoan + loan;
-    const newLoanAvailable = loanAvailable - loan;
-    setTotalLoan(newTotalLoan);
-    setLoanAvailable(newLoanAvailable);
-    setCurrentAssets(currentAssets + loan);
-    alert(
-      `${loan.toLocaleString()}원 대출 신청 완료\n총 대출금액: ${newTotalLoan.toLocaleString()}원\n남은 대출 가능 금액: ${newLoanAvailable.toLocaleString()}원`
-    );
+    if (sessionStorage.getItem('member_id') === null) {
+      alert('로그인 후 이용이 가능합니다');
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:8000/bank/loan", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ loan_amount: loan, cash_balance: currentAssets }),
+      });
+      const data = await res.json();
+      console.log(data);
+      setLoanAvailable(data.max_loan_limit);
+    } catch (error) {
+      console.error("대출 요청 실패:", error);
+      return;
+    }
   };
 
-  const handleRepay = () => {
+  const handleRepay = async () => {
     const loan = Number(loanAmount.replace(/,/g, ""));
     if (isNaN(loan) || loan <= 0) {
       alert("올바른 금액을 입력해주세요.");
@@ -65,14 +99,27 @@ export default function BankPage() {
       alert("현재 자산보다 많은 금액은 상환할 수 없습니다.");
       return;
     }
-    const newTotalLoan = totalLoan - loan;
-    const newLoanAvailable = loanAvailable + loan;
-    setTotalLoan(newTotalLoan);
-    setLoanAvailable(newLoanAvailable);
-    setCurrentAssets(currentAssets - loan);
-    alert(
-      `${loan.toLocaleString()}원 상환 완료\n총 대출금액: ${newTotalLoan.toLocaleString()}원\n남은 대출 가능 금액: ${newLoanAvailable.toLocaleString()}원`
-    );
+    if (sessionStorage.getItem('member_id') === null) {
+      alert('로그인 후 이용이 가능합니다');
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:8000/bank/repay", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ loan_amount: loan, cash_balance: currentAssets }),
+      });
+      const data = await res.json();
+      console.log(data);
+      setLoanAvailable(data.max_loan_limit);
+    } catch (error) {
+      console.error("상환 요청 실패:", error);
+      return;
+    }
   };
 
   return (
