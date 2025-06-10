@@ -8,7 +8,7 @@ export default function BankPage() {
   const [loanAmount, setLoanAmount] = useState("");
   const [currentAssets, setCurrentAssets] = useState(0); //현재자산
   const [totalLoan, setTotalLoan] = useState(0); //총대출금액
-  const [loanAvailable, setLoanAvailable] = useState(50000000); //대출가능한돈
+  const [loanAvailable, setLoanAvailable] = useState(0); //대출가능한돈
   const currentDebt = totalLoan; // 내빛은 총대출금액과 같게 했음
   const remainingDays: number = 120; //남은 날짜
   const maxLimit: number = 50000000; //최대한도
@@ -22,7 +22,6 @@ export default function BankPage() {
           credentials: "include",
         });
         const data = await res.json();
-        console.log(data);
         setCurrentAssets(data[0].cash_balance);
         setLoanAvailable(data[0].max_loan_limit);
         setCreditGrade(data[0].credit_grade);
@@ -33,7 +32,7 @@ export default function BankPage() {
     };
 
     sendBankData();
-  }, []);
+  }, [loanAvailable]);
 
   // 등급 → 이자율 계산 함수
   const getInterestRateByGrade = (grade: string): number => {
@@ -77,19 +76,11 @@ export default function BankPage() {
       });
       const data = await res.json();
       console.log(data);
+      setLoanAvailable(data.max_loan_limit);
     } catch (error) {
       console.error("대출 요청 실패:", error);
       return;
     }
-
-    const newTotalLoan = totalLoan + loan;
-    const newLoanAvailable = loanAvailable - loan;
-    setTotalLoan(newTotalLoan);
-    setLoanAvailable(newLoanAvailable);
-    setCurrentAssets(currentAssets + loan);
-    alert(
-      `${loan.toLocaleString()}원 대출 신청 완료\n총 대출금액: ${newTotalLoan.toLocaleString()}원\n남은 대출 가능 금액: ${newLoanAvailable.toLocaleString()}원`
-    );
   };
 
   const handleRepay = async () => {

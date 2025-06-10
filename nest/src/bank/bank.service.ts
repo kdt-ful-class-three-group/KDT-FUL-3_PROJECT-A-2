@@ -35,9 +35,15 @@ export class BankService {
   }
 
   async updateBank(member_id: string, updateData: { loan_amount: string, cash_balance: string }) {
-    const sql = `UPDATE bank SET loan_amount = loan_amount + $1, cash_balance = cash_balance + $1 + $2, repayment = loan_amount + $1 WHERE member_id = $3 RETURNING *`;
+    const sql = `
+      UPDATE bank 
+      SET loan_amount = loan_amount + $1,
+      cash_balance = cash_balance + $1,
+      repayment = loan_amount + $1,
+      max_loan_limit = max_loan_limit - $1
+      WHERE member_id = $2 RETURNING *`;
     try {
-      const result = await pool.query(sql, [updateData.loan_amount, updateData.cash_balance, member_id]);
+      const result = await pool.query(sql, [updateData.loan_amount, member_id]);
       console.log(result);
       if (result.rows.length === 0) return [];
       return result.rows[0];
