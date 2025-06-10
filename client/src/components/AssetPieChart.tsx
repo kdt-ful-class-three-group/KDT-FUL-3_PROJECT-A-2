@@ -19,7 +19,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface Holding {
   name: string;      // ex: "삼성전자"
-  value: number;     // 해당 종목의 평가금액(원 단위)
+  value: string;     // 해당 종목의 평가금액(원 단위)
 }
 
 interface AssetPieChartProps {
@@ -103,13 +103,11 @@ export default function AssetPieChart({ holdings }: AssetPieChartProps) {
   // 4) 옆 레전드(컬러 + 퍼센트) 계산
   const legendItems = useMemo(() => {
     const bgColors = chartData.datasets[0].backgroundColor as string[];
-    const rawValues = chartData.datasets[0].data as number[];
-    const totalValue = rawValues.reduce((a, b) => a + b, 0);
-
+    const totalQuantity = holdings.reduce((acc, cur) => acc + Number(cur.value), 0);
     return holdings.map((h, idx) => ({
       name: h.name,
       color: bgColors[idx],
-      percent: ((h.value / totalValue) * 100).toFixed(1) + "%",
+      percent: ((h.value / totalQuantity) * 100).toFixed(1) + "%",
     }));
   }, [chartData, holdings]);
 

@@ -52,8 +52,8 @@ export default function InvestmentPage() {
       credentials: "include",
     }).then((res) => res.json())
       .then((data) => {
-        setHoldings(data);
-        console.log;
+        console.log(data);
+        setHoldings(data.stock);
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -70,9 +70,9 @@ export default function InvestmentPage() {
   );
 
   // Pie 차트에 넘겨줄 데이터: name + value
-  const pieData = dummyHoldings.map((h) => ({
-    name: h.name,
-    value: h.value,
+  const pieData = holdings.map((h) => ({
+    name: h.stock_name,
+    value: h.quantity,
   }));
 
   // Accordion에 넘겨줄 데이터: name + detail
