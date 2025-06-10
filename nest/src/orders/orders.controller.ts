@@ -1,5 +1,13 @@
 // src/words/words.controller.ts
-import { Controller, Get, Post, Body, UseGuards, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { OrdersService } from './orders.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -20,15 +28,16 @@ export class OrdersController {
   }
 
   @Post('stock')
-  async getStockOrders(@Body() data: {member_id: string, stock_code: string}) {
+  async getStockOrders(
+    @Body() data: { member_id: string; stock_code: string },
+  ) {
     return this.ordersService.getStockOrders(data);
   }
 
   @Delete('cancel')
-  async cancelStockOrder(@Body() data: {id: string}) {
+  async cancelStockOrder(@Body() data: { id: string }) {
     return this.ordersService.cancelStockOrder(data);
   }
-
 
   @Get('hello')
   getHello(): string {
