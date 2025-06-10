@@ -76,9 +76,12 @@ export default function InvestmentPage() {
   }));
 
   // Accordion에 넘겨줄 데이터: name + detail
-  const accordionItems = dummyHoldings.map((h) => ({
-    name: h.name,
-    detail: h.detail,
+  const accordionItems = holdings.map((h) => ({
+    name: h.stock_name,
+    detail: {
+      quantity: h.quantity,
+      avgPrice: h.avg_price,
+    },
   }));
 
   return (

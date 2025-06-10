@@ -4,10 +4,10 @@
 import React, { useState } from "react";
 
 interface StockDetail {
-  evaluatedPL: number;    // 평가 손익 (원 단위)
-  returnRate: number;     // 수익률(%)
-  quantity: number;       // 보유 수량(주 단위)
-  avgPrice: number;       // 매수 평균가(원 단위)
+  // evaluatedPL: number;    // 평가 손익 (원 단위)
+  // returnRate: number;     // 수익률(%)
+  quantity: string;       // 보유 수량(주 단위)
+  avgPrice: string;       // 매수 평균가(원 단위)
 }
 
 interface StockAccordionItem {
