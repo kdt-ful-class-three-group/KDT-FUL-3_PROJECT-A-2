@@ -44,7 +44,7 @@ export default function StockPageLayout({
           />
         </div>
         {/* 사용자 요약 정보 */}
-        <StockPortfolio />
+        {/* <StockPortfolio /> */}
         {/* 종목 테이블 */}
         <div className="overflow-x-auto mt-5">{children}</div>
       </div>

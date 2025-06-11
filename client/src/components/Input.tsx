@@ -30,7 +30,7 @@ function Input({
     onChange({ target: { name, value: inputValue } });
   };
   return (
-    <div>
+    <>
       <input
         className={className}
         autoFocus
@@ -43,7 +43,7 @@ function Input({
         pattern={pattern}
         title={title}
       />
-    </div>
+    </>
   );
 }
 

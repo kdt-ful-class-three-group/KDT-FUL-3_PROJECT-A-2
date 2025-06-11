@@ -23,7 +23,7 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
         >
           <p className="text-[#313131] mr-1">현재가</p>
 
-          <img
+          {/* <img
             src={
               sortField === "mkp"
                 ? sortOrder === "desc"
@@ -32,14 +32,14 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
                 : "/image/tbArrow.svg"
             }
             alt="정렬"
-          />
+          /> */}
         </div>
         <div
           className="flex justify-center w-full"
           onClick={() => handleSort("fltRt")}
         >
           <p className="text-[#313131] mr-1">전일대비</p>
-          <img
+          {/* <img
             src={
               sortField === "fltRt"
                 ? sortOrder === "desc"
@@ -48,14 +48,14 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
                 : "/image/tbArrow.svg"
             }
             alt="정렬"
-          />
+          /> */}
         </div>
         <div
           className="flex justify-center w-full"
           onClick={() => handleSort("trPrc")}
         >
           <p className="text-[#313131] mr-1">거래대금</p>
-          <img
+          {/* <img
             src={
               sortField === "trPrc"
                 ? sortOrder === "desc"
@@ -64,7 +64,7 @@ function StockTitleList({ sortField, sortOrder, handleSort, stocks }: Props) {
                 : "/image/tbArrow.svg"
             }
             alt="정렬"
-          />
+          /> */}
         </div>
       </div>
       {stocks.map((stock, id) => (

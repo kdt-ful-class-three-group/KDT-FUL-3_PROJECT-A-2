@@ -128,27 +128,28 @@ export default function MyPage() {
       {/* 닉네임 */}
       <section className="mt-4 px-4 flex justify-center">
         <h2 className="text-xl font-semibold flex justify-center">
-          {user?.nickname}님, 반갑습니다
+          {/* {user?.nickname}님,  */}
+          반갑습니다.
         </h2>
       </section>
 
       {/* 동그라미: 등급 + 점수 */}
-      <section className="mt-6 px-4 flex flex-col items-center">
+      {/* <section className="mt-6 px-4 flex flex-col items-center">
         <ScoreCircle
           creditGrade={user?.credit_grade ?? 1}
           creditScore={user?.credit_score ?? 0}
         />
-      </section>
+      </section> */}
 
       {/* 신용등급표 & 모의투자 등급표 */}
-      <section className="mt-8 px-4">
+      {/* <section className="mt-8 px-4">
         <RatingChart
           userCreditGrade={user?.credit_grade ?? 1}
           userInvestGrade={user?.invest_grade ?? 1}
           creditPercentile={user?.credit_percentile ?? 0}
           investPercentile={user?.invest_percentile ?? 0}
         />
-      </section>
+      </section> */}
 
       {/* 로그아웃 & 파산신청 버튼 */}
       <section className="mt-6 px-4 flex justify-between">

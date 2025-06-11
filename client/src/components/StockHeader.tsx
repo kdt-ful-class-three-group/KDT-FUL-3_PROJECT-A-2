@@ -24,7 +24,7 @@ export default function StockHeader({
     // { name: "호가", key: "orderBook" },
     { name: "차트", key: "stockChart" },
     // { name: "시세", key: "priceInfo" },
-    { name: "정보", key: "companyInfo" },
+    // { name: "정보", key: "companyInfo" },
   ];
 
   return (
