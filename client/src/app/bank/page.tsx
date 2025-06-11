@@ -32,7 +32,7 @@ export default function BankPage() {
     };
 
     sendBankData();
-  }, [loanAvailable]);
+  }, []);
 
   // 등급 → 이자율 계산 함수
   const getInterestRateByGrade = (grade: string): number => {
@@ -50,6 +50,7 @@ export default function BankPage() {
 
   const interestRate: number = getInterestRateByGrade(creditGrade);
 
+  // 대출하기
   const handleLoan = async () => {
     const loan = Number(loanAmount.replace(/,/g, ""));
     if (isNaN(loan) || loan <= 0) {
@@ -68,9 +69,7 @@ export default function BankPage() {
     try {
       const res = await fetch("http://localhost:8000/bank/loan", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           loan_amount: loan,
@@ -78,14 +77,16 @@ export default function BankPage() {
         }),
       });
       const data = await res.json();
-      console.log(data);
       setLoanAvailable(data.max_loan_limit);
+      setCurrentAssets(data.cash_balance);
+      setTotalLoan(data.loan_amount);
     } catch (error) {
       console.error("대출 요청 실패:", error);
       return;
     }
   };
 
+  // 상환하기
   const handleRepay = async () => {
     const loan = Number(loanAmount.replace(/,/g, ""));
     if (isNaN(loan) || loan <= 0) {
@@ -110,9 +111,7 @@ export default function BankPage() {
     try {
       const res = await fetch("http://localhost:8000/bank/repay", {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify({
           loan_amount: loan,
@@ -120,8 +119,9 @@ export default function BankPage() {
         }),
       });
       const data = await res.json();
-      console.log(data);
       setLoanAvailable(data.max_loan_limit);
+      setCurrentAssets(data.cash_balance); // ← 추가!
+      setTotalLoan(data.loan_amount); // ← 필요시 추가!
     } catch (error) {
       console.error("상환 요청 실패:", error);
       return;
