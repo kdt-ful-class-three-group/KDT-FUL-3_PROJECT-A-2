@@ -13,8 +13,8 @@ import {
   Legend,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
-import { Line } from "react-chartjs-2";
-
+import { Bar } from "react-chartjs-2";
+import { StockData } from "@/hooks/useStockApi";
 ChartJS.register(
   LineElement,
   BarElement,
@@ -26,29 +26,25 @@ ChartJS.register(
   Legend
 );
 
-type StockDataHistory = {
-  bas_dt: string; // 기준일자
-  itms_nm: string; // 종목명
-  clpr: number; // 종가
-  tr_prc: number; // 거래대금
-  flt_rt: number; // 전일대비율
-};
-
 type ChartProps = {
-  history: StockDataHistory[];
+  history: any[];
+  filteredStocks: StockData[];
 };
 
-export default function Chart({ history }: ChartProps) {
-  // console.log("stockHistories데이터 확인", stockHistories);
+export default function Chart({ filteredStocks }: ChartProps) {
   const chartData = {
-    labels: history.map((item) => item.bas_dt), // 날짜(기준일자) 라벨
+    labels: filteredStocks.map((item) => item.bas_dt),
     datasets: [
       {
-        label: history[0]?.itms_nm ?? "종목",
-        data: history.map((item) => item.clpr), // 종가(현재가)
-        backgroundColor: "rgba(75,192,192,0.4)",
-        borderColor: "rgba(75,192,192,1)",
-        fill: false,
+        label: filteredStocks[0]?.itms_nm ?? "종목",
+        data: filteredStocks.map((item) => item.clpr),
+        backgroundColor: "rgba(226,60,79,0.1)", // 투명하게
+        borderColor: "#E23C4F",
+        borderWidth: 2,
+        pointRadius: 2,
+        pointHoverRadius: 5,
+        tension: 0.3, // 곡선 효과
+        fill: true,
       },
     ],
   };
@@ -56,11 +52,12 @@ export default function Chart({ history }: ChartProps) {
   const options = {
     responsive: true,
     plugins: {
+      legend: { display: true },
       tooltip: {
         callbacks: {
           label: function (context: any) {
             const idx = context.dataIndex;
-            const item = history[idx];
+            const item = filteredStocks[idx];
             return [
               `가격: ${item.clpr.toLocaleString()}원`,
               `거래대금: ${Number(item.tr_prc).toLocaleString()}원`,
@@ -74,12 +71,20 @@ export default function Chart({ history }: ChartProps) {
       x: {
         type: "category" as const,
         title: { display: true, text: "날짜" },
+        ticks: {
+          autoSkip: true,
+          maxTicksLimit: 10,
+          maxRotation: 45,
+          minRotation: 30,
+        },
+        grid: { display: false },
       },
       y: {
         title: { display: true, text: "가격 (원)" },
+        grid: { color: "rgba(0,0,0,0.05)" },
       },
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return <Bar data={chartData} options={options} />;
 }

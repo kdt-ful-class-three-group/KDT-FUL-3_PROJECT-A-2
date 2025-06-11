@@ -60,8 +60,8 @@ export default function BankPage() {
       alert(`최대 대출 가능 금액은 ${loanAvailable.toLocaleString()}원입니다.`);
       return;
     }
-    if (sessionStorage.getItem('member_id') === null) {
-      alert('로그인 후 이용이 가능합니다');
+    if (sessionStorage.getItem("member_id") === null) {
+      alert("로그인 후 이용이 가능합니다");
       return;
     }
 
@@ -72,7 +72,10 @@ export default function BankPage() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ loan_amount: loan, cash_balance: currentAssets }),
+        body: JSON.stringify({
+          loan_amount: loan,
+          cash_balance: currentAssets,
+        }),
       });
       const data = await res.json();
       console.log(data);
@@ -99,8 +102,8 @@ export default function BankPage() {
       alert("현재 자산보다 많은 금액은 상환할 수 없습니다.");
       return;
     }
-    if (sessionStorage.getItem('member_id') === null) {
-      alert('로그인 후 이용이 가능합니다');
+    if (sessionStorage.getItem("member_id") === null) {
+      alert("로그인 후 이용이 가능합니다");
       return;
     }
 
@@ -111,7 +114,10 @@ export default function BankPage() {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({ loan_amount: loan, cash_balance: currentAssets }),
+        body: JSON.stringify({
+          loan_amount: loan,
+          cash_balance: currentAssets,
+        }),
       });
       const data = await res.json();
       console.log(data);

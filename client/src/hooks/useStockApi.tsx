@@ -36,6 +36,7 @@ export function useStockApi() {
     return Array.from(map.values());
   }, [allStocks]);
   // console.log("memo 데이터 확인", latestStocks);
+  // const srtnCdList = allStocks.map((element) => element.srtn_cd);
 
   const [simulatedStocks, setSimulatedStocks] = useState<StockData[]>([]);
   const [stockHistories, setStockHistories] = useState<
@@ -95,6 +96,7 @@ export function useStockApi() {
     latestStocks: simulatedStocks,
     stockHistories,
     isLoading: isLoadingNext,
+    allStocks,
   };
 }
 
