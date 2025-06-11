@@ -1,7 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import React, { useState } from "react";
 
 export default function ApiProviders({
@@ -14,9 +14,9 @@ export default function ApiProviders({
   return (
     <QueryClientProvider client={queryClient}>
       {children}
-      {process.env.NODE_ENV === "development" && (
-        <ReactQueryDevtools initialIsOpen={false} />
-      )}
+      {/* {process.env.NODE_ENV === "development" && (
+        <ReactQueryDevtools initialIsOpen={true} />
+      )} */}
     </QueryClientProvider>
   );
 }
