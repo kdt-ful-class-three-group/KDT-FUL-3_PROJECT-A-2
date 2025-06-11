@@ -86,7 +86,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
       </div>
 
       {/* 2. 기본 정보 */}
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
+      {/* <dl className="grid grid-cols-2 gap-x-6 gap-y-4 text-sm">
         <div>
           <dt className="font-medium">상장일</dt>
           <dd>{get(info?.listingDate)}</dd>
@@ -120,10 +120,10 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
             )}
           </dd>
         </div>
-      </dl>
+      </dl> */}
 
       {/* 3. 재무정보 요약 */}
-      <section>
+      {/* <section>
         <h4 className="text-lg font-semibold mb-3">재무정보 요약</h4>
         <dl className="grid grid-cols-3 gap-4 text-sm">
           <div>
@@ -159,7 +159,7 @@ export default function CompanyInfo({ stockName }: CompanyInfoProps) {
             </dd>
           </div>
         </dl>
-      </section>
+      </section> */}
 
       {/* 4. 뉴스 */}
       <section>
