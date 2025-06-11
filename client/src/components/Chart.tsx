@@ -13,7 +13,7 @@ import {
   Legend,
 } from "chart.js";
 import "chartjs-adapter-date-fns";
-import { Bar } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import { StockData } from "@/hooks/useStockApi";
 ChartJS.register(
   LineElement,
@@ -86,5 +86,5 @@ export default function Chart({ filteredStocks }: ChartProps) {
     },
   };
 
-  return <Bar data={chartData} options={options} />;
+  return <Line data={chartData} options={options} />;
 }
